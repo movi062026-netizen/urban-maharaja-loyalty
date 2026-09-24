@@ -1,95 +1,107 @@
-import { Crown } from 'lucide-react';
-
 /**
  * Digital Maharaja Card — The centerpiece of the loyalty experience.
- * Displays guest name, stamp progress, and reward status.
+ * Styled with the imperial rosewood, gold filigree, contactless chip, and regal stamp seals.
  */
-export default function MaharajaCard({ guestName, currentStamps, targetStamps, cycleNumber, isComplete }) {
+export default function MaharajaCard({
+  guestName,
+  currentStamps,
+  targetStamps,
+  cycleNumber,
+  isComplete,
+}) {
   const stamps = currentStamps || 0;
   const target = targetStamps || 5;
   const remaining = Math.max(0, target - stamps);
 
   return (
-    <div className="maharaja-card p-6 sm:p-8 text-white animate-fadeIn" role="region" aria-label="Maharaja Loyalty Card">
-      {/* Top ornamental line */}
-      <div className="flex items-center justify-center gap-3 mb-5">
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent to-royal-gold/40" />
-        <Crown className="w-5 h-5 text-royal-gold" />
-        <div className="h-px flex-1 bg-gradient-to-l from-transparent to-royal-gold/40" />
-      </div>
+    <div
+      className="relative w-full max-w-md aspect-[1.58/1] rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-surface-bright via-surface-container to-surface-container-lowest border border-primary-container/50 shadow-[0_24px_50px_rgba(0,0,0,0.9)] overflow-hidden transition-all duration-500 hover:scale-[1.02] text-on-surface"
+      role="region"
+      aria-label="Digital Maharaja Card"
+    >
+      {/* Radial rose-gold sheen orb */}
+      <div className="absolute -top-16 -right-16 w-52 h-52 bg-primary-container/25 rounded-full blur-2xl pointer-events-none" />
+      <div className="absolute -bottom-16 -left-16 w-44 h-44 bg-secondary/15 rounded-full blur-2xl pointer-events-none" />
 
-      {/* Brand Header */}
-      <div className="text-center mb-6 relative z-10">
-        <h2 className="font-serif text-xl sm:text-2xl tracking-[0.15em] text-white/90">URBAN MAHARAJA</h2>
-        <p className="text-[10px] tracking-[0.3em] text-royal-gold/70 mt-1">A FINE DINE</p>
-        <div className="mt-3 inline-block px-5 py-1.5 border border-royal-gold/30 rounded-full">
-          <span className="text-xs tracking-[0.2em] text-royal-gold font-medium">MAHARAJA CARD</span>
+      <div className="relative h-full flex flex-col justify-between z-10">
+        {/* Card Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <span className="material-symbols-outlined text-primary text-[28px]">crown</span>
+            <div className="leading-tight">
+              <span className="font-headline-sm text-title-md text-primary font-bold tracking-widest uppercase block">
+                Maharaja
+              </span>
+              <span className="font-label-sm text-[9px] uppercase tracking-[0.25em] text-secondary font-semibold">
+                Urban Maharaja
+              </span>
+            </div>
+          </div>
+          <span className="font-label-sm text-label-sm uppercase tracking-[0.2em] px-3 py-1 rounded-full bg-primary-container/30 border border-primary/40 text-primary font-bold">
+            {stamps >= target ? 'Royal Reward Unlocked' : stamps >= 3 ? 'Ruby Sovereign' : 'Emerald Patron'}
+          </span>
         </div>
-      </div>
 
-      {/* Guest Name */}
-      <div className="text-center mb-6 relative z-10">
-        <p className="text-xs text-white/40 uppercase tracking-widest mb-1">Guest</p>
-        <p className="font-serif text-lg text-white/90">{guestName || 'Royal Guest'}</p>
-        {cycleNumber > 1 && (
-          <p className="text-[10px] text-royal-gold/60 mt-1">Cycle {cycleNumber}</p>
-        )}
-      </div>
+        {/* Contactless Chip & Stamp Seals */}
+        <div className="my-auto py-2">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-7 rounded bg-primary-container/40 border border-primary/50 flex items-center justify-center">
+                <span className="material-symbols-outlined text-on-surface text-[18px]">contactless</span>
+              </div>
+              <span className="text-xs text-on-surface-variant font-mono">
+                {cycleNumber > 1 ? `Cycle ${cycleNumber}` : 'Royal Pass'}
+              </span>
+            </div>
 
-      {/* Progress Label */}
-      <div className="text-center mb-4 relative z-10">
-        <p className="text-xs text-royal-gold/70 uppercase tracking-[0.2em]">Royal Progress</p>
-      </div>
-
-      {/* Stamps */}
-      <div className="flex justify-center items-center gap-3 sm:gap-4 mb-5 relative z-10" role="progressbar" aria-valuenow={stamps} aria-valuemin={0} aria-valuemax={target} aria-label={`${stamps} of ${target} stamps collected`}>
-        {Array.from({ length: target }, (_, i) => (
-          <div
-            key={i}
-            className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
-              i < stamps
-                ? 'stamp-filled'
-                : 'stamp-empty'
-            }`}
-            aria-hidden="true"
-          >
-            {i < stamps ? (
-              <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-deep-brown" />
-            ) : (
-              <span className="text-xs text-white/20">{i + 1}</span>
-            )}
+            <span className="font-label-sm uppercase tracking-widest text-secondary font-semibold">
+              {stamps} / {target} Seals
+            </span>
           </div>
-        ))}
-      </div>
 
-      {/* Count */}
-      <div className="text-center mb-4 relative z-10">
-        <p className="text-2xl font-serif text-white">
-          <span className="text-royal-gold">{stamps}</span>
-          <span className="text-white/30 mx-1">/</span>
-          <span className="text-white/60">{target}</span>
-        </p>
-        <p className="text-xs text-white/40 uppercase tracking-widest mt-1">Royal Stamps</p>
-      </div>
-
-      {/* Status Message */}
-      <div className="text-center relative z-10">
-        {isComplete ? (
-          <div className="inline-block px-4 py-2 bg-royal-gold/20 rounded-full border border-royal-gold/30">
-            <p className="text-sm text-royal-gold font-medium tracking-wide">🎉 Reward Unlocked!</p>
+          {/* Stamp Seals Progress */}
+          <div className="flex items-center justify-between gap-2 px-1 py-2">
+            {Array.from({ length: target }, (_, i) => {
+              const filled = i < stamps;
+              return (
+                <div
+                  key={i}
+                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-500 ${
+                    filled
+                      ? 'bg-gradient-to-tr from-primary-container to-secondary text-surface-container-lowest shadow-[0_0_12px_rgba(222,107,144,0.6)] font-bold scale-105'
+                      : 'bg-surface-container-high/60 border border-outline-variant/40 text-outline-variant'
+                  }`}
+                  title={filled ? `Stamp ${i + 1} Approved` : `Pending Stamp ${i + 1}`}
+                >
+                  <span className="material-symbols-outlined text-[18px]">
+                    {filled ? 'military_tech' : 'lock'}
+                  </span>
+                </div>
+              );
+            })}
           </div>
-        ) : (
-          <p className="text-sm text-white/50">
-            {remaining === 1 ? '1 visit to unlock your reward' : `${remaining} visits to unlock your reward`}
-          </p>
-        )}
-      </div>
+        </div>
 
-      {/* Bottom ornamental line */}
-      <div className="flex items-center justify-center gap-3 mt-5">
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent to-royal-gold/40" />
-        <div className="w-2 h-2 rotate-45 border border-royal-gold/40" />
-        <div className="h-px flex-1 bg-gradient-to-l from-transparent to-royal-gold/40" />
+        {/* Card Footer: Guest Name & Expiration */}
+        <div className="flex items-end justify-between pt-1">
+          <div>
+            <p className="font-label-sm text-[10px] text-secondary uppercase tracking-[0.2em] mb-0.5">
+              Imperial Member
+            </p>
+            <p className="font-title-md text-title-md text-on-surface font-mono tracking-wider uppercase font-semibold">
+              {guestName || 'Royal Guest'}
+            </p>
+          </div>
+
+          <div className="text-right">
+            <p className="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest mb-0.5">
+              Validity
+            </p>
+            <span className="font-label-sm text-label-sm text-primary font-mono tracking-widest">
+              LIFETIME
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );
