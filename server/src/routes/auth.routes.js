@@ -6,6 +6,7 @@ const validate = require('../middleware/validate');
 const {
   guestOtpRules,
   guestVerifyRules,
+  customerRegisterRules,
   staffLoginRules,
   refreshTokenRules,
   updateProfileRules,
@@ -14,6 +15,7 @@ const {
 // Guest auth
 router.post('/guest/request-otp', authLimiter, guestOtpRules, validate, authController.guestRequestOtp);
 router.post('/guest/verify-otp', authLimiter, guestVerifyRules, validate, authController.guestVerifyOtp);
+router.post('/guest/register', authLimiter, customerRegisterRules, validate, authController.customerRegister);
 
 // Staff/Admin auth
 router.post('/admin/login', authLimiter, staffLoginRules, validate, authController.staffLogin);

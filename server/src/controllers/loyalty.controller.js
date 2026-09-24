@@ -75,15 +75,32 @@ const rejectStamp = async (req, res, next) => {
   }
 };
 
-// Staff searches for a guest by phone
+// Staff searches for a guest by email or phone
 const searchGuest = async (req, res, next) => {
   try {
     const User = require('../models/User');
     const { ROLES } = require('../constants');
-    const { phone } = req.query;
+    const searchTerm = (req.query.query || req.query.phone || req.query.email || '').trim();
 
-    const guest = await User.findOne({ phone, role: ROLES.GUEST })
-      .select('name phone email lastLoginAt');
+    if (!searchTerm) {
+      return success(res, { guest: null }, 'Search term required');
+    }
+
+    let query;
+    if (searchTerm.includes('@')) {
+      query = { email: searchTerm.toLowerCase(), role: ROLES.GUEST };
+    } else {
+      query = {
+        role: ROLES.GUEST,
+        $or: [
+          { phone: searchTerm },
+          { email: searchTerm.toLowerCase() },
+          { name: new RegExp(searchTerm, 'i') },
+        ],
+      };
+    }
+
+    const guest = await User.findOne(query).select('name phone email lastLoginAt');
 
     if (!guest) {
       return success(res, { guest: null }, 'Guest not found');

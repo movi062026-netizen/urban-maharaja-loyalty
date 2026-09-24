@@ -24,87 +24,217 @@ const generateTokens = (user) => {
 };
 
 /**
- * Guest login — phone-based with dev OTP
+ * Guest login request — supports Email OTP (primary) and Phone OTP (fallback)
  */
-const guestRequestOtp = async (phone) => {
-  if (!phone || phone.length < 10) {
-    throw new ValidationError('Valid phone number is required');
+const guestRequestOtp = async (identifier) => {
+  let email = null;
+  let phone = null;
+
+  if (typeof identifier === 'object' && identifier !== null) {
+    email = identifier.email?.trim().toLowerCase();
+    phone = identifier.phone?.trim();
+  } else if (typeof identifier === 'string') {
+    if (identifier.includes('@')) {
+      email = identifier.trim().toLowerCase();
+    } else {
+      phone = identifier.trim();
+    }
   }
 
+  if (!email && (!phone || phone.length < 10)) {
+    throw new ValidationError('A valid email address or 10-digit mobile number is required');
+  }
+
+  const cacheKey = email || phone;
+
   // Rate limit OTP requests via Redis
-  const attempts = await cache.trackOtpAttempt(phone);
+  const attempts = await cache.trackOtpAttempt(cacheKey);
   if (attempts && attempts > 5) {
-    throw new ValidationError('Too many OTP requests. Please try again in 15 minutes.');
+    throw new ValidationError('Too many OTP requests. Please wait a few moments before trying again.');
   }
 
   // Find or create guest
-  let user = await User.findOne({ phone, role: ROLES.GUEST });
+  const query = email ? { email, role: ROLES.GUEST } : { phone, role: ROLES.GUEST };
+  let user = await User.findOne(query);
 
   if (!user) {
+    // Check if email already belongs to a staff/admin
+    if (email) {
+      const staffUser = await User.findOne({ email });
+      if (staffUser && staffUser.role !== ROLES.GUEST) {
+        throw new ValidationError('This email is associated with a staff terminal. Please use staff login.');
+      }
+    }
+
     user = await User.create({
-      name: 'Guest',
-      phone,
+      name: email ? email.split('@')[0].replace(/[._-]/g, ' ') : 'Sovereign Guest',
+      email: email || undefined,
+      phone: phone || undefined,
       role: ROLES.GUEST,
     });
+
+    // Automatically provision their Digital Maharaja Card
+    const { getOrCreateActiveCard } = require('./loyalty.service');
+    await getOrCreateActiveCard(user._id);
   }
 
   if (!user.isActive) {
-    throw new AuthenticationError('Account is deactivated');
+    throw new AuthenticationError('Account has been deactivated. Please contact restaurant concierge.');
   }
 
-  // Generate OTP
+  // Generate 6-digit OTP
   const otp = env.isDevelopment ? '123456' : String(Math.floor(100000 + Math.random() * 900000));
 
-  // Store OTP in Redis (5-minute TTL) — replaces MongoDB storage
-  await cache.storeOtp(phone, otp);
+  // Store OTP in Redis (5-minute TTL)
+  await cache.storeOtp(cacheKey, otp);
 
-  // Also keep MongoDB fallback for when Redis is unavailable
+  // MongoDB fallback
   const expiry = new Date(Date.now() + 5 * 60 * 1000);
   user.devOtp = otp;
   user.devOtpExpiry = expiry;
   await user.save();
 
   if (env.isDevelopment) {
-    return { message: 'OTP sent', devOtp: otp };
+    return {
+      message: email ? `Royal seal dispatched to ${email}` : `OTP sent to ${phone}`,
+      devOtp: otp,
+      email,
+      phone,
+    };
   }
 
-  // In production: send SMS here
-  return { message: 'OTP sent to your phone' };
+  return {
+    message: email ? `Royal verification seal dispatched to ${email}` : `OTP dispatched to ${phone}`,
+    email,
+    phone,
+  };
+};
+
+/**
+ * Customer Registration — Name + Email (+ Phone optional)
+ */
+const customerRegister = async ({ name, email, phone }) => {
+  if (!name || name.trim().length < 2) {
+    throw new ValidationError('Please provide your noble name (at least 2 characters)');
+  }
+  if (!email || !email.includes('@')) {
+    throw new ValidationError('A valid email address is required');
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const normalizedPhone = phone?.trim() || undefined;
+
+  // Check if email is already taken
+  let existingUser = await User.findOne({ email: normalizedEmail });
+  if (existingUser) {
+    if (existingUser.role !== ROLES.GUEST) {
+      throw new ValidationError('This email is reserved for staff authentication.');
+    }
+    // If already a guest, update name if needed & send OTP
+    if (name && (!existingUser.name || existingUser.name === 'Guest')) {
+      existingUser.name = name.trim();
+    }
+    if (normalizedPhone && !existingUser.phone) {
+      existingUser.phone = normalizedPhone;
+    }
+    await existingUser.save();
+
+    // Ensure active loyalty card exists
+    const { getOrCreateActiveCard } = require('./loyalty.service');
+    await getOrCreateActiveCard(existingUser._id);
+
+    return guestRequestOtp(normalizedEmail);
+  }
+
+  // Create new guest patron
+  const user = await User.create({
+    name: name.trim(),
+    email: normalizedEmail,
+    phone: normalizedPhone,
+    role: ROLES.GUEST,
+  });
+
+  // Automatically provision their Digital Maharaja Card
+  const { getOrCreateActiveCard } = require('./loyalty.service');
+  await getOrCreateActiveCard(user._id);
+
+  // Generate and dispatch OTP
+  const otp = env.isDevelopment ? '123456' : String(Math.floor(100000 + Math.random() * 900000));
+  await cache.storeOtp(normalizedEmail, otp);
+
+  user.devOtp = otp;
+  user.devOtpExpiry = new Date(Date.now() + 5 * 60 * 1000);
+  await user.save();
+
+  return {
+    message: `Imperial account created. Verification OTP dispatched to ${normalizedEmail}`,
+    devOtp: env.isDevelopment ? otp : undefined,
+    email: normalizedEmail,
+  };
 };
 
 /**
  * Verify guest OTP and return tokens
  */
-const guestVerifyOtp = async (phone, otp, auditCtx = {}) => {
-  const user = await User.findOne({ phone, role: ROLES.GUEST })
-    .select('+devOtp +devOtpExpiry +refreshToken');
+const guestVerifyOtp = async (identifier, otp, auditCtx = {}) => {
+  let email = null;
+  let phone = null;
+  let code = otp;
+
+  if (typeof identifier === 'object' && identifier !== null) {
+    email = identifier.email?.trim().toLowerCase();
+    phone = identifier.phone?.trim();
+    code = identifier.otp || otp;
+  } else if (typeof identifier === 'string') {
+    if (identifier.includes('@')) {
+      email = identifier.trim().toLowerCase();
+    } else {
+      phone = identifier.trim();
+    }
+  }
+
+  if (!email && !phone) {
+    throw new ValidationError('Email or phone number is required');
+  }
+  if (!code) {
+    throw new ValidationError('OTP is required');
+  }
+
+  const query = email ? { email, role: ROLES.GUEST } : { phone, role: ROLES.GUEST };
+  const user = await User.findOne(query).select('+devOtp +devOtpExpiry +refreshToken');
 
   if (!user) {
-    throw new AuthenticationError('Invalid phone number');
+    throw new AuthenticationError('Guest account not found. Please register first.');
   }
 
   if (!user.isActive) {
-    throw new AuthenticationError('Account is deactivated');
+    throw new AuthenticationError('Account is deactivated. Please contact concierge.');
   }
+
+  const cacheKey = email || phone;
 
   // Verify OTP — try Redis first, fallback to MongoDB
-  const redisOtp = await cache.getOtp(phone);
+  const redisOtp = await cache.getOtp(cacheKey);
   const storedOtp = redisOtp || user.devOtp;
 
-  if (!storedOtp || String(storedOtp) !== String(otp)) {
-    throw new AuthenticationError('Invalid OTP');
+  if (!storedOtp || String(storedOtp) !== String(code).trim()) {
+    throw new AuthenticationError('Invalid OTP code. Please verify the code.');
   }
 
-  // Check expiry only if using MongoDB fallback (Redis has built-in TTL)
+  // Check expiry if using MongoDB fallback
   if (!redisOtp && user.devOtpExpiry < new Date()) {
-    throw new AuthenticationError('OTP expired');
+    throw new AuthenticationError('OTP expired. Please request a new verification code.');
   }
 
-  // Clear OTP from both stores
-  await cache.deleteOtp(phone);
+  // Clear OTP
+  await cache.deleteOtp(cacheKey);
   user.devOtp = undefined;
   user.devOtpExpiry = undefined;
   user.lastLoginAt = new Date();
+
+  // Provision loyalty card if missing
+  const { getOrCreateActiveCard } = require('./loyalty.service');
+  await getOrCreateActiveCard(user._id);
 
   const tokens = generateTokens(user);
   user.refreshToken = tokens.refreshToken;
@@ -124,7 +254,7 @@ const guestVerifyOtp = async (phone, otp, auditCtx = {}) => {
     action: AUDIT_ACTIONS.LOGIN,
     entityType: ENTITY_TYPES.USER,
     entityId: user._id,
-    metadata: { method: 'phone_otp', otpSource: redisOtp ? 'redis' : 'mongodb' },
+    metadata: { method: email ? 'email_otp' : 'phone_otp', otpSource: redisOtp ? 'redis' : 'mongodb' },
   });
 
   return {
@@ -232,6 +362,7 @@ const updateGuestProfile = async (userId, { name, email }) => {
 
 module.exports = {
   guestRequestOtp,
+  customerRegister,
   guestVerifyOtp,
   staffLogin,
   refreshAccessToken,

@@ -8,37 +8,37 @@ const validate = require('../middleware/validate');
 const { ROLES } = require('../constants');
 const { paginationRules, createStaffRules, mongoIdParam } = require('../validators/business.validator');
 
-// All admin routes require ADMIN role
-router.use(authenticate, authorize(ROLES.ADMIN));
+// All terminal routes require authentication
+router.use(authenticate);
 
-// Dashboard
-router.get('/dashboard', adminController.getDashboard);
-router.get('/analytics', adminController.getAnalytics);
-router.get('/activity', adminController.getRecentActivity);
+// Dashboard & Analytics (accessible by both Admin and Staff)
+router.get('/dashboard', authorize(ROLES.ADMIN, ROLES.STAFF), adminController.getDashboard);
+router.get('/analytics', authorize(ROLES.ADMIN, ROLES.STAFF), adminController.getAnalytics);
+router.get('/activity', authorize(ROLES.ADMIN, ROLES.STAFF), adminController.getRecentActivity);
 
-// Guest management
-router.get('/guests', paginationRules, validate, adminController.getGuests);
-router.get('/guests/:id', mongoIdParam, validate, adminController.getGuestDetail);
+// Guest management (accessible by both Admin and Staff)
+router.get('/guests', authorize(ROLES.ADMIN, ROLES.STAFF), paginationRules, validate, adminController.getGuests);
+router.get('/guests/:id', authorize(ROLES.ADMIN, ROLES.STAFF), mongoIdParam, validate, adminController.getGuestDetail);
 
-// Stamp management
-router.get('/stamps', paginationRules, validate, adminController.getStamps);
+// Stamp management (accessible by both Admin and Staff)
+router.get('/stamps', authorize(ROLES.ADMIN, ROLES.STAFF), paginationRules, validate, adminController.getStamps);
 
-// Reward management (admin CRUD)
-router.get('/rewards', rewardController.getAllRewards);
+// Reward management (accessible by both Admin and Staff)
+router.get('/rewards', authorize(ROLES.ADMIN, ROLES.STAFF), rewardController.getAllRewards);
 
-// Redemption management
-router.get('/redemptions', paginationRules, validate, rewardController.getAllRedemptions);
+// Redemption management (accessible by both Admin and Staff)
+router.get('/redemptions', authorize(ROLES.ADMIN, ROLES.STAFF), paginationRules, validate, rewardController.getAllRedemptions);
 
-// Staff management
-router.get('/staff', staffController.getStaff);
-router.post('/staff', createStaffRules, validate, staffController.createStaff);
-router.patch('/staff/:id', mongoIdParam, validate, staffController.updateStaff);
+// Staff management & Credential Creation (Admin Only)
+router.get('/staff', authorize(ROLES.ADMIN), staffController.getStaff);
+router.post('/staff', authorize(ROLES.ADMIN), createStaffRules, validate, staffController.createStaff);
+router.patch('/staff/:id', authorize(ROLES.ADMIN), mongoIdParam, validate, staffController.updateStaff);
 
-// Settings
-router.get('/settings', settingsController.getSettings);
-router.patch('/settings', settingsController.updateSettings);
+// Settings (Admin Only)
+router.get('/settings', authorize(ROLES.ADMIN), settingsController.getSettings);
+router.patch('/settings', authorize(ROLES.ADMIN), settingsController.updateSettings);
 
-// Audit logs
-router.get('/audit-logs', paginationRules, validate, adminController.getAuditLogs);
+// Audit logs (Admin Only)
+router.get('/audit-logs', authorize(ROLES.ADMIN), paginationRules, validate, adminController.getAuditLogs);
 
 module.exports = router;

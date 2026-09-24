@@ -4,8 +4,19 @@ const { success } = require('../utils/response');
 
 const guestRequestOtp = async (req, res, next) => {
   try {
-    const result = await authService.guestRequestOtp(req.body.phone);
-    success(res, result, 'OTP sent');
+    const identifier = req.body.email || req.body.phone || req.body;
+    const result = await authService.guestRequestOtp(identifier);
+    success(res, result, result.message || 'OTP dispatched');
+  } catch (error) {
+    next(error);
+  }
+};
+
+const customerRegister = async (req, res, next) => {
+  try {
+    const { name, email, phone } = req.body;
+    const result = await authService.customerRegister({ name, email, phone });
+    success(res, result, result.message || 'Registration successful', 201);
   } catch (error) {
     next(error);
   }
@@ -13,8 +24,9 @@ const guestRequestOtp = async (req, res, next) => {
 
 const guestVerifyOtp = async (req, res, next) => {
   try {
+    const identifier = req.body.email || req.body.phone || req.body;
     const result = await authService.guestVerifyOtp(
-      req.body.phone,
+      identifier,
       req.body.otp,
       auditContext(req)
     );
@@ -76,6 +88,7 @@ const updateProfile = async (req, res, next) => {
 
 module.exports = {
   guestRequestOtp,
+  customerRegister,
   guestVerifyOtp,
   staffLogin,
   refreshToken,

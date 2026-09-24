@@ -13,8 +13,9 @@ const sidebarLinks = [
   { to: '/admin/rewards', label: 'Reward Catalog', icon: Gift },
   { to: '/admin/redemptions', label: 'Redemptions', icon: ShoppingBag },
   { to: '/admin/analytics', label: 'Analytics & Trends', icon: BarChart3 },
-  { to: '/admin/settings', label: 'Platform Settings', icon: Settings },
-  { to: '/admin/audit-logs', label: 'Audit Trail', icon: ScrollText },
+  { to: '/admin/staff', label: 'Staff Credentials', icon: UserCog, adminOnly: true },
+  { to: '/admin/settings', label: 'Platform Settings', icon: Settings, adminOnly: true },
+  { to: '/admin/audit-logs', label: 'Audit Trail', icon: ScrollText, adminOnly: true },
 ];
 
 export default function AdminLayout() {
@@ -71,8 +72,10 @@ export default function AdminLayout() {
 
         {/* Nav Links */}
         <nav className="flex-1 p-3.5 space-y-1.5 overflow-y-auto">
-          {sidebarLinks.map(({ to, label, icon: Icon }) => {
-            const isActive = location.pathname === to;
+          {sidebarLinks
+            .filter((item) => !item.adminOnly || user?.role === 'ADMIN')
+            .map(({ to, label, icon: Icon }) => {
+              const isActive = location.pathname === to;
             return (
               <Link
                 key={to}

@@ -1,8 +1,19 @@
 import api from './client';
 
 export const authApi = {
-  requestOtp: (phone) => api.post('/auth/guest/request-otp', { phone }),
-  verifyOtp: (phone, otp) => api.post('/auth/guest/verify-otp', { phone, otp }),
+  requestOtp: (payload) => {
+    const data = typeof payload === 'string'
+      ? (payload.includes('@') ? { email: payload } : { phone: payload })
+      : payload;
+    return api.post('/auth/guest/request-otp', data);
+  },
+  verifyOtp: (identifier, otp) => {
+    const data = typeof identifier === 'string'
+      ? (identifier.includes('@') ? { email: identifier, otp } : { phone: identifier, otp })
+      : { ...identifier, otp };
+    return api.post('/auth/guest/verify-otp', data);
+  },
+  registerCustomer: (data) => api.post('/auth/guest/register', data),
   adminLogin: (email, password) => api.post('/auth/admin/login', { email, password }),
   refreshToken: (refreshToken) => api.post('/auth/refresh', { refreshToken }),
   logout: () => api.post('/auth/logout'),
@@ -14,7 +25,12 @@ export const loyaltyApi = {
   getMyCard: () => api.get('/loyalty/cards/me'),
   getMyStamps: () => api.get('/loyalty/stamps/me'),
   getMyHistory: () => api.get('/loyalty/history/me'),
-  searchGuest: (phone) => api.get('/loyalty/guests/search', { params: { phone } }),
+  searchGuest: (query) => {
+    const params = typeof query === 'object'
+      ? query
+      : (query?.includes('@') ? { email: query } : { query });
+    return api.get('/loyalty/guests/search', { params });
+  },
   requestStamp: (guestId) => api.post('/loyalty/stamps', { guestId }),
   approveStamp: (stampId) => api.patch(`/loyalty/stamps/${stampId}/approve`),
   rejectStamp: (stampId, reason) => api.patch(`/loyalty/stamps/${stampId}/reject`, { reason }),

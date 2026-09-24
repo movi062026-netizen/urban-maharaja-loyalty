@@ -75,8 +75,13 @@ const mongoIdParam = [
 const searchRules = [
   query('phone')
     .optional()
-    .trim()
-    .isLength({ min: 4 }).withMessage('Search query too short'),
+    .trim(),
+  query('email')
+    .optional()
+    .trim(),
+  query('query')
+    .optional()
+    .trim(),
 ];
 
 const createStaffRules = [

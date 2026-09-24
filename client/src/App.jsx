@@ -33,6 +33,7 @@ import RedemptionsPage from './pages/admin/RedemptionsPage';
 import AnalyticsPage from './pages/admin/AnalyticsPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import AuditLogsPage from './pages/admin/AuditLogsPage';
+import StaffPage from './pages/admin/StaffPage';
 
 export default function App() {
   return (
@@ -99,6 +100,7 @@ export default function App() {
             <Route path="/admin/redemptions" element={<RedemptionsPage />} />
             <Route path="/admin/analytics" element={<AnalyticsPage />} />
             <Route path="/admin/settings" element={<SettingsPage />} />
+            <Route path="/admin/staff" element={<StaffPage />} />
             <Route path="/admin/audit-logs" element={<AuditLogsPage />} />
           </Route>
 
