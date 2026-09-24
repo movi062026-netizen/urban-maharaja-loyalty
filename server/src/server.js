@@ -3,15 +3,25 @@ const env = require('./config/env');
 const logger = require('./config/logger');
 const connectDB = require('./config/database');
 
+const { initRedis, ping: pingRedis } = require('./integrations/redis');
+
 const start = async () => {
   // Connect to MongoDB
   await connectDB();
+
+  // Initialize Upstash Redis
+  const redisClient = initRedis();
+  if (redisClient) {
+    const pong = await pingRedis();
+    logger.info(pong ? '✅ Upstash Redis connected' : '⚠️ Upstash Redis ping failed');
+  }
 
   // Start HTTP server
   const server = app.listen(env.PORT, () => {
     logger.info(`🏰 Urban Maharaja API running on port ${env.PORT}`, {
       environment: env.NODE_ENV,
       port: env.PORT,
+      redis: !!redisClient,
     });
   });
 

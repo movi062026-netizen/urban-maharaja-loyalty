@@ -3,12 +3,21 @@ const RewardRedemption = require('../models/RewardRedemption');
 const { REDEMPTION_STATUS, AUDIT_ACTIONS, ENTITY_TYPES } = require('../constants');
 const { NotFoundError, ConflictError, AuthorizationError } = require('../utils/errors');
 const { createAuditLog } = require('./audit.service');
+const { cache } = require('../integrations/redis');
 
 /**
- * Get all active rewards
+ * Get all active rewards (cached with Redis, 5-min TTL)
  */
 const getActiveRewards = async () => {
-  return Reward.find({ isActive: true }).sort({ requiredStamps: 1 });
+  const cached = await cache.getCachedActiveRewards();
+  if (cached) {
+    return cached;
+  }
+
+  const rewards = await Reward.find({ isActive: true }).sort({ requiredStamps: 1 });
+  const plainRewards = rewards.map((r) => (r.toObject ? r.toObject() : r));
+  await cache.setCachedActiveRewards(plainRewards);
+  return rewards;
 };
 
 /**
@@ -28,10 +37,13 @@ const getRewardById = async (rewardId) => {
 };
 
 /**
- * Create a new reward (admin)
+ * Create a new reward (admin) — invalidates active rewards cache
  */
 const createReward = async (data, auditCtx = {}) => {
   const reward = await Reward.create(data);
+
+  // Invalidate active rewards cache
+  await cache.invalidateRewardCaches();
 
   createAuditLog({
     ...auditCtx,
@@ -45,7 +57,7 @@ const createReward = async (data, auditCtx = {}) => {
 };
 
 /**
- * Update a reward (admin)
+ * Update a reward (admin) — invalidates active rewards cache
  */
 const updateReward = async (rewardId, data, auditCtx = {}) => {
   const reward = await Reward.findById(rewardId);
@@ -53,6 +65,9 @@ const updateReward = async (rewardId, data, auditCtx = {}) => {
 
   Object.assign(reward, data);
   await reward.save();
+
+  // Invalidate active rewards cache
+  await cache.invalidateRewardCaches();
 
   createAuditLog({
     ...auditCtx,
@@ -66,7 +81,7 @@ const updateReward = async (rewardId, data, auditCtx = {}) => {
 };
 
 /**
- * Redeem a reward (staff/admin action)
+ * Redeem a reward (staff/admin action) — invalidates guest cache
  */
 const redeemReward = async (redemptionId, staffId, auditCtx = {}) => {
   const redemption = await RewardRedemption.findById(redemptionId)
@@ -95,13 +110,17 @@ const redeemReward = async (redemptionId, staffId, auditCtx = {}) => {
   redemption.redeemedAt = new Date();
   await redemption.save();
 
+  // Invalidate guest cache and dashboard cache
+  const guestId = redemption.guestId?._id || redemption.guestId;
+  cache.invalidateGuestCaches(guestId).catch(() => {});
+
   createAuditLog({
     ...auditCtx,
     action: AUDIT_ACTIONS.REWARD_REDEEMED,
     entityType: ENTITY_TYPES.REDEMPTION,
     entityId: redemption._id,
     metadata: {
-      guestId: redemption.guestId._id || redemption.guestId,
+      guestId: guestId,
       rewardTitle: redemption.rewardId?.title,
     },
   });

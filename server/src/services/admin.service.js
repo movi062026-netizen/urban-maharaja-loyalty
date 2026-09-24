@@ -6,11 +6,15 @@ const RewardRedemption = require('../models/RewardRedemption');
 const ReviewEvent = require('../models/ReviewEvent');
 const AuditLog = require('../models/AuditLog');
 const { ROLES, STAMP_STATUS, REDEMPTION_STATUS, LOYALTY_STATUS } = require('../constants');
+const { cache } = require('../integrations/redis');
 
 /**
  * Get dashboard overview stats
  */
 const getDashboardStats = async () => {
+  // Try Redis cache first
+  const cached = await cache.getCachedDashboard();
+  if (cached) return cached;
   const [
     totalGuests,
     totalStamps,
@@ -33,7 +37,7 @@ const getDashboardStats = async () => {
     LoyaltyCard.countDocuments({ status: LOYALTY_STATUS.COMPLETED }),
   ]);
 
-  return {
+  const result = {
     totalGuests,
     totalVisits: approvedStamps,
     totalStamps: approvedStamps,
@@ -44,6 +48,11 @@ const getDashboardStats = async () => {
     activeCards,
     completedCards,
   };
+
+  // Cache in Redis (1 minute)
+  await cache.setCachedDashboard(result);
+
+  return result;
 };
 
 /**

@@ -4,6 +4,7 @@ const User = require('../models/User');
 const { ROLES, AUDIT_ACTIONS, ENTITY_TYPES } = require('../constants');
 const { AuthenticationError, ValidationError, NotFoundError } = require('../utils/errors');
 const { createAuditLog } = require('./audit.service');
+const { cache } = require('../integrations/redis');
 
 /**
  * Generate access + refresh token pair
@@ -30,6 +31,12 @@ const guestRequestOtp = async (phone) => {
     throw new ValidationError('Valid phone number is required');
   }
 
+  // Rate limit OTP requests via Redis
+  const attempts = await cache.trackOtpAttempt(phone);
+  if (attempts && attempts > 5) {
+    throw new ValidationError('Too many OTP requests. Please try again in 15 minutes.');
+  }
+
   // Find or create guest
   let user = await User.findOne({ phone, role: ROLES.GUEST });
 
@@ -45,10 +52,14 @@ const guestRequestOtp = async (phone) => {
     throw new AuthenticationError('Account is deactivated');
   }
 
-  // Dev OTP — in production, replace with SMS provider
+  // Generate OTP
   const otp = env.isDevelopment ? '123456' : String(Math.floor(100000 + Math.random() * 900000));
-  const expiry = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
 
+  // Store OTP in Redis (5-minute TTL) — replaces MongoDB storage
+  await cache.storeOtp(phone, otp);
+
+  // Also keep MongoDB fallback for when Redis is unavailable
+  const expiry = new Date(Date.now() + 5 * 60 * 1000);
   user.devOtp = otp;
   user.devOtpExpiry = expiry;
   await user.save();
@@ -76,16 +87,21 @@ const guestVerifyOtp = async (phone, otp, auditCtx = {}) => {
     throw new AuthenticationError('Account is deactivated');
   }
 
-  // Verify OTP
-  if (!user.devOtp || user.devOtp !== otp) {
+  // Verify OTP — try Redis first, fallback to MongoDB
+  const redisOtp = await cache.getOtp(phone);
+  const storedOtp = redisOtp || user.devOtp;
+
+  if (!storedOtp || String(storedOtp) !== String(otp)) {
     throw new AuthenticationError('Invalid OTP');
   }
 
-  if (user.devOtpExpiry < new Date()) {
+  // Check expiry only if using MongoDB fallback (Redis has built-in TTL)
+  if (!redisOtp && user.devOtpExpiry < new Date()) {
     throw new AuthenticationError('OTP expired');
   }
 
-  // Clear OTP
+  // Clear OTP from both stores
+  await cache.deleteOtp(phone);
   user.devOtp = undefined;
   user.devOtpExpiry = undefined;
   user.lastLoginAt = new Date();
@@ -93,6 +109,12 @@ const guestVerifyOtp = async (phone, otp, auditCtx = {}) => {
   const tokens = generateTokens(user);
   user.refreshToken = tokens.refreshToken;
   await user.save();
+
+  // Store session in Redis
+  await cache.setSession(user._id.toString(), {
+    role: user.role,
+    loginAt: new Date().toISOString(),
+  });
 
   // Audit
   createAuditLog({
@@ -102,7 +124,7 @@ const guestVerifyOtp = async (phone, otp, auditCtx = {}) => {
     action: AUDIT_ACTIONS.LOGIN,
     entityType: ENTITY_TYPES.USER,
     entityId: user._id,
-    metadata: { method: 'phone_otp' },
+    metadata: { method: 'phone_otp', otpSource: redisOtp ? 'redis' : 'mongodb' },
   });
 
   return {
@@ -190,6 +212,8 @@ const refreshAccessToken = async (refreshToken) => {
  */
 const logout = async (userId) => {
   await User.findByIdAndUpdate(userId, { refreshToken: null });
+  // Clear Redis session
+  await cache.removeSession(String(userId));
 };
 
 /**

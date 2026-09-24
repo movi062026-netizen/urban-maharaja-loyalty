@@ -26,8 +26,9 @@ const env = {
   GOOGLE_MAPS_URL: process.env.GOOGLE_MAPS_URL || '',
   RESERVATION_URL: process.env.RESERVATION_URL || '',
   
-  // Redis (optional)
-  REDIS_URL: process.env.REDIS_URL || '',
+  // Upstash Redis
+  UPSTASH_REDIS_URL: process.env.UPSTASH_REDIS_URL || '',
+  UPSTASH_REDIS_TOKEN: process.env.UPSTASH_REDIS_TOKEN || '',
   
   // Logging
   LOG_LEVEL: process.env.LOG_LEVEL || 'info',

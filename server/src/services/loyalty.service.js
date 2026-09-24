@@ -8,6 +8,7 @@ const RestaurantSettings = require('../models/RestaurantSettings');
 const { LOYALTY_STATUS, STAMP_STATUS, REDEMPTION_STATUS, AUDIT_ACTIONS, ENTITY_TYPES } = require('../constants');
 const { NotFoundError, ConflictError, ValidationError, AuthorizationError } = require('../utils/errors');
 const { createAuditLog } = require('./audit.service');
+const { cache } = require('../integrations/redis');
 
 /**
  * Get or create active loyalty card for a guest
@@ -45,6 +46,10 @@ const getOrCreateActiveCard = async (guestId) => {
  * Get guest's loyalty card with full details
  */
 const getGuestLoyaltyCard = async (guestId) => {
+  // Try Redis cache first
+  const cached = await cache.getCachedGuestCard(guestId);
+  if (cached) return cached;
+
   const card = await getOrCreateActiveCard(guestId);
   const stamps = await Stamp.find({
     loyaltyCardId: card._id,
@@ -60,13 +65,18 @@ const getGuestLoyaltyCard = async (guestId) => {
     status: REDEMPTION_STATUS.AVAILABLE,
   }).populate('rewardId', 'title description rewardType validityDays');
 
-  return {
+  const result = {
     card,
     stamps,
     availableRedemptions,
     stampsRemaining: Math.max(0, card.targetStamps - card.currentStamps),
     isComplete: card.currentStamps >= card.targetStamps,
   };
+
+  // Cache in Redis (30 seconds)
+  await cache.setCachedGuestCard(guestId, result);
+
+  return result;
 };
 
 /**
@@ -97,6 +107,8 @@ const requestStamp = async (guestId, staffId, auditCtx = {}) => {
     entityId: stamp._id,
     metadata: { guestId, loyaltyCardId: card._id },
   });
+
+  cache.invalidateGuestCard(guestId).catch(() => {});
 
   return stamp;
 };
@@ -194,6 +206,9 @@ const approveStamp = async (stampId, staffId, auditCtx = {}) => {
 
     await session.commitTransaction();
 
+    // Invalidate guest card and dashboard caches in Redis
+    cache.invalidateGuestCaches(stamp.guestId).catch(() => {});
+
     return {
       stamp,
       card,
@@ -229,6 +244,9 @@ const rejectStamp = async (stampId, staffId, reason, auditCtx = {}) => {
     entityId: stamp._id,
     metadata: { guestId: stamp.guestId, reason },
   });
+
+  // Invalidate guest card cache in Redis
+  cache.invalidateGuestCard(stamp.guestId).catch(() => {});
 
   return stamp;
 };

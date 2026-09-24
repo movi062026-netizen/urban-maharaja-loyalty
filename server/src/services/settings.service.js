@@ -1,20 +1,29 @@
 const RestaurantSettings = require('../models/RestaurantSettings');
 const { AUDIT_ACTIONS, ENTITY_TYPES } = require('../constants');
 const { createAuditLog } = require('./audit.service');
+const { cache } = require('../integrations/redis');
 
 /**
- * Get settings (create default if none exist)
+ * Get settings (Redis-cached, create default if none exist)
  */
 const getSettings = async () => {
+  // Try Redis cache first
+  const cached = await cache.getCachedSettings();
+  if (cached) return cached;
+
   let settings = await RestaurantSettings.findOne();
   if (!settings) {
     settings = await RestaurantSettings.create({});
   }
+
+  // Cache in Redis
+  await cache.setCachedSettings(settings.toObject());
+
   return settings;
 };
 
 /**
- * Update settings (admin)
+ * Update settings (admin) — invalidates Redis cache
  */
 const updateSettings = async (data, auditCtx = {}) => {
   let settings = await RestaurantSettings.findOne();
@@ -43,6 +52,9 @@ const updateSettings = async (data, auditCtx = {}) => {
   }
 
   await settings.save();
+
+  // Invalidate Redis cache
+  await cache.invalidateSettings();
 
   createAuditLog({
     ...auditCtx,
