@@ -1,0 +1,23 @@
+export const ROLES = {
+  GUEST: 'GUEST',
+  STAFF: 'STAFF',
+  ADMIN: 'ADMIN',
+};
+
+export const STAMP_STATUS = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+};
+
+export const REDEMPTION_STATUS = {
+  AVAILABLE: 'AVAILABLE',
+  REDEEMED: 'REDEEMED',
+  EXPIRED: 'EXPIRED',
+};
+
+export const LOYALTY_STATUS = {
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  EXPIRED: 'EXPIRED',
+};

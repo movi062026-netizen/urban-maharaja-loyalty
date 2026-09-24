@@ -1,0 +1,108 @@
+const loyaltyService = require('../services/loyalty.service');
+const { auditContext } = require('../services/audit.service');
+const { success } = require('../utils/response');
+
+// Guest gets their own loyalty card
+const getMyCard = async (req, res, next) => {
+  try {
+    const data = await loyaltyService.getGuestLoyaltyCard(req.user.id);
+    success(res, data, 'Loyalty card retrieved');
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Guest gets their stamps
+const getMyStamps = async (req, res, next) => {
+  try {
+    const stamps = await loyaltyService.getGuestStamps(req.user.id);
+    success(res, { stamps }, 'Stamps retrieved');
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Guest gets their visit history
+const getMyHistory = async (req, res, next) => {
+  try {
+    const history = await loyaltyService.getGuestHistory(req.user.id);
+    success(res, { history }, 'History retrieved');
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Staff requests a stamp for a guest
+const requestStamp = async (req, res, next) => {
+  try {
+    const stamp = await loyaltyService.requestStamp(
+      req.body.guestId,
+      req.user.id,
+      auditContext(req)
+    );
+    success(res, { stamp }, 'Stamp requested', 201);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Staff approves a pending stamp
+const approveStamp = async (req, res, next) => {
+  try {
+    const result = await loyaltyService.approveStamp(
+      req.params.id,
+      req.user.id,
+      auditContext(req)
+    );
+    success(res, result, 'Stamp approved');
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Staff rejects a pending stamp
+const rejectStamp = async (req, res, next) => {
+  try {
+    const stamp = await loyaltyService.rejectStamp(
+      req.params.id,
+      req.user.id,
+      req.body.reason,
+      auditContext(req)
+    );
+    success(res, { stamp }, 'Stamp rejected');
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Staff searches for a guest by phone
+const searchGuest = async (req, res, next) => {
+  try {
+    const User = require('../models/User');
+    const { ROLES } = require('../constants');
+    const { phone } = req.query;
+
+    const guest = await User.findOne({ phone, role: ROLES.GUEST })
+      .select('name phone email lastLoginAt');
+
+    if (!guest) {
+      return success(res, { guest: null }, 'Guest not found');
+    }
+
+    const loyaltyData = await loyaltyService.getGuestLoyaltyCard(guest._id);
+
+    success(res, { guest, loyalty: loyaltyData }, 'Guest found');
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  getMyCard,
+  getMyStamps,
+  getMyHistory,
+  requestStamp,
+  approveStamp,
+  rejectStamp,
+  searchGuest,
+};

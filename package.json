@@ -1,0 +1,20 @@
+{
+  "name": "urban-maharaja-loyalty",
+  "version": "1.0.0",
+  "description": "Urban Maharaja Digital Loyalty & Review Platform",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start",
+    "seed": "cd server && npm run seed",
+    "test": "cd server && npm test",
+    "test:client": "cd client && npm test",
+    "lint": "concurrently \"cd server && npm run lint\" \"cd client && npm run lint\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
