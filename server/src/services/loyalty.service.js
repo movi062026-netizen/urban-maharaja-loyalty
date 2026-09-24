@@ -43,7 +43,7 @@ const getOrCreateActiveCard = async (guestId) => {
 };
 
 /**
- * Get guest's loyalty card with full details
+ * Get guest's loyalty card with full details and cycle history
  */
 const getGuestLoyaltyCard = async (guestId) => {
   // Try Redis cache first
@@ -51,26 +51,36 @@ const getGuestLoyaltyCard = async (guestId) => {
   if (cached) return cached;
 
   const card = await getOrCreateActiveCard(guestId);
+
+  // Fetch all cards for this guest to track cycle history (Cycle 1, 2, 3...)
+  const allCards = await LoyaltyCard.find({ guestId }).sort({ cycleNumber: -1 });
+
+  // Fetch all approved stamps for the current card
   const stamps = await Stamp.find({
     loyaltyCardId: card._id,
     status: STAMP_STATUS.APPROVED,
   })
-    .sort({ approvedAt: 1 })
+    .sort({ approvedAt: -1 })
     .populate('approvedBy', 'name');
 
-  // Check available rewards
+  // Check all available unredeemed rewards for this guest across any cycle
   const availableRedemptions = await RewardRedemption.find({
     guestId,
-    loyaltyCardId: card._id,
     status: REDEMPTION_STATUS.AVAILABLE,
   }).populate('rewardId', 'title description rewardType validityDays');
 
+  const totalCompletedCycles = allCards.filter(c => c.status === LOYALTY_STATUS.COMPLETED).length;
+  const totalApprovedStamps = await Stamp.countDocuments({ guestId, status: STAMP_STATUS.APPROVED });
+
   const result = {
     card,
+    allCards,
     stamps,
     availableRedemptions,
     stampsRemaining: Math.max(0, card.targetStamps - card.currentStamps),
     isComplete: card.currentStamps >= card.targetStamps,
+    totalCompletedCycles,
+    totalApprovedStamps,
   };
 
   // Cache in Redis (30 seconds)
@@ -80,17 +90,57 @@ const getGuestLoyaltyCard = async (guestId) => {
 };
 
 /**
- * Request a stamp for a guest visit (creates a PENDING stamp)
- * Called by staff when verifying a guest visit.
+ * Start next royal card cycle for a patron (Cycle 2, Cycle 3, etc.)
  */
-const requestStamp = async (guestId, staffId, auditCtx = {}) => {
+const startNextCycle = async (guestId) => {
+  const activeCard = await LoyaltyCard.findOne({ guestId, status: LOYALTY_STATUS.ACTIVE });
+  if (activeCard && activeCard.currentStamps < activeCard.targetStamps) {
+    return activeCard; // Current cycle is still in progress
+  }
+
+  if (activeCard) {
+    activeCard.status = LOYALTY_STATUS.COMPLETED;
+    await activeCard.save();
+  }
+
+  const completedCount = await LoyaltyCard.countDocuments({ guestId, status: LOYALTY_STATUS.COMPLETED });
+  const settings = await RestaurantSettings.findOne();
+  const targetStamps = settings?.loyaltyConfig?.targetStamps || 5;
+
+  const newCard = await LoyaltyCard.create({
+    guestId,
+    currentStamps: 0,
+    targetStamps,
+    status: LOYALTY_STATUS.ACTIVE,
+    cycleNumber: completedCount + 1,
+  });
+
+  cache.invalidateGuestCaches(guestId).catch(() => {});
+  return newCard;
+};
+
+/**
+ * Request a stamp for a guest visit (creates a PENDING stamp)
+ * Can be called by staff OR guest requesting verification.
+ */
+const requestStamp = async (guestId, staffId = null, auditCtx = {}) => {
   const card = await getOrCreateActiveCard(guestId);
 
   if (card.status !== LOYALTY_STATUS.ACTIVE) {
     throw new ConflictError('Loyalty card is not active');
   }
 
-  // Generate unique visit ID (date-based to prevent same-day duplicates if desired)
+  // Prevent duplicate pending stamps for the same guest visit
+  const existingPending = await Stamp.findOne({
+    guestId,
+    loyaltyCardId: card._id,
+    status: STAMP_STATUS.PENDING,
+  });
+  if (existingPending) {
+    return existingPending;
+  }
+
+  // Generate unique visit ID
   const visitId = `visit-${guestId}-${Date.now()}-${uuidv4().slice(0, 8)}`;
 
   const stamp = await Stamp.create({
@@ -105,10 +155,10 @@ const requestStamp = async (guestId, staffId, auditCtx = {}) => {
     action: AUDIT_ACTIONS.STAMP_REQUESTED,
     entityType: ENTITY_TYPES.STAMP,
     entityId: stamp._id,
-    metadata: { guestId, loyaltyCardId: card._id },
+    metadata: { guestId, loyaltyCardId: card._id, requestedBy: staffId ? 'STAFF' : 'GUEST' },
   });
 
-  cache.invalidateGuestCard(guestId).catch(() => {});
+  cache.invalidateGuestCaches(guestId).catch(() => {});
 
   return stamp;
 };
@@ -288,6 +338,7 @@ const getGuestHistory = async (guestId) => {
 module.exports = {
   getOrCreateActiveCard,
   getGuestLoyaltyCard,
+  startNextCycle,
   requestStamp,
   approveStamp,
   rejectStamp,

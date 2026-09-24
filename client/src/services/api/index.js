@@ -25,6 +25,8 @@ export const loyaltyApi = {
   getMyCard: () => api.get('/loyalty/cards/me'),
   getMyStamps: () => api.get('/loyalty/stamps/me'),
   getMyHistory: () => api.get('/loyalty/history/me'),
+  requestMyStamp: () => api.post('/loyalty/stamps/request-my-stamp'),
+  startNextCycle: () => api.post('/loyalty/cards/next-cycle'),
   searchGuest: (query) => {
     const params = typeof query === 'object'
       ? query

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { loyaltyApi } from '../../services/api';
 import MaharajaCard from '../../components/loyalty/MaharajaCard';
-import { Gift, ArrowRight } from 'lucide-react';
+import { Gift, ArrowRight, Stamp, Sparkles, CheckCircle2, ShieldCheck, History, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
@@ -11,6 +11,9 @@ export default function MaharajaCardPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [requestingStamp, setRequestingStamp] = useState(false);
+  const [startingCycle, setStartingCycle] = useState(false);
+  const [selectedCycleIndex, setSelectedCycleIndex] = useState(0);
 
   useEffect(() => {
     loadCard();
@@ -22,25 +25,57 @@ export default function MaharajaCardPage() {
       const res = await loyaltyApi.getMyCard();
       setData(res.data.data);
     } catch (err) {
-      setError(err.response?.data?.error?.message || 'Failed to load card');
+      setError(err.response?.data?.error?.message || 'Failed to load Maharaja Card');
       toast.error('Failed to load your Maharaja Card');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleRequestStamp = async () => {
+    setRequestingStamp(true);
+    try {
+      await loyaltyApi.requestMyStamp();
+      toast.success('Royal dining seal requested! Waiter/Concierge will confirm your visit.');
+      loadCard();
+    } catch (err) {
+      toast.error(err.response?.data?.error?.message || 'Failed to request seal');
+    } finally {
+      setRequestingStamp(false);
+    }
+  };
+
+  const handleStartNextCycle = async () => {
+    setStartingCycle(true);
+    try {
+      await loyaltyApi.startNextCycle();
+      toast.success('New Maharaja Card cycle activated! Enjoy your dining.');
+      loadCard();
+    } catch (err) {
+      toast.error(err.response?.data?.error?.message || 'Failed to activate next cycle');
+    } finally {
+      setStartingCycle(false);
+    }
+  };
+
   if (loading) {
     return (
-      <div className="space-y-6 animate-pulse">
-        <div className="h-64 sm:h-72 rounded-3xl bg-surface-container/60 border border-outline-variant/30" />
-        <div className="h-24 rounded-2xl bg-surface-container/60 border border-outline-variant/30" />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-pulse">
+        <div className="lg:col-span-7 space-y-6">
+          <div className="h-64 sm:h-80 rounded-3xl bg-surface-container/60 border border-outline-variant/30" />
+          <div className="h-28 rounded-2xl bg-surface-container/60 border border-outline-variant/30" />
+        </div>
+        <div className="lg:col-span-5 space-y-4">
+          <div className="h-44 rounded-2xl bg-surface-container/60 border border-outline-variant/30" />
+          <div className="h-44 rounded-2xl bg-surface-container/60 border border-outline-variant/30" />
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center py-12 p-6 rounded-3xl bg-surface-container/80 border border-outline-variant/30">
+      <div className="text-center py-16 p-8 rounded-3xl bg-surface-container/80 border border-outline-variant/30 text-on-surface">
         <p className="text-on-surface-variant text-sm mb-4">{error}</p>
         <button
           onClick={loadCard}
@@ -52,61 +87,220 @@ export default function MaharajaCardPage() {
     );
   }
 
-  const { card, availableRedemptions, isComplete } = data || {};
+  const { card, allCards = [], stamps = [], availableRedemptions = [], isComplete, totalCompletedCycles = 0, totalApprovedStamps = 0 } = data || {};
+  const activeCycle = card?.cycleNumber || 1;
+  const isCardFinished = (card?.currentStamps || 0) >= (card?.targetStamps || 5);
 
   return (
-    <div className="space-y-6 animate-slideUp text-on-surface">
-      {/* Maharaja Card */}
-      <MaharajaCard
-        guestName={user?.name}
-        currentStamps={card?.currentStamps}
-        targetStamps={card?.targetStamps}
-        cycleNumber={card?.cycleNumber}
-        isComplete={isComplete}
-      />
+    <div className="space-y-8 animate-slideUp text-on-surface">
+      {/* Welcome Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-outline-variant/20">
+        <div>
+          <h1 className="font-serif text-2xl sm:text-3xl text-on-surface font-bold">
+            Digital Maharaja Card
+          </h1>
+          <p className="text-xs text-on-surface-variant mt-1 font-sans">
+            Welcome, <strong className="text-secondary">{user?.name || 'Noble Patron'}</strong>. Present your card during dining to collect seals.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="px-3 py-1.5 rounded-xl bg-surface-container border border-outline-variant/30 text-xs font-mono text-secondary font-bold flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-primary" />
+            <span>Cycle #{activeCycle} Active</span>
+          </span>
+          <button
+            onClick={loadCard}
+            className="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+            title="Refresh Card"
+          >
+            <RefreshCw className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
 
-      {/* Available Rewards */}
-      {availableRedemptions?.length > 0 && (
-        <div className="bg-surface-container/85 rounded-3xl p-6 border border-outline-variant/30 backdrop-blur-xl shadow-lg">
-          <h3 className="font-serif text-lg text-on-surface mb-3 flex items-center gap-2 font-bold">
-            <Gift className="w-5 h-5 text-primary" /> Available Rewards
-          </h3>
-          <div className="space-y-3">
-            {availableRedemptions.map((r) => (
-              <div key={r._id} className="flex items-center justify-between p-3.5 bg-surface-container-high/80 border border-outline-variant/30 rounded-xl">
-                <div>
-                  <p className="font-semibold text-on-surface text-sm">{r.rewardId?.title}</p>
-                  <p className="text-xs text-on-surface-variant mt-0.5">{r.rewardId?.description}</p>
-                </div>
-                <span className="text-xs px-2.5 py-1 bg-green-500/20 text-green-300 border border-green-500/30 rounded-full font-semibold">
-                  Unlocked
-                </span>
+      {/* Main Grid: Left Card, Right Progress & Rewards */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left Column: Digital Card & Actions (7 Cols) */}
+        <div className="lg:col-span-7 space-y-6">
+          <div className="flex justify-center">
+            <MaharajaCard
+              guestName={user?.name}
+              currentStamps={card?.currentStamps}
+              targetStamps={card?.targetStamps}
+              cycleNumber={card?.cycleNumber}
+              isComplete={isComplete || isCardFinished}
+            />
+          </div>
+
+          {/* Action Row: Request Stamp for Visit */}
+          <div className="p-5 rounded-2xl bg-surface-container/85 border border-outline-variant/30 backdrop-blur-xl shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary-container/20 border border-primary/30 flex items-center justify-center text-primary shrink-0">
+                <Stamp className="w-5 h-5" />
               </div>
-            ))}
+              <div>
+                <h3 className="font-serif font-bold text-on-surface text-sm">Dining at Urban Maharaja Right Now?</h3>
+                <p className="text-xs text-on-surface-variant">Request a seal directly to your card for your server to confirm</p>
+              </div>
+            </div>
+
+            <button
+              onClick={handleRequestStamp}
+              disabled={requestingStamp || isCardFinished}
+              className="w-full sm:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 shrink-0"
+            >
+              {requestingStamp ? (
+                <span className="w-4 h-4 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  <Stamp className="w-4 h-4" />
+                  <span>Request Visit Seal</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Cycle Completed Milestone Celebration */}
+          {isCardFinished && (
+            <div className="p-6 rounded-2xl bg-gradient-to-br from-primary-container/20 via-surface-container to-secondary/20 border border-primary/40 backdrop-blur-xl shadow-xl text-center space-y-3">
+              <div className="w-12 h-12 rounded-full bg-primary-container/30 border border-primary/50 flex items-center justify-center mx-auto text-primary">
+                <CheckCircle2 className="w-6 h-6" />
+              </div>
+              <h3 className="font-serif text-xl font-bold text-on-surface">
+                🎉 Royal Cycle #{activeCycle} Completed!
+              </h3>
+              <p className="text-xs text-on-surface-variant max-w-md mx-auto leading-relaxed">
+                You have collected all 5 royal seals! Your royal complimentary reward voucher has been unlocked and added to your rewards vault.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <Link
+                  to="/rewards"
+                  className="px-5 py-2.5 rounded-xl bg-primary-container text-surface-container-lowest text-xs uppercase tracking-wider font-bold hover:brightness-110 shadow no-underline inline-flex items-center gap-1.5"
+                >
+                  <Gift className="w-4 h-4" />
+                  <span>Claim Your Reward</span>
+                </Link>
+                <button
+                  onClick={handleStartNextCycle}
+                  disabled={startingCycle}
+                  className="px-5 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/40 text-secondary text-xs uppercase tracking-wider font-bold transition-all cursor-pointer flex items-center gap-1.5"
+                >
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  <span>{startingCycle ? 'Activating...' : `Begin Royal Cycle #${activeCycle + 1}`}</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Loyalty Stats Overview */}
+          <div className="grid grid-cols-3 gap-3">
+            <div className="p-4 rounded-2xl bg-surface-container/70 border border-outline-variant/30 text-center">
+              <span className="text-[10px] uppercase tracking-wider text-on-surface-variant font-semibold block mb-1">
+                Current Seals
+              </span>
+              <span className="text-xl font-serif font-bold text-primary">
+                {card?.currentStamps || 0} / {card?.targetStamps || 5}
+              </span>
+            </div>
+            <div className="p-4 rounded-2xl bg-surface-container/70 border border-outline-variant/30 text-center">
+              <span className="text-[10px] uppercase tracking-wider text-on-surface-variant font-semibold block mb-1">
+                Completed Cards
+              </span>
+              <span className="text-xl font-serif font-bold text-secondary">
+                {totalCompletedCycles} Passes
+              </span>
+            </div>
+            <div className="p-4 rounded-2xl bg-surface-container/70 border border-outline-variant/30 text-center">
+              <span className="text-[10px] uppercase tracking-wider text-on-surface-variant font-semibold block mb-1">
+                Total Visits
+              </span>
+              <span className="text-xl font-serif font-bold text-on-surface">
+                {totalApprovedStamps} Seals
+              </span>
+            </div>
           </div>
         </div>
-      )}
 
-      {/* Reward Unlocked Alert */}
-      {isComplete && (
-        <div className="bg-gradient-to-br from-primary-container/20 to-secondary/20 rounded-3xl p-6 text-center border border-primary/40 backdrop-blur-xl shadow-xl">
-          <h3 className="font-serif text-xl text-primary font-bold mb-2">🎉 Royal Reward Unlocked!</h3>
-          <p className="text-xs sm:text-sm text-on-surface-variant mb-4">Your Maharaja Card cycle is complete. Claim your royal reward.</p>
-          <Link
-            to="/rewards"
-            className="px-6 py-3 rounded-full bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 no-underline inline-flex items-center gap-2"
-          >
-            <span>View &amp; Redeem Reward</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+        {/* Right Column: Cycle Progression & Rewards (5 Cols) */}
+        <div className="lg:col-span-5 space-y-6">
+          {/* How Card Cycles Work */}
+          <div className="p-6 rounded-2xl bg-surface-container/85 border border-outline-variant/30 backdrop-blur-xl shadow-lg">
+            <h3 className="font-serif text-base font-bold text-on-surface mb-2 flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-primary" />
+              <span>Maharaja Card Cycle Progression</span>
+            </h3>
+            <p className="text-xs text-on-surface-variant leading-relaxed mb-4">
+              Every 5 dining visits completes a full cycle and awards an exclusive fine-dining perk. Once completed, your pass rolls over into Cycle 2, Cycle 3, and beyond with higher privileges!
+            </p>
+
+            {/* Cycle History Badges */}
+            <div className="space-y-2">
+              {allCards.map((c) => (
+                <div
+                  key={c._id}
+                  className={`p-3 rounded-xl border flex items-center justify-between text-xs transition-colors ${
+                    c.status === 'ACTIVE'
+                      ? 'bg-primary-container/15 border-primary/40 text-on-surface'
+                      : 'bg-surface-container-high/60 border-outline-variant/25 text-on-surface-variant'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[16px] text-primary">
+                      {c.status === 'ACTIVE' ? 'military_tech' : 'check_circle'}
+                    </span>
+                    <span className="font-semibold">Cycle #{c.cycleNumber}</span>
+                  </div>
+                  <div className="flex items-center gap-2 font-mono">
+                    <span>{c.currentStamps}/{c.targetStamps} Seals</span>
+                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                      c.status === 'ACTIVE' ? 'bg-primary-container/30 text-primary' : 'bg-green-500/20 text-green-300'
+                    }`}>
+                      {c.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Available Rewards Vault */}
+          <div className="p-6 rounded-2xl bg-surface-container/85 border border-outline-variant/30 backdrop-blur-xl shadow-lg">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-serif text-base font-bold text-on-surface flex items-center gap-2">
+                <Gift className="w-4 h-4 text-secondary" />
+                <span>Unlocked Reward Vouchers</span>
+              </h3>
+              <Link to="/rewards" className="text-xs text-secondary hover:text-primary transition-colors no-underline font-medium">
+                View All →
+              </Link>
+            </div>
+
+            {availableRedemptions.length === 0 ? (
+              <div className="p-5 rounded-xl bg-surface-container-lowest/60 border border-outline-variant/20 text-center">
+                <p className="text-xs text-on-surface-variant/70 leading-relaxed">
+                  No unredeemed vouchers at this moment. Complete your 5 seals to unlock your complimentary royal treat!
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {availableRedemptions.map((r) => (
+                  <div
+                    key={r._id}
+                    className="p-3.5 rounded-xl bg-surface-container-high/80 border border-primary/30 flex items-center justify-between"
+                  >
+                    <div>
+                      <p className="font-semibold text-on-surface text-xs">{r.rewardId?.title || 'Complimentary Perk'}</p>
+                      <p className="text-[11px] text-on-surface-variant mt-0.5">{r.rewardId?.description || 'Valid on your next dine-in'}</p>
+                    </div>
+                    <span className="px-2.5 py-1 rounded-full bg-green-500/20 text-green-300 border border-green-500/30 text-[10px] font-bold uppercase">
+                      Ready
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      )}
-
-      {/* Concierge Info Banner */}
-      <div className="bg-surface-container/70 rounded-2xl p-4 text-center border border-outline-variant/30 backdrop-blur-md">
-        <p className="text-xs text-on-surface-variant/80">
-          Present your card to the royal staff during your meal to collect your stamps.
-        </p>
       </div>
     </div>
   );

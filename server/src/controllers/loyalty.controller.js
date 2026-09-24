@@ -114,10 +114,36 @@ const searchGuest = async (req, res, next) => {
   }
 };
 
+// Guest triggers beginning of next cycle (Cycle 2, 3, etc.)
+const startNextCycle = async (req, res, next) => {
+  try {
+    const card = await loyaltyService.startNextCycle(req.user.id);
+    success(res, { card }, 'Next Maharaja Card cycle activated');
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Guest requests a stamp for their current dining visit
+const requestMyStamp = async (req, res, next) => {
+  try {
+    const stamp = await loyaltyService.requestStamp(
+      req.user.id,
+      null,
+      auditContext(req)
+    );
+    success(res, { stamp }, 'Dining seal requested from royal concierge', 201);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getMyCard,
   getMyStamps,
   getMyHistory,
+  startNextCycle,
+  requestMyStamp,
   requestStamp,
   approveStamp,
   rejectStamp,

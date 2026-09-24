@@ -13,7 +13,9 @@ const {
 
 // Guest endpoints
 router.get('/cards/me', authenticate, authorize(ROLES.GUEST), loyaltyController.getMyCard);
+router.post('/cards/next-cycle', authenticate, authorize(ROLES.GUEST), loyaltyController.startNextCycle);
 router.get('/stamps/me', authenticate, authorize(ROLES.GUEST), loyaltyController.getMyStamps);
+router.post('/stamps/request-my-stamp', authenticate, authorize(ROLES.GUEST), operationLimiter, loyaltyController.requestMyStamp);
 router.get('/history/me', authenticate, authorize(ROLES.GUEST), loyaltyController.getMyHistory);
 
 // Staff endpoints
