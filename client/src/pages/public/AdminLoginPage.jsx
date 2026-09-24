@@ -27,7 +27,7 @@ export default function AdminLoginPage() {
     }
   };
 
-  const handleQuickFill = (roleEmail, defaultPass = 'Admin@123456') => {
+  const handleQuickFill = (roleEmail, defaultPass = 'Admin@123') => {
     setEmail(roleEmail);
     setPassword(defaultPass);
     toast.success(`Loaded credentials for ${roleEmail}`);
@@ -151,14 +151,14 @@ export default function AdminLoginPage() {
             <div className="grid grid-cols-2 gap-2.5">
               <button
                 type="button"
-                onClick={() => handleQuickFill('admin@urbanmaharaja.com', 'Admin@123456')}
+                onClick={() => handleQuickFill('admin@urbanmaharaja.com', 'Admin@123')}
                 className="px-3 py-2 rounded-lg bg-surface-container-high/80 hover:bg-surface-container-highest border border-outline-variant/30 text-xs text-primary font-mono text-center transition-colors cursor-pointer"
               >
                 Super Admin
               </button>
               <button
                 type="button"
-                onClick={() => handleQuickFill('staff@urbanmaharaja.com', 'Staff@123456')}
+                onClick={() => handleQuickFill('staff@urbanmaharaja.com', 'Staff@123')}
                 className="px-3 py-2 rounded-lg bg-surface-container-high/80 hover:bg-surface-container-highest border border-outline-variant/30 text-xs text-secondary font-mono text-center transition-colors cursor-pointer"
               >
                 Staff Concierge
