@@ -58,20 +58,28 @@ const guestRequestOtp = async (identifier) => {
   let user = await User.findOne(query);
 
   if (!user) {
-    // Check if email already belongs to a staff/admin
+    // Check if email or phone already belongs to a staff/admin
     if (email) {
       const staffUser = await User.findOne({ email });
       if (staffUser && staffUser.role !== ROLES.GUEST) {
         throw new ValidationError('This email is associated with a staff terminal. Please use staff login.');
       }
     }
+    if (phone) {
+      const staffUser = await User.findOne({ phone });
+      if (staffUser && staffUser.role !== ROLES.GUEST) {
+        throw new ValidationError('This phone number is associated with a staff terminal. Please use staff login.');
+      }
+    }
 
-    user = await User.create({
-      name: email ? email.split('@')[0].replace(/[._-]/g, ' ') : 'Sovereign Guest',
-      email: email || undefined,
-      phone: phone || undefined,
+    const userData = {
+      name: email ? email.split('@')[0].replace(/[._-]/g, ' ') : `Patron ${phone ? phone.slice(-4) : ''}`,
       role: ROLES.GUEST,
-    });
+    };
+    if (email) userData.email = email;
+    if (phone) userData.phone = phone;
+
+    user = await User.create(userData);
 
     // Automatically provision their Digital Maharaja Card
     const { getOrCreateActiveCard } = require('./loyalty.service');
@@ -94,17 +102,9 @@ const guestRequestOtp = async (identifier) => {
   user.devOtpExpiry = expiry;
   await user.save();
 
-  if (env.isDevelopment) {
-    return {
-      message: email ? `Royal seal dispatched to ${email}` : `OTP sent to ${phone}`,
-      devOtp: otp,
-      email,
-      phone,
-    };
-  }
-
   return {
     message: email ? `Royal verification seal dispatched to ${email}` : `OTP dispatched to ${phone}`,
+    devOtp: env.isDevelopment ? otp : undefined,
     email,
     phone,
   };
@@ -122,19 +122,32 @@ const customerRegister = async ({ name, email, phone }) => {
   }
 
   const normalizedEmail = email.trim().toLowerCase();
-  const normalizedPhone = phone?.trim() || undefined;
+  const normalizedPhone = phone?.trim() ? phone.trim().replace(/\s+/g, '') : undefined;
 
-  // Check if email is already taken
-  let existingUser = await User.findOne({ email: normalizedEmail });
+  // 1. Check if email is reserved for staff
+  const staffWithEmail = await User.findOne({ email: normalizedEmail });
+  if (staffWithEmail && staffWithEmail.role !== ROLES.GUEST) {
+    throw new ValidationError('This email is reserved for staff terminal access.');
+  }
+
+  // 2. Check if a guest already exists with this email OR phone
+  const queryConditions = [{ email: normalizedEmail }];
+  if (normalizedPhone) {
+    queryConditions.push({ phone: normalizedPhone });
+  }
+
+  let existingUser = await User.findOne({
+    role: ROLES.GUEST,
+    $or: queryConditions,
+  });
+
   if (existingUser) {
-    if (existingUser.role !== ROLES.GUEST) {
-      throw new ValidationError('This email is reserved for staff authentication.');
-    }
-    // If already a guest, update name if needed & send OTP
-    if (name && (!existingUser.name || existingUser.name === 'Guest')) {
+    // If found, update profile details and dispatch OTP
+    if (name && (!existingUser.name || existingUser.name === 'Guest' || existingUser.name === 'Sovereign Guest')) {
       existingUser.name = name.trim();
     }
-    if (normalizedPhone && !existingUser.phone) {
+    existingUser.email = normalizedEmail;
+    if (normalizedPhone) {
       existingUser.phone = normalizedPhone;
     }
     await existingUser.save();
@@ -143,16 +156,20 @@ const customerRegister = async ({ name, email, phone }) => {
     const { getOrCreateActiveCard } = require('./loyalty.service');
     await getOrCreateActiveCard(existingUser._id);
 
-    return guestRequestOtp(normalizedEmail);
+    return guestRequestOtp({ email: normalizedEmail });
   }
 
-  // Create new guest patron
-  const user = await User.create({
+  // 3. Create new guest patron safely
+  const userData = {
     name: name.trim(),
     email: normalizedEmail,
-    phone: normalizedPhone,
     role: ROLES.GUEST,
-  });
+  };
+  if (normalizedPhone) {
+    userData.phone = normalizedPhone;
+  }
+
+  const user = await User.create(userData);
 
   // Automatically provision their Digital Maharaja Card
   const { getOrCreateActiveCard } = require('./loyalty.service');
@@ -170,6 +187,7 @@ const customerRegister = async ({ name, email, phone }) => {
     message: `Imperial account created. Verification OTP dispatched to ${normalizedEmail}`,
     devOtp: env.isDevelopment ? otp : undefined,
     email: normalizedEmail,
+    phone: normalizedPhone,
   };
 };
 

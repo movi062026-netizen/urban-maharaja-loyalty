@@ -31,35 +31,34 @@ export default function ReviewPage() {
   };
 
   return (
-    <div className="space-y-6 animate-slideUp">
-      <div className="bg-white rounded-2xl p-8 shadow-royal text-center">
-        <div className="w-16 h-16 rounded-full bg-royal-gold/10 flex items-center justify-center mx-auto mb-5">
-          <Heart className="w-8 h-8 text-royal-rose" />
+    <div className="space-y-6 animate-slideUp text-on-surface">
+      <div className="bg-surface-container/85 rounded-3xl p-8 border border-outline-variant/30 backdrop-blur-xl shadow-xl text-center">
+        <div className="w-16 h-16 rounded-2xl bg-primary-container/20 border border-primary/30 flex items-center justify-center mx-auto mb-5 text-primary shadow-lg">
+          <Heart className="w-8 h-8 text-primary" />
         </div>
 
-        <h1 className="font-serif text-2xl text-deep-brown mb-3">Loved Your Experience?</h1>
-        <p className="text-deep-brown/50 text-sm leading-relaxed mb-8 max-w-xs mx-auto">
-          Your kind words mean the world to us. Share your royal dining experience
-          and help others discover Urban Maharaja.
+        <h1 className="font-serif text-2xl text-on-surface font-bold mb-3">Loved Your Experience?</h1>
+        <p className="text-on-surface-variant text-xs sm:text-sm leading-relaxed mb-8 max-w-sm mx-auto">
+          Your kind words illuminate our dastarkhān. Share your royal dining impression on Google to guide fellow connoisseurs.
         </p>
 
         <button
           onClick={handleClick}
-          className="btn-gold inline-flex items-center gap-2 text-base px-8 py-3"
+          className="px-8 py-3.5 rounded-full bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all inline-flex items-center gap-2.5 cursor-pointer"
         >
-          <Star className="w-5 h-5" />
-          Leave a Google Review
+          <Star className="w-4 h-4 fill-surface-container-lowest" />
+          <span>Leave a Google Review</span>
           <ExternalLink className="w-4 h-4" />
         </button>
 
         {clicked && (
-          <p className="text-sm text-success mt-4 animate-fadeIn">Thank you for your feedback! 🙏</p>
+          <p className="text-xs text-green-300 font-semibold mt-4 animate-fadeIn">Thank you for your noble feedback! 🙏</p>
         )}
       </div>
 
-      <div className="bg-cream-dark rounded-xl p-4 text-center">
-        <p className="text-xs text-deep-brown/30">
-          You will be redirected to Google Maps to leave your review.
+      <div className="bg-surface-container/60 rounded-2xl p-4 text-center border border-outline-variant/30 backdrop-blur-md">
+        <p className="text-xs text-on-surface-variant/70">
+          You will be redirected to the official Urban Maharaja Google profile.
         </p>
       </div>
     </div>

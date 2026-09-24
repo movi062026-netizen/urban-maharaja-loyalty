@@ -22,7 +22,15 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Do NOT intercept or refresh auth endpoints
+    const isAuthEndpoint =
+      originalRequest?.url?.includes('/auth/admin/login') ||
+      originalRequest?.url?.includes('/auth/guest/verify-otp') ||
+      originalRequest?.url?.includes('/auth/guest/request-otp') ||
+      originalRequest?.url?.includes('/auth/guest/register') ||
+      originalRequest?.url?.includes('/auth/refresh');
+
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
       originalRequest._retry = true;
 
       try {

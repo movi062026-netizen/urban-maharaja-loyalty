@@ -6,10 +6,10 @@ export default function ProtectedRoute({ children, roles }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-cream">
+      <div className="min-h-screen flex items-center justify-center bg-background text-on-surface">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-royal-gold border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-deep-brown/60 font-serif">Loading...</p>
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-secondary font-serif tracking-wider uppercase text-xs">Authenticating Royal Credentials...</p>
         </div>
       </div>
     );
