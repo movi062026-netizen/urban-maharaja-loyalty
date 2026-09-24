@@ -2,7 +2,7 @@
 
 /* ── Urban Maharaja Regal Rosewood Design System ──────────────────────── */
 @theme {
-  /* Surface & Containers */
+  /* Surfaces & Containers */
   --color-background: #1e0f11;
   --color-surface: #1e0f11;
   --color-surface-dim: #1e0f11;
@@ -61,173 +61,113 @@
   --color-on-error: #690005;
   --color-on-error-container: #ffdad6;
 
-  /* Legacy aliases for backward compatibility */
-  --color-royal-rose: #de6b90;
-  --color-royal-rose-light: #ffb1c6;
-  --color-royal-gold: #e4c194;
-  --color-royal-gold-light: #ffddb4;
-  --color-deep-brown: #1e0f11;
-  --color-cream: #f9dbde;
-
   /* Fonts */
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-montserrat: 'Montserrat', sans-serif;
 }
 
-/* ── Typography Utility Classes ─────────────────────────────────────── */
-.font-display-lg {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(34px, 5.5vw, 56px);
-  line-height: 1.15;
-  letter-spacing: 0.04em;
+/* ── Typography Classes with Guaranteed Line Heights & Spacing ────────── */
+.font-display-lg,
+.text-display-lg {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  line-height: 1.28 !important;
+  letter-spacing: 0.02em;
   font-weight: 700;
 }
 
-.text-display-lg {
-  font-size: clamp(34px, 5.5vw, 56px);
-  line-height: 1.15;
-}
-
-.font-headline-lg {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(26px, 4vw, 38px);
-  line-height: 1.25;
-  letter-spacing: 0.02em;
+.font-headline-lg,
+.text-headline-lg {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.85rem, 4vw, 2.5rem);
+  line-height: 1.32 !important;
+  letter-spacing: 0.015em;
   font-weight: 600;
 }
 
-.text-headline-lg {
-  font-size: clamp(26px, 4vw, 38px);
-  line-height: 1.25;
-}
-
-.font-headline-md {
-  font-family: 'Playfair Display', serif;
-  font-size: 26px;
-  line-height: 34px;
+.font-headline-md,
+.text-headline-md {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.4rem, 3vw, 1.75rem);
+  line-height: 1.38 !important;
   letter-spacing: 0.01em;
   font-weight: 600;
 }
 
-.text-headline-md {
-  font-size: 26px;
-  line-height: 34px;
-}
-
-.font-headline-sm {
-  font-family: 'Playfair Display', serif;
-  font-size: 22px;
-  line-height: 30px;
+.font-headline-sm,
+.text-headline-sm {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.45rem);
+  line-height: 1.4 !important;
   font-weight: 600;
 }
 
-.text-headline-sm {
-  font-size: 22px;
-  line-height: 30px;
-}
-
-.font-title-lg {
-  font-family: 'Playfair Display', serif;
-  font-size: 20px;
-  line-height: 28px;
-  letter-spacing: 0.02em;
+.font-title-lg,
+.text-title-lg {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.25rem;
+  line-height: 1.5 !important;
   font-weight: 500;
 }
 
-.text-title-lg {
-  font-size: 20px;
-  line-height: 28px;
-}
-
-.font-title-md {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 17px;
-  line-height: 24px;
-  letter-spacing: 0.01em;
+.font-title-md,
+.text-title-md {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.55 !important;
   font-weight: 600;
 }
 
-.text-title-md {
-  font-size: 17px;
-  line-height: 24px;
-}
-
-.font-body-lg {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 16px;
-  line-height: 26px;
-  letter-spacing: 0.01em;
-  font-weight: 400;
-}
-
+.font-body-lg,
 .text-body-lg {
-  font-size: 16px;
-  line-height: 26px;
-}
-
-.font-body-md {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 14px;
-  line-height: 22px;
-  letter-spacing: 0.005em;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.75 !important;
   font-weight: 400;
 }
 
+.font-body-md,
 .text-body-md {
-  font-size: 14px;
-  line-height: 22px;
-}
-
-.font-body-sm {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 12px;
-  line-height: 18px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 0.925rem;
+  line-height: 1.7 !important;
   font-weight: 400;
 }
 
+.font-body-sm,
 .text-body-sm {
-  font-size: 12px;
-  line-height: 18px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 0.825rem;
+  line-height: 1.65 !important;
+  font-weight: 400;
 }
 
-.font-label-lg {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 13px;
-  line-height: 18px;
+.font-label-lg,
+.text-label-lg {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 0.8125rem;
+  line-height: 1.5 !important;
   letter-spacing: 0.14em;
   font-weight: 700;
 }
 
-.text-label-lg {
-  font-size: 13px;
-  line-height: 18px;
-}
-
-.font-label-md {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 11px;
-  line-height: 16px;
+.font-label-md,
+.text-label-md {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 0.725rem;
+  line-height: 1.5 !important;
   letter-spacing: 0.12em;
   font-weight: 600;
 }
 
-.text-label-md {
-  font-size: 11px;
-  line-height: 16px;
-}
-
-.font-label-sm {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 10px;
-  line-height: 14px;
+.font-label-sm,
+.text-label-sm {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 0.65rem;
+  line-height: 1.5 !important;
   letter-spacing: 0.18em;
   font-weight: 700;
-}
-
-.text-label-sm {
-  font-size: 10px;
-  line-height: 14px;
 }
 
 /* ── Material Symbols ───────────────────────────────────────────────── */
@@ -249,17 +189,23 @@
 }
 
 /* ── Base Styles ────────────────────────────────────────────────────── */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 html, body {
   background-color: #1e0f11;
   color: #f9dbde;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure headings never overlap subsequent text */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', Georgia, serif;
+  margin-top: 0;
+}
+
+p {
+  margin-top: 0;
 }
 
 /* Custom Scrollbar */
@@ -276,51 +222,4 @@ html, body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #de6b90;
-}
-
-/* ── Glassmorphism & Luxury Component Utilities ─────────────────────── */
-.glass-panel {
-  background: rgba(44, 27, 29, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(222, 107, 144, 0.25);
-  box-shadow: 0 16px 36px -8px rgba(24, 10, 12, 0.85);
-}
-
-.glass-card {
-  background: rgba(44, 27, 29, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(85, 66, 70, 0.4);
-  box-shadow: 0 20px 45px -10px rgba(24, 10, 12, 0.9);
-}
-
-.btn-royal-gradient {
-  background: linear-gradient(135deg, #de6b90 0%, #e882a3 50%, #e4c194 100%);
-  color: #180a0c;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  box-shadow: 0 8px 24px rgba(222, 107, 144, 0.35);
-  transition: all 0.3s ease;
-}
-.btn-royal-gradient:hover {
-  filter: brightness(1.12);
-  box-shadow: 0 12px 32px rgba(255, 177, 198, 0.5);
-  transform: translateY(-2px);
-}
-
-.btn-royal-outline {
-  background: rgba(55, 37, 39, 0.7);
-  border: 1px solid rgba(85, 66, 70, 0.5);
-  color: #f9dbde;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  backdrop-filter: blur(12px);
-  transition: all 0.3s ease;
-}
-.btn-royal-outline:hover {
-  border-color: rgba(255, 177, 198, 0.5);
-  color: #ffb1c6;
-  background: rgba(66, 48, 50, 0.9);
 }
