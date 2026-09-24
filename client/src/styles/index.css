@@ -189,13 +189,16 @@
 }
 
 /* ── Base Styles ────────────────────────────────────────────────────── */
-html, body {
+html, body, #root {
   background-color: #1e0f11;
   color: #f9dbde;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   scroll-behavior: smooth;
   margin: 0;
   padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Ensure headings never overlap subsequent text */

@@ -15,16 +15,18 @@ export default function HomePage() {
   };
 
   return (
-    <div className="w-full bg-background min-h-screen text-on-surface">
+    <div className="w-full max-w-full bg-background min-h-screen text-on-surface overflow-x-hidden">
       {/* ── 1. HERO GRAND ENTRY ───────────────────────────────────────── */}
-      <section className="relative w-full pt-12 pb-20 md:py-24 overflow-hidden bg-gradient-to-b from-surface-container-lowest via-surface to-surface-container-low">
+      <section className="relative w-full max-w-full pt-12 pb-20 md:py-24 overflow-hidden bg-gradient-to-b from-surface-container-lowest via-surface to-surface-container-low">
         {/* Ambient glowing orbs & regal rosewood aura */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[550px] bg-primary-container/15 rounded-full blur-[140px] pointer-events-none" />
-        <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] bg-tertiary-container/20 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute -bottom-10 right-1/4 w-[500px] h-[350px] bg-secondary-container/25 rounded-full blur-[110px] pointer-events-none" />
+        <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] max-w-full h-[550px] bg-primary-container/15 rounded-full blur-[140px]" />
+          <div className="absolute top-1/3 left-1/4 w-[400px] max-w-full h-[400px] bg-tertiary-container/20 rounded-full blur-[120px]" />
+          <div className="absolute -bottom-10 right-1/4 w-[500px] max-w-full h-[350px] bg-secondary-container/25 rounded-full blur-[110px]" />
+        </div>
 
         {/* Scalloped Palace Jharokha Arch Backdrop Silhouette in Rose Gold */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none select-none">
+        <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none select-none overflow-hidden">
           <svg className="w-full max-w-5xl h-auto" fill="none" viewBox="0 0 800 650" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M400 30 C 470 120, 560 170, 680 190 C 760 210, 780 280, 780 370 L 780 650 L 20 650 L 20 370 C 20 280, 40 210, 120 190 C 240 170, 330 120, 400 30 Z"
@@ -40,7 +42,7 @@ export default function HomePage() {
           </svg>
         </div>
 
-        <div className="relative max-w-[1200px] mx-auto px-6 lg:px-12 flex flex-col items-center text-center">
+        <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12 flex flex-col items-center text-center">
           {/* Regal Crest Artwork Emblem */}
           <div className="relative group cursor-pointer mb-6 transition-all duration-700 hover:scale-105">
             <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-primary-container/40 via-secondary/30 to-primary-container/40 blur-xl opacity-80 group-hover:opacity-100 transition-opacity" />
@@ -77,7 +79,7 @@ export default function HomePage() {
           </h1>
 
           <p className="font-sans text-base sm:text-lg text-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-10 px-4">
-            Dine like a Maharaja and immerse in centuries of regal Indian heritage, slow-cooked royal repasts, 24-karat saffron delicacies, and transcendent palace hospitality.
+            Dine like a Maharaja and immerse in centuries of regal Indian heritage, slow-cooked royal repasts, 24-karat saffron delicacies, and transcendent palace hospitality in Jaipur.
           </p>
 
           {/* Dual Luxury Call-to-Actions */}
@@ -132,8 +134,8 @@ export default function HomePage() {
       </section>
 
       {/* ── 2. THE IMPERIAL PHILOSOPHY & HERITAGE HIGHLIGHT ───────────── */}
-      <section className="relative w-full py-20 md:py-28 bg-surface-container-lowest overflow-hidden">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-12">
+      <section className="relative w-full max-w-full py-20 md:py-28 bg-surface-container-lowest overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
           {/* Section Tag */}
           <div className="flex flex-col items-center text-center mb-16">
             <span className="text-xs uppercase tracking-[0.25em] text-secondary font-semibold mb-2">
@@ -248,8 +250,8 @@ export default function HomePage() {
       </section>
 
       {/* ── 3. THE MAHARAJA LOYALTY CARD TEASER ──────────────────────── */}
-      <section className="relative w-full py-20 md:py-28 bg-gradient-to-b from-surface to-surface-container-lowest overflow-hidden">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-12">
+      <section className="relative w-full max-w-full py-20 md:py-28 bg-gradient-to-b from-surface to-surface-container-lowest overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary-container/40 border border-secondary/30 text-secondary mb-3">
               <span className="material-symbols-outlined text-[16px]">loyalty</span>
@@ -419,8 +421,8 @@ export default function HomePage() {
       </section>
 
       {/* ── 4. CHEF'S TASTING FLIGHT & SIGNATURE CREATIONS ────────────── */}
-      <section className="relative w-full py-20 md:py-28 bg-surface-container-low">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-12">
+      <section className="relative w-full max-w-full py-20 md:py-28 bg-surface-container-low overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
             <div>
               <span className="text-xs uppercase tracking-[0.22em] text-secondary font-semibold block mb-1">
@@ -592,12 +594,10 @@ export default function HomePage() {
       </section>
 
       {/* ── 5. CRITICS' ENCOMIUM & PALACE RESERVATION CONCIERGE ────────── */}
-      <section className="relative w-full py-20 md:py-28 bg-surface overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full border border-primary/5 opacity-40 pointer-events-none" />
-
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-12">
+      <section className="relative w-full max-w-full py-20 md:py-28 bg-surface overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
           {/* Gastronome Endorsement Card */}
-          <div className="mb-16 p-8 sm:p-12 lg:p-14 rounded-3xl bg-surface-container-low/80 border border-primary/25 backdrop-blur-2xl shadow-xl text-center relative">
+          <div className="mb-16 p-8 sm:p-12 lg:p-14 rounded-3xl bg-surface-container-low/80 border border-primary/25 backdrop-blur-2xl shadow-xl text-center relative overflow-hidden">
             <span className="material-symbols-outlined text-primary text-[42px] opacity-40 mb-3 inline-block">
               format_quote
             </span>
@@ -613,7 +613,7 @@ export default function HomePage() {
           </div>
 
           {/* Palace Table Reservation Bar */}
-          <div className="rounded-3xl p-6 sm:p-10 lg:p-12 bg-gradient-to-r from-surface-container-lowest via-surface-container-high to-surface-container-lowest border border-outline-variant/40 shadow-2xl">
+          <div className="rounded-3xl p-6 sm:p-10 lg:p-12 bg-gradient-to-r from-surface-container-lowest via-surface-container-high to-surface-container-lowest border border-outline-variant/40 shadow-2xl overflow-hidden">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
               <div className="max-w-md text-center lg:text-left">
                 <span className="text-xs uppercase tracking-[0.22em] text-primary font-bold block mb-1">
@@ -628,8 +628,8 @@ export default function HomePage() {
               </div>
 
               {/* Quick Interactive Booking Bar */}
-              <form onSubmit={handleQuickReservation} className="w-full lg:w-auto flex flex-col sm:flex-row flex-wrap items-center gap-3">
-                <div className="w-full sm:w-auto min-w-[150px] px-4 py-3 rounded-2xl bg-surface-container border border-outline-variant/40 text-on-surface flex items-center gap-2">
+              <form onSubmit={handleQuickReservation} className="w-full lg:w-auto flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3">
+                <div className="w-full sm:w-auto px-4 py-3 rounded-2xl bg-surface-container border border-outline-variant/40 text-on-surface flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-[20px]">calendar_today</span>
                   <input
                     className="bg-transparent text-xs text-on-surface focus:outline-none w-full cursor-pointer font-sans"
@@ -639,7 +639,7 @@ export default function HomePage() {
                   />
                 </div>
 
-                <div className="w-full sm:w-auto min-w-[140px] px-4 py-3 rounded-2xl bg-surface-container border border-outline-variant/40 text-on-surface flex items-center gap-2">
+                <div className="w-full sm:w-auto px-4 py-3 rounded-2xl bg-surface-container border border-outline-variant/40 text-on-surface flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-[20px]">group</span>
                   <select
                     className="bg-transparent text-xs text-on-surface focus:outline-none w-full cursor-pointer font-sans"
@@ -652,7 +652,7 @@ export default function HomePage() {
                   </select>
                 </div>
 
-                <div className="w-full sm:w-auto min-w-[160px] px-4 py-3 rounded-2xl bg-surface-container border border-outline-variant/40 text-on-surface flex items-center gap-2">
+                <div className="w-full sm:w-auto px-4 py-3 rounded-2xl bg-surface-container border border-outline-variant/40 text-on-surface flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-[20px]">chair</span>
                   <select
                     className="bg-transparent text-xs text-on-surface focus:outline-none w-full cursor-pointer font-sans"

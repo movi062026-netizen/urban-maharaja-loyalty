@@ -16,39 +16,39 @@ const restaurantSettingsSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      default: 'REPLACE_WITH_RESTAURANT_ADDRESS',
+      default: 'Plot No. AC-209, Central Spine, Mahal Road, Gyan Vihar, Jagatpura, Jaipur, Rajasthan 302017',
     },
     phone: {
       type: String,
-      default: 'REPLACE_WITH_PHONE',
+      default: '+91 98765 43210',
     },
     email: {
       type: String,
-      default: 'REPLACE_WITH_EMAIL',
+      default: 'concierge@urbanmaharaja.com',
     },
     openingHours: {
       type: mongoose.Schema.Types.Mixed,
       default: {
-        monday: { open: '12:00', close: '23:00' },
-        tuesday: { open: '12:00', close: '23:00' },
-        wednesday: { open: '12:00', close: '23:00' },
-        thursday: { open: '12:00', close: '23:00' },
-        friday: { open: '12:00', close: '23:00' },
-        saturday: { open: '12:00', close: '23:00' },
-        sunday: { open: '12:00', close: '23:00' },
+        monday: { open: '12:00', close: '23:30' },
+        tuesday: { open: '12:00', close: '23:30' },
+        wednesday: { open: '12:00', close: '23:30' },
+        thursday: { open: '12:00', close: '23:30' },
+        friday: { open: '12:00', close: '23:30' },
+        saturday: { open: '12:00', close: '23:30' },
+        sunday: { open: '12:00', close: '23:30' },
       },
     },
     googleReviewUrl: {
       type: String,
-      default: 'REPLACE_WITH_GOOGLE_REVIEW_URL',
+      default: 'https://search.google.com/local/writereview?placeid=ChIJMcfXSQDJbTkRFyg-4Qkdv-k',
     },
     googleMapsUrl: {
       type: String,
-      default: 'REPLACE_WITH_GOOGLE_MAPS_URL',
+      default: 'https://www.google.com/maps/place/URBAN+MAHARAJA/@26.8069227,75.8578327,17z/data=!3m1!4b1!4m6!3m5!1s0x396dc90049d7c731:0xe9bd1d09e13e2817!8m2!3d26.8069227!4d75.8578327!16s%2Fg%2F11w2_b84t7',
     },
     reservationUrl: {
       type: String,
-      default: 'REPLACE_WITH_RESERVATION_URL',
+      default: 'http://localhost:5173/contact',
     },
     // Loyalty program configuration
     loyaltyConfig: {

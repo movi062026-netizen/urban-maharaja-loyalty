@@ -101,7 +101,7 @@ export default function Footer() {
                 <span className="material-symbols-outlined text-primary text-[18px] mt-0.5">location_on</span>
                 <div>
                   <p className="text-on-surface font-medium mb-0.5">Imperial Pavilion</p>
-                  <p className="text-on-surface-variant/80">Heritage Palace Boulevard, Suite 700</p>
+                  <p className="text-on-surface-variant/80">Plot No. AC-209, Central Spine, Mahal Road, Jagatpura, Jaipur, Rajasthan 302017</p>
                 </div>
               </div>
               <div className="flex items-start gap-2.5">
