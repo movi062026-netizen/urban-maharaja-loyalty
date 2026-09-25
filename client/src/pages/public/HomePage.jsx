@@ -432,7 +432,7 @@ export default function HomePage() {
                     </span>
                   </div>
                   <div className="absolute bottom-3 right-4 font-serif text-2xl text-primary font-bold">
-                    $38
+                    ₹695
                   </div>
                 </div>
 
@@ -481,7 +481,7 @@ export default function HomePage() {
                     </span>
                   </div>
                   <div className="absolute bottom-3 right-4 font-serif text-2xl text-primary font-bold">
-                    $52
+                    ₹895
                   </div>
                 </div>
 
@@ -530,7 +530,7 @@ export default function HomePage() {
                     </span>
                   </div>
                   <div className="absolute bottom-3 right-4 font-serif text-2xl text-primary font-bold">
-                    $46
+                    ₹845
                   </div>
                 </div>
 
