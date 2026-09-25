@@ -20,10 +20,14 @@ export default function ProtectedRoute({ children, roles }) {
   }
 
   if (roles && !roles.includes(user.role)) {
-    if (user.role === 'ADMIN' || user.role === 'STAFF') {
-      return <Navigate to="/admin" replace />;
+    // Cleanly distinguish dashboards by role
+    if (user.role === 'ADMIN') {
+      return <Navigate to="/admin/dashboard" replace />;
     }
-    return <Navigate to="/maharaja-card" replace />;
+    if (user.role === 'STAFF') {
+      return <Navigate to="/staff/dashboard" replace />;
+    }
+    return <Navigate to="/guest/card" replace />;
   }
 
   return children;

@@ -7,15 +7,15 @@ import {
 } from 'lucide-react';
 
 const sidebarLinks = [
-  { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/admin/guests', label: 'Guests & Patrons', icon: Users },
-  { to: '/admin/stamps', label: 'Stamp Desk', icon: Stamp },
-  { to: '/admin/rewards', label: 'Reward Catalog', icon: Gift },
-  { to: '/admin/redemptions', label: 'Redemptions', icon: ShoppingBag },
-  { to: '/admin/analytics', label: 'Analytics & Trends', icon: BarChart3 },
-  { to: '/admin/staff', label: 'Staff Credentials', icon: UserCog, adminOnly: true },
-  { to: '/admin/settings', label: 'Platform Settings', icon: Settings, adminOnly: true },
-  { to: '/admin/audit-logs', label: 'Audit Trail', icon: ScrollText, adminOnly: true },
+  { to: '/admin/dashboard', label: 'Executive Dashboard', icon: LayoutDashboard },
+  { to: '/admin/staff', label: 'Staff Credentials', icon: UserCog },
+  { to: '/admin/rewards', label: 'Rewards Manager', icon: Gift },
+  { to: '/admin/analytics', label: 'Palace Analytics', icon: BarChart3 },
+  { to: '/admin/settings', label: 'Platform Settings', icon: Settings },
+  { to: '/admin/audit-logs', label: 'Security & Audit', icon: ScrollText },
+  { to: '/admin/guests', label: 'Patrons Registry', icon: Users },
+  { to: '/admin/stamps', label: 'Master Stamp Desk', icon: Stamp },
+  { to: '/admin/redemptions', label: 'Master Redemptions', icon: ShoppingBag },
 ];
 
 export default function AdminLayout() {

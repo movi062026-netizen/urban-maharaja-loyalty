@@ -5,6 +5,8 @@ import MaharajaCard from '../../components/loyalty/MaharajaCard';
 import { Gift, ArrowRight, Stamp, Sparkles, CheckCircle2, ShieldCheck, History, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import GuestTierBadge from '../../components/guest/GuestTierBadge';
+import GuestStampTracker from '../../components/guest/GuestStampTracker';
 
 export default function MaharajaCardPage() {
   const { user } = useAuth();
@@ -118,9 +120,12 @@ export default function MaharajaCardPage() {
         </div>
       </div>
 
-      {/* Main Grid: Left Card, Right Progress & Rewards */}
+      {/* Imperial Tier Badge Banner */}
+      <GuestTierBadge totalApprovedStamps={totalApprovedStamps} />
+
+      {/* Main Grid: Left Card & Stamp Tracker, Right Cycles & Rewards */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Digital Card & Actions (7 Cols) */}
+        {/* Left Column: Digital Card & Stamp Tracker (7 Cols) */}
         <div className="lg:col-span-7 space-y-6">
           <div className="flex justify-center">
             <MaharajaCard
@@ -132,33 +137,15 @@ export default function MaharajaCardPage() {
             />
           </div>
 
-          {/* Action Row: Request Stamp for Visit */}
-          <div className="p-5 rounded-2xl bg-surface-container/85 border border-outline-variant/30 backdrop-blur-xl shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-primary-container/20 border border-primary/30 flex items-center justify-center text-primary shrink-0">
-                <Stamp className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-serif font-bold text-on-surface text-sm">Dining at Urban Maharaja Right Now?</h3>
-                <p className="text-xs text-on-surface-variant">Request a seal directly to your card for your server to confirm</p>
-              </div>
-            </div>
-
-            <button
-              onClick={handleRequestStamp}
-              disabled={requestingStamp || isCardFinished}
-              className="w-full sm:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 shrink-0"
-            >
-              {requestingStamp ? (
-                <span className="w-4 h-4 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <>
-                  <Stamp className="w-4 h-4" />
-                  <span>Request Visit Seal</span>
-                </>
-              )}
-            </button>
-          </div>
+          {/* Interactive Stamp & Seal Collection Tracker */}
+          <GuestStampTracker
+            currentStamps={card?.currentStamps || 0}
+            targetStamps={card?.targetStamps || 5}
+            cycleNumber={card?.cycleNumber || 1}
+            onRequestStamp={handleRequestStamp}
+            requesting={requestingStamp}
+            isComplete={isCardFinished}
+          />
 
           {/* Cycle Completed Milestone Celebration */}
           {isCardFinished && (
@@ -174,7 +161,7 @@ export default function MaharajaCardPage() {
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                 <Link
-                  to="/rewards"
+                  to="/guest/rewards"
                   className="px-5 py-2.5 rounded-xl bg-primary-container text-surface-container-lowest text-xs uppercase tracking-wider font-bold hover:brightness-110 shadow no-underline inline-flex items-center gap-1.5"
                 >
                   <Gift className="w-4 h-4" />
@@ -270,7 +257,7 @@ export default function MaharajaCardPage() {
                 <Gift className="w-4 h-4 text-secondary" />
                 <span>Unlocked Reward Vouchers</span>
               </h3>
-              <Link to="/rewards" className="text-xs text-secondary hover:text-primary transition-colors no-underline font-medium">
+              <Link to="/guest/rewards" className="text-xs text-secondary hover:text-primary transition-colors no-underline font-medium">
                 View All →
               </Link>
             </div>

@@ -18,10 +18,12 @@ export default function Navbar() {
   const handleUserClick = () => {
     if (!user) {
       navigate('/login');
-    } else if (user.role === 'ADMIN' || user.role === 'STAFF') {
+    } else if (user.role === 'ADMIN') {
       navigate('/admin/dashboard');
+    } else if (user.role === 'STAFF') {
+      navigate('/staff/dashboard');
     } else {
-      navigate('/maharaja-card');
+      navigate('/guest/card');
     }
   };
 
@@ -93,10 +95,10 @@ export default function Navbar() {
             </Link>
           ) : (
             <Link
-              to={user.role === 'ADMIN' || user.role === 'STAFF' ? '/admin/dashboard' : '/maharaja-card'}
+              to={user.role === 'ADMIN' ? '/admin/dashboard' : user.role === 'STAFF' ? '/staff/dashboard' : '/guest/card'}
               className="hidden md:inline-flex items-center justify-center text-xs uppercase tracking-[0.14em] px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest font-bold shadow-md hover:brightness-110 transition-all no-underline whitespace-nowrap"
             >
-              {user.role === 'ADMIN' ? 'Admin Portal' : user.role === 'STAFF' ? 'Staff Portal' : 'My Card'}
+              {user.role === 'ADMIN' ? 'Admin Portal' : user.role === 'STAFF' ? 'Staff Portal' : 'My Maharaja Card'}
             </Link>
           )}
 
@@ -170,11 +172,11 @@ export default function Navbar() {
             ) : (
               <div className="flex gap-2">
                 <Link
-                  to={user.role === 'ADMIN' || user.role === 'STAFF' ? '/admin/dashboard' : '/maharaja-card'}
+                  to={user.role === 'ADMIN' ? '/admin/dashboard' : user.role === 'STAFF' ? '/staff/dashboard' : '/guest/card'}
                   onClick={() => setIsOpen(false)}
                   className="flex-1 text-center py-3 rounded-full bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest text-xs uppercase tracking-[0.16em] font-bold shadow-lg no-underline"
                 >
-                  Dashboard
+                  {user.role === 'ADMIN' ? 'Admin Portal' : user.role === 'STAFF' ? 'Staff Portal' : 'My Maharaja Card'}
                 </Link>
                 <button
                   onClick={() => {

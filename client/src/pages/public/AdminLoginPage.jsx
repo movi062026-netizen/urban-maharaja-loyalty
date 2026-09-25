@@ -18,8 +18,14 @@ export default function AdminLoginPage() {
     try {
       const { data } = await authApi.adminLogin(email, password);
       login(data.data.user, data.data.tokens);
-      toast.success(`Imperial access granted. Welcome, ${data.data.user.name}`);
-      navigate('/admin/dashboard');
+      toast.success(`Access granted. Welcome, ${data.data.user.name}`);
+      if (data.data.user.role === 'ADMIN') {
+        navigate('/admin/dashboard');
+      } else if (data.data.user.role === 'STAFF') {
+        navigate('/staff/dashboard');
+      } else {
+        navigate('/guest/card');
+      }
     } catch (error) {
       toast.error(error.response?.data?.error?.message || 'Authentication failed. Check credentials.');
     } finally {

@@ -211,7 +211,7 @@ export default function LoginPage() {
       const { data } = await authApi.verifyOtp(identifier, otpCode.trim());
       login(data.data.user, data.data.tokens);
       toast.success(`Welcome to the Court of Urban Maharaja, ${data.data.user.name || 'Noble Patron'}!`);
-      navigate('/maharaja-card');
+      navigate('/guest/card');
     } catch (error) {
       toast.error(error.response?.data?.error?.message || 'Invalid or expired OTP code');
     } finally {

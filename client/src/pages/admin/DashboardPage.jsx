@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { adminApi } from '../../services/api';
 import { Users, Stamp, Gift, ShoppingBag, Star, CreditCard, BarChart3, TrendingUp } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from 'recharts';
+import AdminMetricCard from '../../components/admin/AdminMetricCard';
 import toast from 'react-hot-toast';
 
 export default function DashboardPage() {
@@ -62,16 +63,14 @@ export default function DashboardPage() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {statCards.map(({ label, value, icon: Icon, color }) => (
-          <div key={label} className="bg-surface-container/85 rounded-2xl p-5 border border-outline-variant/30 backdrop-blur-xl shadow-lg hover:border-primary/40 transition-colors">
-            <div className="flex items-center justify-between mb-3">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
-                <Icon className="w-5 h-5" />
-              </div>
-            </div>
-            <p className="text-2xl font-bold font-serif text-on-surface">{value || 0}</p>
-            <p className="text-xs text-on-surface-variant mt-1 font-medium">{label}</p>
-          </div>
+        {statCards.map(({ label, value, icon, color }) => (
+          <AdminMetricCard
+            key={label}
+            title={label}
+            value={value || 0}
+            icon={icon}
+            color={color.includes('secondary') ? 'secondary' : color.includes('green') ? 'green' : color.includes('amber') ? 'amber' : 'primary'}
+          />
         ))}
       </div>
 
