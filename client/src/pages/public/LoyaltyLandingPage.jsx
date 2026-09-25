@@ -1,4 +1,5 @@
 import { Link, useSearchParams } from 'react-router-dom';
+import MaharajaCard from '../../components/loyalty/MaharajaCard';
 
 const tiers = [
   {
@@ -102,51 +103,15 @@ export default function LoyaltyLandingPage() {
 
       {/* ── Virtual Card Live Preview ─────────────────────────────────── */}
       <section className="relative w-full py-16 bg-surface-container-lowest overflow-hidden">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-12">
-          <div className="max-w-md mx-auto mb-16">
-            <div className="relative w-full aspect-[1.58/1] rounded-3xl p-7 bg-gradient-to-br from-surface-bright via-surface-container to-surface-container-lowest border border-primary-container/50 shadow-[0_24px_60px_rgba(0,0,0,0.9)] overflow-hidden transition-all duration-500 hover:scale-105">
-              <div className="absolute -top-14 -right-14 w-52 h-52 bg-primary-container/30 rounded-full blur-2xl" />
-
-              <div className="relative h-full flex flex-col justify-between z-10">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-primary text-[30px]">crown</span>
-                    <span className="font-headline-sm text-title-md text-primary font-bold tracking-widest uppercase">
-                      Maharaja
-                    </span>
-                  </div>
-                  <span className="font-label-sm text-label-sm uppercase tracking-[0.2em] px-3 py-1 rounded-full bg-primary-container/30 border border-primary/30 text-primary">
-                    Kohinoor Tier
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-4 my-auto">
-                  <div className="w-11 h-8 rounded bg-primary-container/40 border border-primary/50 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-on-surface text-[19px]">contactless</span>
-                  </div>
-                  <div className="flex gap-2.5">
-                    <span className="w-3 h-3 rounded-full bg-primary animate-pulse" />
-                    <span className="w-3 h-3 rounded-full bg-primary" />
-                    <span className="w-3 h-3 rounded-full bg-primary" />
-                    <span className="w-3 h-3 rounded-full bg-primary" />
-                    <span className="w-3 h-3 rounded-full bg-primary/40" />
-                  </div>
-                </div>
-
-                <div className="flex items-end justify-between">
-                  <div>
-                    <p className="font-label-sm text-label-sm text-secondary uppercase tracking-[0.18em]">
-                      Imperial Passholder
-                    </p>
-                    <p className="font-title-md text-title-md text-on-surface font-mono tracking-wider">
-                      ROYAL GUEST
-                    </p>
-                  </div>
-                  <span className="font-label-sm text-label-sm text-primary">EXP 12/28</span>
-                </div>
-              </div>
-            </div>
-            <p className="text-center font-label-sm uppercase tracking-[0.2em] text-on-surface-variant/70 mt-4">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
+          <div className="max-w-md mx-auto mb-16 flex flex-col items-center">
+            <MaharajaCard
+              guestName="Imperial Passholder"
+              currentStamps={4}
+              targetStamps={5}
+              cycleNumber={1}
+            />
+            <p className="text-center text-xs uppercase tracking-[0.2em] text-secondary font-mono mt-4">
               Real-time digital pass stored in your mobile browser
             </p>
           </div>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import MaharajaCard from '../../components/loyalty/MaharajaCard';
 import toast from 'react-hot-toast';
 
 export default function HomePage() {
@@ -326,45 +327,14 @@ export default function HomePage() {
           {/* Interactive Maharaja Metallic Card Showcase & Tier Preview */}
           <div className="rounded-3xl p-6 sm:p-10 lg:p-12 bg-surface-container-high/70 border border-outline-variant/40 backdrop-blur-2xl shadow-[0_24px_50px_rgba(24,10,12,0.95)]">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              {/* Virtual Card Graphic */}
-              <div className="lg:col-span-5 flex justify-center">
-                <div className="relative w-full max-w-sm aspect-[1.58/1] min-h-[220px] rounded-2xl p-6 bg-gradient-to-br from-surface-bright via-surface-container to-surface-container-lowest border border-primary-container/40 shadow-2xl overflow-hidden transition-all duration-500 hover:scale-105">
-                  <div className="absolute -top-12 -right-12 w-48 h-48 bg-primary-container/25 rounded-full blur-2xl" />
-                  <div className="relative h-full flex flex-col justify-between z-10">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-primary text-[26px]">crown</span>
-                        <span className="font-serif text-base text-primary font-bold tracking-widest uppercase">
-                          Maharaja
-                        </span>
-                      </div>
-                      <span className="text-[10px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-full bg-primary-container/30 border border-primary/30 text-primary font-bold">
-                        Kohinoor Tier
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-4 my-auto">
-                      <div className="w-10 h-7 rounded bg-primary-container/40 border border-primary/50 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-on-surface text-[17px]">contactless</span>
-                      </div>
-                      <div className="flex gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" />
-                        <span className="w-2.5 h-2.5 rounded-full bg-primary" />
-                        <span className="w-2.5 h-2.5 rounded-full bg-primary" />
-                        <span className="w-2.5 h-2.5 rounded-full bg-primary/40" />
-                        <span className="w-2.5 h-2.5 rounded-full bg-primary/40" />
-                      </div>
-                    </div>
-
-                    <div className="flex items-end justify-between">
-                      <div>
-                        <p className="text-[10px] text-secondary uppercase tracking-[0.18em] mb-0.5">Imperial Member</p>
-                        <p className="text-sm text-on-surface font-mono tracking-wider font-semibold">RAVI PRAKASH SINGH</p>
-                      </div>
-                      <span className="text-[11px] text-primary font-mono">EXP 12/28</span>
-                    </div>
-                  </div>
-                </div>
+              {/* Virtual Glassmorphic Card Graphic */}
+              <div className="lg:col-span-5 flex justify-center w-full">
+                <MaharajaCard
+                  guestName="Ravi Prakash Singh"
+                  currentStamps={3}
+                  targetStamps={5}
+                  cycleNumber={1}
+                />
               </div>
 
               {/* Tier Specifications & Quick CTA */}
