@@ -1,0 +1,67 @@
+services:
+  # ── Backend API Service ─────────────────────────────────────────────
+  backend:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.backend
+    container_name: urban-maharaja-api
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: development
+      PORT: 5000
+      MONGODB_URI: mongodb://mongodb:27017/urban-maharaja
+      JWT_ACCESS_SECRET: dev-access-secret-urban-maharaja-2026
+      JWT_REFRESH_SECRET: dev-refresh-secret-urban-maharaja-2026
+      JWT_ACCESS_EXPIRY: 15m
+      JWT_REFRESH_EXPIRY: 7d
+      CLIENT_URL: http://localhost:5173
+      LOG_LEVEL: info
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - urban-maharaja-net
+
+  # ── MongoDB Service ─────────────────────────────────────────────────
+  mongodb:
+    image: mongo:7.0
+    container_name: urban-maharaja-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: urban-maharaja
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - urban-maharaja-net
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── Frontend Web Client ─────────────────────────────────────────────
+  client:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.client
+    container_name: urban-maharaja-web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - urban-maharaja-net
+
+networks:
+  urban-maharaja-net:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local

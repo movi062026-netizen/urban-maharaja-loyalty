@@ -1,0 +1,45 @@
+# ==============================================================================
+# Urban Maharaja Royalty Platform — Render Blueprint Specification
+# Docs: https://render.com/docs/blueprint-spec
+# ==============================================================================
+
+services:
+  # ── Backend API Web Service ──────────────────────────────────────────
+  - type: web
+    name: urban-maharaja-api
+    runtime: docker
+    dockerfilePath: server/Dockerfile
+    dockerContext: server
+    plan: free
+    region: oregon
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        sync: false # Enter your MongoDB Atlas connection URI
+      - key: JWT_ACCESS_SECRET
+        generateValue: true # Render automatically generates a secure 256-bit secret
+      - key: JWT_REFRESH_SECRET
+        generateValue: true # Render automatically generates a secure 256-bit secret
+      - key: JWT_ACCESS_EXPIRY
+        value: 15m
+      - key: JWT_REFRESH_EXPIRY
+        value: 7d
+      - key: CLIENT_URL
+        sync: false # Set to your frontend URL (e.g. https://urbanmaharaja.com or Render URL)
+      - key: LOG_LEVEL
+        value: info
+      - key: GOOGLE_REVIEW_URL
+        sync: false
+      - key: GOOGLE_MAPS_URL
+        sync: false
+      - key: RESERVATION_URL
+        sync: false
+      - key: UPSTASH_REDIS_URL
+        sync: false
+      - key: UPSTASH_REDIS_TOKEN
+        sync: false

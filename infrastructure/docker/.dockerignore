@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log
+.git
+.github
+.env
+.env.*
+!.env.example
+coverage
+tests
+dist
+.vscode
+.idea
+*.md
+!README.md
+client/node_modules
+server/node_modules
