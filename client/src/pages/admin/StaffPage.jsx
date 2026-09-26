@@ -253,7 +253,7 @@ export default function StaffPage() {
 
                 <div className="flex gap-2">
                   <button
-                    onClick={() => handleCopyCredentials(`Urban Maharaja Terminal Login\nPortal: http://localhost:5173/admin/login\nEmail: ${createdCredential.email}\nPassword: ${createdCredential.password}`)}
+                    onClick={() => handleCopyCredentials(`Urban Maharaja Terminal Login\nPortal: ${window.location.origin}/staff/login\nEmail: ${createdCredential.email}\nPassword: ${createdCredential.password}`)}
                     className="flex-1 py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Copy className="w-4 h-4" />

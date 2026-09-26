@@ -75,7 +75,7 @@ export default function StaffCredentialModal({ isOpen, onClose, onSubmit, loadin
             <div className="p-4 rounded-2xl bg-surface-container-lowest font-mono text-xs space-y-2.5 border border-outline-variant/30">
               <div className="flex justify-between">
                 <span className="text-outline">Portal URL:</span>
-                <span className="text-primary font-bold">http://localhost:5173/admin/login</span>
+                <span className="text-primary font-bold">{window.location.origin}/staff/login</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-outline">Staff Member:</span>
@@ -100,7 +100,7 @@ export default function StaffCredentialModal({ isOpen, onClose, onSubmit, loadin
                 type="button"
                 onClick={() =>
                   handleCopy(
-                    `Urban Maharaja Terminal Login\nPortal: http://localhost:5173/admin/login\nEmail: ${createdCredential.email}\nPassword: ${createdCredential.password}`
+                    `Urban Maharaja Terminal Login\nPortal: ${window.location.origin}/staff/login\nEmail: ${createdCredential.email}\nPassword: ${createdCredential.password}`
                   )
                 }
                 className="flex-1 py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer"
