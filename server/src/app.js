@@ -42,6 +42,28 @@ app.use('/api/', apiLimiter);
 // ── API Routes ────────────────────────────────────────
 app.use('/api/v1', routes);
 
+// ── Root Gateway & Healthcheck ────────────────────────
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: '🏰 Urban Maharaja API Gateway is Live & Operational',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/v1/health',
+      api: '/api/v1',
+    },
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Urban Maharaja API is healthy',
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // ── Error Handling ────────────────────────────────────
 app.use(notFoundHandler);
 app.use(errorHandler);
