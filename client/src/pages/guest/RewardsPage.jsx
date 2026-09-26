@@ -47,7 +47,7 @@ export default function RewardsPage() {
             Guest Privileges
           </span>
         </div>
-        <h1 className="font-serif text-2xl sm:text-3xl text-on-surface font-bold">Your Royal Rewards</h1>
+        <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-on-surface font-bold">Your Royal Rewards</h1>
         <p className="text-xs text-on-surface-variant mt-1">
           Special culinary delights, vintage treats, and imperial dining honors unlocked with your stamps
         </p>

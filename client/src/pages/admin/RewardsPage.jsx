@@ -176,7 +176,7 @@ export default function RewardsPage() {
         ) : rewards.map((r) => (
           <div
             key={r._id}
-            className={`bg-surface-container/85 rounded-2xl p-5 border border-outline-variant/30 backdrop-blur-xl shadow-lg flex flex-col justify-between transition-all ${
+            className={`glass-panel-elevated p-4 sm:p-5 flex flex-col justify-between transition-all ${
               !r.isActive ? 'opacity-60 border-dashed' : ''
             }`}
           >

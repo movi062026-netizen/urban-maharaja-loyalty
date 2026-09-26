@@ -36,7 +36,7 @@ export default function ProfilePage() {
         <p className="text-xs text-on-surface-variant mt-1">Manage your royal account details and contact preferences</p>
       </div>
 
-      <div className="bg-surface-container/85 rounded-3xl p-6 sm:p-8 border border-outline-variant/30 backdrop-blur-xl shadow-xl">
+      <div className="glass-card-royal p-4 sm:p-6 lg:p-8">
         <div className="flex items-center gap-4 mb-6 pb-5 border-b border-outline-variant/30">
           <div className="w-14 h-14 rounded-2xl bg-primary-container/20 border border-primary/30 flex items-center justify-center text-primary shadow-md">
             <User className="w-7 h-7" />

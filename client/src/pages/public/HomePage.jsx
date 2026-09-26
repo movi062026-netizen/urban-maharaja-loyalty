@@ -16,9 +16,9 @@ export default function HomePage() {
   };
 
   return (
-    <div className="w-full max-w-full bg-background min-h-screen text-on-surface overflow-x-hidden">
+    <article className="w-full max-w-full bg-background min-h-screen text-on-surface overflow-x-hidden">
       {/* ── 1. HERO GRAND ENTRY ───────────────────────────────────────── */}
-      <section className="relative w-full max-w-full pt-12 pb-20 md:py-24 overflow-hidden bg-gradient-to-b from-surface-container-lowest via-surface to-surface-container-low">
+      <section className="relative w-full max-w-full pt-8 sm:pt-12 pb-16 sm:pb-20 md:py-24 overflow-hidden bg-gradient-to-b from-surface-container-lowest via-surface to-surface-container-low" aria-label="Hero">
         {/* Ambient glowing orbs & regal rosewood aura */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] max-w-full h-[550px] bg-primary-container/15 rounded-full blur-[140px]" />
@@ -43,7 +43,7 @@ export default function HomePage() {
           </svg>
         </div>
 
-        <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12 flex flex-col items-center text-center">
+        <div className="relative max-w-[1200px] mx-auto px-3 sm:px-6 lg:px-12 flex flex-col items-center text-center">
           {/* Regal Crest Artwork Emblem */}
           <div className="relative group cursor-pointer mb-6 transition-all duration-700 hover:scale-105">
             <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-primary-container/40 via-secondary/30 to-primary-container/40 blur-xl opacity-80 group-hover:opacity-100 transition-opacity" />
@@ -72,22 +72,22 @@ export default function HomePage() {
           </div>
 
           {/* Stately Hero Headline */}
-          <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl text-on-surface max-w-4xl tracking-tight leading-[1.25] mb-6 font-bold">
+          <h1 className="font-serif text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-on-surface max-w-4xl tracking-tight leading-[1.2] sm:leading-[1.25] mb-5 sm:mb-6 font-bold">
             Where Royalty Meets
             <span className="block mt-2 sm:mt-3 italic bg-gradient-to-r from-primary via-primary-container to-secondary bg-clip-text text-transparent font-normal drop-shadow-[0_2px_14px_rgba(222,107,144,0.3)]">
               Culinary Excellence
             </span>
           </h1>
 
-          <p className="font-sans text-base sm:text-lg text-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-10 px-4">
+          <p className="font-sans text-sm sm:text-base lg:text-lg text-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-8 sm:mb-10 px-2 sm:px-4">
             Dine like a Maharaja and immerse in centuries of regal Indian heritage, slow-cooked royal repasts, 24-karat saffron delicacies, and transcendent palace hospitality in Jaipur.
           </p>
 
           {/* Dual Luxury Call-to-Actions */}
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5 mb-14">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 mb-10 sm:mb-14 w-full">
             <Link
               to="/loyalty"
-              className="relative group inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest text-xs sm:text-sm uppercase tracking-[0.16em] font-bold shadow-[0_12px_28px_rgba(222,107,144,0.35)] hover:shadow-[0_16px_36px_rgba(255,177,198,0.5)] hover:scale-105 transition-all duration-300 no-underline"
+              className="relative group inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-full glass-btn-primary text-[10px] sm:text-xs lg:text-sm uppercase tracking-[0.14em] sm:tracking-[0.16em] shadow-[0_12px_28px_rgba(222,107,144,0.35)] hover:shadow-[0_16px_36px_rgba(255,177,198,0.5)] hover:scale-105 transition-all duration-300 no-underline w-full sm:w-auto justify-center"
             >
               <span className="material-symbols-outlined text-[20px]">military_tech</span>
               <span>Explore Maharaja Card</span>
@@ -98,7 +98,7 @@ export default function HomePage() {
 
             <Link
               to="/menu"
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-surface-container-high/70 hover:bg-surface-container-highest text-on-surface hover:text-primary text-xs sm:text-sm uppercase tracking-[0.16em] border border-outline-variant/50 backdrop-blur-xl shadow-lg hover:shadow-xl hover:border-primary/40 transition-all duration-300 no-underline font-semibold"
+              className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-full glass-btn-secondary text-[10px] sm:text-xs lg:text-sm uppercase tracking-[0.14em] sm:tracking-[0.16em] transition-all duration-300 no-underline w-full sm:w-auto justify-center"
             >
               <span className="material-symbols-outlined text-[20px] text-primary">restaurant_menu</span>
               <span>View Royal Menu</span>
@@ -106,16 +106,16 @@ export default function HomePage() {
           </div>
 
           {/* Accolade Ribbon Strip with Rose-Gold Frosted Finish */}
-          <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
-            <div className="flex items-center gap-4 px-6 py-4 rounded-2xl bg-surface-container/70 border border-primary/20 backdrop-blur-md shadow-md text-left">
-              <span className="material-symbols-outlined text-primary text-[24px] shrink-0">workspace_premium</span>
+          <div className="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4">
+            <div className="flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 rounded-2xl glass-surface text-left">
+              <span className="material-symbols-outlined text-primary text-[20px] sm:text-[24px] shrink-0" aria-hidden="true">workspace_premium</span>
               <div>
-                <p className="text-[11px] font-sans uppercase tracking-[0.2em] text-secondary font-semibold mb-0.5">Honor</p>
-                <p className="text-base font-serif font-bold text-on-surface leading-snug">Michelin Guide 2025</p>
+                <p className="text-[10px] sm:text-[11px] font-sans uppercase tracking-[0.2em] text-secondary font-semibold mb-0.5">Honor</p>
+                <p className="text-sm sm:text-base font-serif font-bold text-on-surface leading-snug">Michelin Guide 2025</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 px-6 py-4 rounded-2xl bg-surface-container/70 border border-primary/20 backdrop-blur-md shadow-md text-left">
+            <div className="flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 rounded-2xl glass-surface text-left">
               <span className="material-symbols-outlined text-primary text-[24px] shrink-0">stars</span>
               <div>
                 <p className="text-[11px] font-sans uppercase tracking-[0.2em] text-secondary font-semibold mb-0.5">Gastronomy</p>
@@ -123,7 +123,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4 px-6 py-4 rounded-2xl bg-surface-container/70 border border-primary/20 backdrop-blur-md shadow-md text-left">
+            <div className="flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 rounded-2xl glass-surface text-left">
               <span className="material-symbols-outlined text-primary text-[24px] shrink-0">local_fire_department</span>
               <div>
                 <p className="text-[11px] font-sans uppercase tracking-[0.2em] text-secondary font-semibold mb-0.5">Lineage</p>
@@ -189,7 +189,7 @@ export default function HomePage() {
                 <span className="text-xs uppercase tracking-[0.2em] text-primary font-bold block mb-2">
                   The Custodians of Royal Flavours
                 </span>
-                <h3 className="font-serif text-2xl sm:text-3xl text-on-surface leading-snug font-bold mb-4">
+                <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl text-on-surface leading-snug font-bold mb-4">
                   Resurrecting the Lost Feasts of Rajputana &amp; Awadh Courtyards
                 </h3>
                 <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed mb-6 font-sans">
@@ -199,7 +199,7 @@ export default function HomePage() {
 
               {/* 3 Heritage Features */}
               <div className="space-y-4">
-                <div className="flex items-start gap-4 p-4 rounded-2xl bg-surface-container/60 border border-outline-variant/30 backdrop-blur-md transition-all hover:border-primary/40">
+                <div className="flex items-start gap-4 p-4 rounded-2xl glass-surface transition-all hover:border-primary/40">
                   <div className="w-10 h-10 rounded-xl bg-primary-container/25 flex items-center justify-center text-primary shrink-0 mt-0.5">
                     <span className="material-symbols-outlined text-[20px]">skillet</span>
                   </div>
@@ -211,7 +211,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 rounded-2xl bg-surface-container/60 border border-outline-variant/30 backdrop-blur-md transition-all hover:border-secondary/40">
+                <div className="flex items-start gap-4 p-4 rounded-2xl glass-surface transition-all hover:border-secondary/40">
                   <div className="w-10 h-10 rounded-xl bg-secondary/20 flex items-center justify-center text-secondary shrink-0 mt-0.5">
                     <span className="material-symbols-outlined text-[20px]">award_star</span>
                   </div>
@@ -223,7 +223,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 rounded-2xl bg-surface-container/60 border border-outline-variant/30 backdrop-blur-md transition-all hover:border-primary/40">
+                <div className="flex items-start gap-4 p-4 rounded-2xl glass-surface transition-all hover:border-primary/40">
                   <div className="w-10 h-10 rounded-xl bg-primary-container/25 flex items-center justify-center text-primary shrink-0 mt-0.5">
                     <span className="material-symbols-outlined text-[20px]">menu_book</span>
                   </div>
@@ -343,7 +343,7 @@ export default function HomePage() {
                   <span className="text-xs uppercase tracking-[0.2em] text-secondary font-bold block mb-1">
                     Ascend the Imperial Hierarchy
                   </span>
-                  <h3 className="font-serif text-2xl sm:text-3xl text-on-surface font-bold mb-2">
+                  <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl text-on-surface font-bold mb-2">
                     From Emerald Guest to Kohinoor Patron
                   </h3>
                   <p className="text-sm text-on-surface-variant leading-relaxed">
@@ -589,7 +589,7 @@ export default function HomePage() {
                 <span className="text-xs uppercase tracking-[0.22em] text-primary font-bold block mb-1">
                   The Sovereign Table
                 </span>
-                <h3 className="font-serif text-2xl sm:text-3xl text-on-surface font-bold">
+                <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl text-on-surface font-bold">
                   Reserve Your Imperial Seat
                 </h3>
                 <p className="text-xs sm:text-sm text-on-surface-variant mt-2 leading-relaxed">
@@ -646,6 +646,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-    </div>
+    </article>
   );
 }

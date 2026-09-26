@@ -52,7 +52,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Basic Info */}
-      <div className="bg-surface-container/85 rounded-2xl p-6 border border-outline-variant/30 backdrop-blur-xl shadow-lg space-y-4">
+      <div className="glass-panel-elevated p-4 sm:p-6 space-y-4">
         <div className="flex items-center gap-2 border-b border-outline-variant/30 pb-3">
           <Building2 className="w-5 h-5 text-primary" />
           <h2 className="font-serif text-lg text-on-surface font-bold">Palace Information</h2>
@@ -102,7 +102,7 @@ export default function SettingsPage() {
       </div>
 
       {/* External Integration URLs */}
-      <div className="bg-surface-container/85 rounded-2xl p-6 border border-outline-variant/30 backdrop-blur-xl shadow-lg space-y-4">
+      <div className="glass-panel-elevated p-4 sm:p-6 space-y-4">
         <div className="flex items-center gap-2 border-b border-outline-variant/30 pb-3">
           <Globe className="w-5 h-5 text-secondary" />
           <h2 className="font-serif text-lg text-on-surface font-bold">Integration Endpoints &amp; URLs</h2>
@@ -136,7 +136,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Loyalty Pass Config */}
-      <div className="bg-surface-container/85 rounded-2xl p-6 border border-outline-variant/30 backdrop-blur-xl shadow-lg space-y-4">
+      <div className="glass-panel-elevated p-4 sm:p-6 space-y-4">
         <div className="flex items-center gap-2 border-b border-outline-variant/30 pb-3">
           <Sparkles className="w-5 h-5 text-primary" />
           <h2 className="font-serif text-lg text-on-surface font-bold">Digital Maharaja Card Rules</h2>

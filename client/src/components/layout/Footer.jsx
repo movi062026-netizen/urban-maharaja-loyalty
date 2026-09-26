@@ -16,46 +16,46 @@ export default function Footer() {
   };
 
   return (
-    <footer className="w-full bg-surface-container-lowest border-t border-outline-variant/30 text-on-surface-variant" role="contentinfo">
-      <div className="max-w-[1200px] mx-auto px-6 lg:px-12 pt-16 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+    <footer className="w-full bg-surface-container-lowest border-t border-outline-variant/30 text-on-surface-variant" role="contentinfo" aria-label="Site Footer">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12 pt-12 sm:pt-16 pb-8 sm:pb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
           {/* Brand & Provenance */}
-          <div className="flex flex-col space-y-4">
-            <Link to="/" className="flex items-center gap-3 no-underline group">
+          <div className="flex flex-col space-y-4 sm:col-span-2 lg:col-span-1">
+            <Link to="/" className="flex items-center gap-3 no-underline group" aria-label="Urban Maharaja Home">
               <img
                 alt="Urban Maharaja logo"
-                className="h-10 w-10 object-cover rounded-full border border-primary/40 shadow-sm"
+                className="h-9 w-9 sm:h-10 sm:w-10 object-cover rounded-full border border-primary/40 shadow-sm"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXfNDYsMNpYnQyhMne22oWb4DIfAUVqXueX3fQTazODkKNaq6IpvuCe6yu7lv8L_lhENbBqd1cgSUVpqme1pDmXcF8kdOmsWW-xz4nTkD3tAJqwgEzZwvhUD_OtagFfWDTLe9rV4m0bd-kPRK7TbG269RThlqZhCdLFfV5bpAw7-c3L8UwduSZx61Qj3VRfiR96AzL9LrhoyzWY2fbYfPnnGaCG2XoTN48W0PTqBxGbc3rkEUpl_vp3g"
                 onError={(e) => {
                   e.target.style.display = 'none';
                 }}
               />
               <div className="flex flex-col">
-                <span className="font-headline-sm text-headline-sm uppercase tracking-[0.2em] text-primary font-bold">
+                <span className="font-serif text-base sm:text-lg uppercase tracking-[0.15em] sm:tracking-[0.2em] text-primary font-bold">
                   Urban Maharaja
                 </span>
-                <span className="font-label-sm text-label-sm uppercase tracking-[0.22em] text-secondary">
+                <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.18em] sm:tracking-[0.22em] text-secondary font-semibold">
                   Imperial Gastronomy
                 </span>
               </div>
             </Link>
 
-            <p className="font-body-sm text-body-sm text-on-surface-variant/80 leading-relaxed">
+            <p className="text-xs sm:text-sm text-on-surface-variant/80 leading-relaxed max-w-xs">
               An ultra-luxurious dining sanctuary breathing the majestic grandeur of Rajasthan and imperial Mughal courts into modern culinary artistry.
             </p>
 
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-high border border-primary/20 text-primary w-fit">
-              <span className="material-symbols-outlined text-[16px]">workspace_premium</span>
-              <span className="font-label-sm text-label-sm uppercase tracking-[0.22em]">Michelin Standard 2026</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-chip w-fit">
+              <span className="material-symbols-outlined text-[14px] sm:text-[16px] text-secondary" aria-hidden="true">workspace_premium</span>
+              <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.18em] sm:tracking-[0.22em] font-bold text-secondary">Michelin Standard 2026</span>
             </div>
           </div>
 
           {/* Imperial Portals */}
-          <div className="flex flex-col space-y-3">
-            <h4 className="font-title-md text-title-md text-on-surface uppercase tracking-widest text-primary">
+          <nav className="flex flex-col space-y-3" aria-label="Footer Navigation">
+            <h4 className="text-sm sm:text-base text-primary uppercase tracking-widest font-bold">
               Imperial Portals
             </h4>
-            <ul className="space-y-2.5 font-body-sm text-body-sm list-none p-0">
+            <ul className="space-y-2 sm:space-y-2.5 text-xs sm:text-sm list-none p-0 m-0">
               <li>
                 <Link to="/about" className="text-on-surface-variant hover:text-primary transition-colors no-underline">
                   Our Royal Heritage
@@ -82,78 +82,79 @@ export default function Footer() {
                 </Link>
               </li>
             </ul>
-          </div>
+          </nav>
 
           {/* Palace & Hours */}
           <div className="flex flex-col space-y-3">
-            <h4 className="font-title-md text-title-md text-on-surface uppercase tracking-widest text-primary">
+            <h4 className="text-sm sm:text-base text-primary uppercase tracking-widest font-bold">
               Palace & Hours
             </h4>
-            <div className="space-y-3 font-body-sm text-body-sm text-on-surface-variant">
+            <div className="space-y-3 text-xs sm:text-sm text-on-surface-variant">
               <div className="flex items-start gap-2.5">
-                <span className="material-symbols-outlined text-primary text-[18px] mt-0.5">schedule</span>
-                <div>
+                <span className="material-symbols-outlined text-primary text-[16px] sm:text-[18px] mt-0.5 shrink-0" aria-hidden="true">schedule</span>
+                <div className="min-w-0">
                   <p className="text-on-surface font-medium mb-0.5">Royal Dining Hours</p>
                   <p className="text-on-surface-variant/80">Mon – Sun: 12:00 PM – 11:00 PM</p>
                 </div>
               </div>
-              <div className="flex items-start gap-2.5">
-                <span className="material-symbols-outlined text-primary text-[18px] mt-0.5">location_on</span>
-                <div>
+              <address className="flex items-start gap-2.5 not-italic">
+                <span className="material-symbols-outlined text-primary text-[16px] sm:text-[18px] mt-0.5 shrink-0" aria-hidden="true">location_on</span>
+                <div className="min-w-0">
                   <p className="text-on-surface font-medium mb-0.5">Imperial Pavilion</p>
-                  <p className="text-on-surface-variant/80">Plot No. AC-209, Central Spine, Mahal Road, Jagatpura, Jaipur, Rajasthan 302017</p>
+                  <p className="text-on-surface-variant/80 break-safe">Plot No. AC-209, Central Spine, Mahal Road, Jagatpura, Jaipur, Rajasthan 302017</p>
                 </div>
-              </div>
+              </address>
               <div className="flex items-start gap-2.5">
-                <span className="material-symbols-outlined text-primary text-[18px] mt-0.5">call</span>
-                <div>
+                <span className="material-symbols-outlined text-primary text-[16px] sm:text-[18px] mt-0.5 shrink-0" aria-hidden="true">call</span>
+                <div className="min-w-0">
                   <p className="text-on-surface font-medium mb-0.5">VIP Concierge</p>
-                  <p className="text-on-surface-variant/80">+1 (800) MAHARAJA</p>
+                  <a href="tel:+918001234567" className="text-on-surface-variant/80 no-underline hover:text-primary transition-colors">+91 (800) MAHARAJA</a>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Maharaja Gazette */}
-          <div className="flex flex-col space-y-3">
-            <h4 className="font-title-md text-title-md text-on-surface uppercase tracking-widest text-primary">
+          <div className="flex flex-col space-y-3 sm:col-span-2 lg:col-span-1">
+            <h4 className="text-sm sm:text-base text-primary uppercase tracking-widest font-bold">
               Maharaja Gazette
             </h4>
-            <p className="font-body-sm text-body-sm text-on-surface-variant/80">
+            <p className="text-xs sm:text-sm text-on-surface-variant/80">
               Receive confidential invitations to seasonal royal tastings and rare vintage releases.
             </p>
             <form onSubmit={handleSubscribe} className="flex flex-col gap-2.5">
-              <div className="relative">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Your imperial address..."
-                  className="w-full px-4 py-2.5 rounded-lg bg-surface-container border border-outline-variant/40 text-on-surface placeholder-on-surface-variant/50 text-body-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                />
-                <button
-                  type="submit"
-                  className="mt-2 w-full px-4 py-2.5 rounded-lg bg-gradient-to-r from-primary-container to-secondary text-surface-container-lowest font-label-md text-label-md uppercase tracking-[0.16em] font-semibold hover:brightness-110 transition-all shadow-md cursor-pointer"
-                >
-                  Subscribe to Gazette
-                </button>
-              </div>
+              <label htmlFor="footer-email" className="sr-only">Your email address</label>
+              <input
+                id="footer-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your imperial address..."
+                className="w-full px-4 py-2.5 rounded-lg glass-input text-on-surface placeholder-on-surface-variant/50 text-xs sm:text-sm focus:outline-none"
+                autoComplete="email"
+              />
+              <button
+                type="submit"
+                className="w-full px-4 py-2.5 rounded-lg glass-btn-primary text-[10px] sm:text-xs uppercase tracking-[0.14em] sm:tracking-[0.16em] font-bold"
+              >
+                Subscribe to Gazette
+              </button>
             </form>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 font-body-sm text-body-sm text-on-surface-variant/70 border-t border-outline-variant/20">
-          <p>© {new Date().getFullYear()} Urban Maharaja — A Fine Dine. All Imperial Rights Reserved.</p>
-          <div className="flex items-center gap-6 font-label-sm text-label-sm uppercase tracking-[0.22em]">
+        <div className="mt-8 sm:mt-12 pt-5 sm:pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-[10px] sm:text-xs text-on-surface-variant/70 border-t border-outline-variant/20">
+          <p className="text-center sm:text-left">© {new Date().getFullYear()} Urban Maharaja — A Fine Dine. All Imperial Rights Reserved.</p>
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-[9px] sm:text-[10px] uppercase tracking-[0.18em] sm:tracking-[0.22em] font-bold">
             <Link to="/about" className="hover:text-primary transition-colors no-underline">
               Privacy Policy
             </Link>
-            <span className="text-outline-variant">•</span>
+            <span className="text-outline-variant hidden sm:inline" aria-hidden="true">•</span>
             <Link to="/about" className="hover:text-primary transition-colors no-underline">
               Terms of Royal Service
             </Link>
-            <span className="text-outline-variant">•</span>
+            <span className="text-outline-variant hidden sm:inline" aria-hidden="true">•</span>
             <Link to="/about" className="hover:text-primary transition-colors no-underline">
               Guest Dress Code
             </Link>

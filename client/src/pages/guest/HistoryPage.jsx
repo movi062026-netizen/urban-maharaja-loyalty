@@ -51,7 +51,7 @@ export default function HistoryPage() {
         </div>
       ) : (
         history.map(({ card, stamps, redemptions }) => (
-          <div key={card._id} className="bg-surface-container/85 rounded-3xl p-6 border border-outline-variant/30 backdrop-blur-xl shadow-lg">
+          <div key={card._id} className="glass-panel-elevated p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/30">
               <div className="flex items-center gap-2">
                 <Crown className="w-5 h-5 text-primary" />

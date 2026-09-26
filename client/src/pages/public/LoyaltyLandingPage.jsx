@@ -78,7 +78,7 @@ export default function LoyaltyLandingPage() {
           <div className="flex flex-wrap items-center justify-center gap-5">
             <Link
               to="/login"
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest font-label-lg uppercase tracking-[0.16em] font-bold shadow-lg hover:scale-105 transition-all no-underline"
+              className="inline-flex items-center gap-3 px-8 py-4 rounded-full glass-btn-primary font-label-lg uppercase tracking-[0.16em] font-bold shadow-lg hover:scale-105 transition-all no-underline"
             >
               <span className="material-symbols-outlined text-[20px]">badge</span>
               <span>Claim Digital Card</span>

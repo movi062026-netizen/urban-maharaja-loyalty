@@ -54,7 +54,7 @@ export default function AdminLoginPage() {
             <div className="w-16 h-16 rounded-2xl bg-surface-container-high/90 border border-primary/40 flex items-center justify-center mx-auto mb-3 shadow-[0_12px_28px_rgba(222,107,144,0.3)] group-hover:scale-105 transition-transform">
               <span className="material-symbols-outlined text-primary text-[34px]">shield_person</span>
             </div>
-            <h1 className="font-serif text-2xl sm:text-3xl text-on-surface font-bold tracking-wider uppercase">
+            <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-on-surface font-bold tracking-wider uppercase">
               Urban Maharaja
             </h1>
             <p className="text-xs uppercase tracking-[0.25em] text-secondary font-semibold mt-1">
@@ -136,7 +136,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full py-4 rounded-xl glass-btn-primary text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {loading ? (
                 <span className="w-5 h-5 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />

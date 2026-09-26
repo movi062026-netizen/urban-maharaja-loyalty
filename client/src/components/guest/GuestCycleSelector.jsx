@@ -4,7 +4,7 @@ export default function GuestCycleSelector({ allCards = [], activeCardId, onSele
   if (!allCards || allCards.length <= 1) return null;
 
   return (
-    <div className="bg-surface-container/85 rounded-2xl p-5 border border-outline-variant/30 backdrop-blur-xl shadow-lg">
+    <div className="glass-panel-elevated p-5 border border-outline-variant/30 backdrop-blur-xl shadow-lg">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-serif font-bold text-on-surface text-sm flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-primary" />

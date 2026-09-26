@@ -54,6 +54,7 @@ export default function AppRoutes() {
 
       {/* Authentication Portals (Distinct for Customers & Staff/Admin) */}
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<LoginPage defaultMode="register" />} />
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route path="/staff/login" element={<AdminLoginPage defaultRole="STAFF" />} />
 

@@ -32,7 +32,7 @@ export default function ReviewPage() {
 
   return (
     <div className="space-y-6 animate-slideUp text-on-surface">
-      <div className="bg-surface-container/85 rounded-3xl p-8 border border-outline-variant/30 backdrop-blur-xl shadow-xl text-center">
+      <div className="glass-card-royal p-5 sm:p-8 text-center">
         <div className="w-16 h-16 rounded-2xl bg-primary-container/20 border border-primary/30 flex items-center justify-center mx-auto mb-5 text-primary shadow-lg">
           <Heart className="w-8 h-8 text-primary" />
         </div>

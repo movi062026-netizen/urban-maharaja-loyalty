@@ -64,7 +64,7 @@ export default function ContactPage() {
                 <span className="text-xs uppercase tracking-[0.2em] text-secondary font-bold mb-2 block">
                   Sovereign Booking
                 </span>
-                <h2 className="font-serif text-2xl sm:text-3xl text-on-surface font-bold mb-6">
+                <h2 className="font-serif text-xl sm:text-2xl lg:text-3xl text-on-surface font-bold mb-6">
                   Confirm Your Dining Room
                 </h2>
 

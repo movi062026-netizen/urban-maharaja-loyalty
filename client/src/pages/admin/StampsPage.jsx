@@ -206,7 +206,7 @@ export default function StampsPage() {
       )}
 
       {/* ── STAFF STAMP DESK PANEL ── */}
-      <div className="bg-surface-container/85 rounded-2xl p-6 border border-outline-variant/40 backdrop-blur-xl shadow-lg space-y-5">
+      <div className="glass-panel-elevated p-4 sm:p-6 space-y-5">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-primary-container/20 border border-primary/40 flex items-center justify-center text-primary">
             <StampIcon className="w-5 h-5" />
@@ -322,7 +322,7 @@ export default function StampsPage() {
       </div>
 
       {/* Past Stamps Log Table */}
-      <div className="bg-surface-container/85 rounded-2xl border border-outline-variant/30 backdrop-blur-xl shadow-lg overflow-hidden">
+      <div className="glass-panel-elevated overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

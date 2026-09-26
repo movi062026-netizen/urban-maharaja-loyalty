@@ -49,7 +49,7 @@ export default function StaffRedemptionsPage() {
       {/* Interactive Voucher Scanner / Passcode Entry */}
       <StaffRedemptionScanner onRedemptionComplete={loadRedemptions} />
 
-      <div className="bg-surface-container/85 rounded-2xl border border-outline-variant/30 backdrop-blur-xl shadow-lg overflow-hidden">
+      <div className="glass-panel-elevated overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

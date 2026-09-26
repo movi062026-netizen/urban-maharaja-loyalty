@@ -56,7 +56,7 @@ export default function AnalyticsPage() {
       ) : (
         <div className="space-y-6">
           {/* Guest Registrations */}
-          <div className="bg-surface-container/85 rounded-2xl p-6 border border-outline-variant/30 backdrop-blur-xl shadow-lg">
+          <div className="glass-panel-elevated p-4 sm:p-6">
             <div className="flex items-center gap-2 mb-4">
               <Users className="w-5 h-5 text-primary" />
               <h3 className="font-serif text-lg text-on-surface font-bold">Noble Patron Inductions</h3>
@@ -81,7 +81,7 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Stamps Approved */}
-          <div className="bg-surface-container/85 rounded-2xl p-6 border border-outline-variant/30 backdrop-blur-xl shadow-lg">
+          <div className="glass-panel-elevated p-4 sm:p-6">
             <div className="flex items-center gap-2 mb-4">
               <Stamp className="w-5 h-5 text-secondary" />
               <h3 className="font-serif text-lg text-on-surface font-bold">Royal Seals Granted</h3>
@@ -100,7 +100,7 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Reward Redemptions */}
-          <div className="bg-surface-container/85 rounded-2xl p-6 border border-outline-variant/30 backdrop-blur-xl shadow-lg">
+          <div className="glass-panel-elevated p-4 sm:p-6">
             <div className="flex items-center gap-2 mb-4">
               <Gift className="w-5 h-5 text-green-400" />
               <h3 className="font-serif text-lg text-on-surface font-bold">Completed Voucher Redemptions</h3>

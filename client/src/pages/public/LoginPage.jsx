@@ -4,10 +4,14 @@ import { useAuth } from '../../context/AuthContext';
 import { authApi } from '../../services/api';
 import toast from 'react-hot-toast';
 
-export default function LoginPage() {
-  const [mode, setMode] = useState('login'); // 'login' | 'register'
+export default function LoginPage({ defaultMode = 'login' }) {
+  const [mode, setMode] = useState(defaultMode); // 'login' | 'register'
   const [loginMethod, setLoginMethod] = useState('email'); // 'email' | 'phone'
   const [step, setStep] = useState('input'); // 'input' | 'otp'
+
+  useEffect(() => {
+    if (defaultMode) setMode(defaultMode);
+  }, [defaultMode]);
 
   // Input states
   const [email, setEmail] = useState('');
@@ -266,7 +270,7 @@ export default function LoginPage() {
     : `+91 ${phone.trim() || 'mobile'}`;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8 relative overflow-hidden text-on-surface">
+    <div className="min-h-screen min-h-dvh flex items-center justify-center bg-background px-3 sm:px-4 py-6 sm:py-8 relative overflow-hidden text-on-surface">
       {/* Ambient background glows */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] max-w-full h-[520px] bg-primary-container/15 rounded-full blur-[140px]" />
@@ -274,7 +278,7 @@ export default function LoginPage() {
         <div className="absolute top-10 left-10 w-72 h-72 bg-primary/10 rounded-full blur-[100px]" />
       </div>
 
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-md relative z-10 animate-fadeInUp">
         {/* Brand Crest & Header */}
         <div className="text-center mb-7">
           <Link to="/" className="no-underline inline-block group">
@@ -284,7 +288,7 @@ export default function LoginPage() {
                 ★
               </div>
             </div>
-            <h1 className="font-serif text-2xl sm:text-3xl uppercase tracking-[0.2em] text-primary font-bold">
+            <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl uppercase tracking-[0.2em] text-primary font-bold">
               URBAN MAHARAJA
             </h1>
             <p className="text-xs uppercase tracking-[0.26em] text-secondary font-semibold mt-1">
@@ -294,7 +298,7 @@ export default function LoginPage() {
         </div>
 
         {/* Authentication Card */}
-        <div className="p-7 sm:p-9 rounded-3xl bg-surface-container/85 border border-outline-variant/40 backdrop-blur-2xl shadow-[0_24px_60px_rgba(18,7,9,0.95)]">
+        <div className="glass-card-royal p-5 sm:p-7 lg:p-9">
           {/* Mode Switcher Tabs (when in input step) */}
           {step === 'input' && (
             <div className="grid grid-cols-2 p-1 mb-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/30">
@@ -430,7 +434,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2"
+                  className="w-full py-4 rounded-xl glass-btn-primary text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2"
                 >
                   {loading ? (
                     <span className="w-5 h-5 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />
@@ -554,7 +558,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 mt-2 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full py-4 mt-2 rounded-xl glass-btn-primary text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {loading ? (
                   <span className="w-5 h-5 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />
@@ -636,7 +640,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading || otpDigits.some((d) => d === '')}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full py-4 rounded-xl glass-btn-primary text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {loading ? (
                   <span className="w-5 h-5 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />

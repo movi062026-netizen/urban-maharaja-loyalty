@@ -77,12 +77,12 @@ export default function StaffPage() {
   return (
     <div className="space-y-6 animate-fadeIn text-on-surface">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h1 className="font-serif text-2xl lg:text-3xl text-on-surface font-bold">
-            Staff &amp; Concierge Management
+          <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-on-surface font-bold">
+            Staff & Concierge Management
           </h1>
-          <p className="text-xs text-on-surface-variant mt-1">
+          <p className="text-[10px] sm:text-xs text-on-surface-variant mt-1">
             Issue and govern terminal credentials for stamp desk attendants and system administrators
           </p>
         </div>
@@ -100,7 +100,7 @@ export default function StaffPage() {
               setCreatedCredential(null);
               setShowModal(true);
             }}
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 transition-all flex items-center gap-2 cursor-pointer"
+            className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl glass-btn-primary text-[10px] sm:text-xs uppercase tracking-wider font-bold flex items-center gap-2 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Issue Staff Credentials</span>
@@ -128,7 +128,7 @@ export default function StaffPage() {
           {staffList.map((member) => (
             <div
               key={member._id}
-              className="p-5 rounded-2xl bg-surface-container/85 border border-outline-variant/30 backdrop-blur-xl shadow-lg flex flex-col justify-between"
+              className="glass-panel-elevated p-4 sm:p-5 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-start justify-between mb-3">
