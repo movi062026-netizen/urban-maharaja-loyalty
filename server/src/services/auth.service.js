@@ -97,25 +97,25 @@ const guestRequestOtp = async (identifier) => {
  * Customer Registration — Name + Email + Phone + Password
  */
 const customerRegister = async ({ name, email, phone, password }) => {
-  if (!name || name.trim().length < 2) {
-    throw new ValidationError('Please provide your noble name (at least 2 characters)');
+  if (!name || typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 100) {
+    throw new ValidationError('Please provide your full noble name (between 2 and 100 characters)');
   }
-  if (!email || !email.includes('@')) {
-    throw new ValidationError('A valid email address is required');
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || typeof email !== 'string' || !emailRegex.test(email.trim())) {
+    throw new ValidationError('A valid email address is required (e.g., patron@example.com)');
   }
-  if (!phone || phone.trim().length < 10) {
-    throw new ValidationError('A valid 10-digit mobile number is required');
+  const normalizedPhone = phone ? String(phone).trim().replace(/\D/g, '') : '';
+  if (!normalizedPhone || normalizedPhone.length < 10 || normalizedPhone.length > 15) {
+    throw new ValidationError('A valid mobile number between 10 and 15 digits is required');
   }
-  if (!password || password.length < 6) {
-    throw new ValidationError('Password must be at least 6 characters');
+  if (!password || typeof password !== 'string' || password.length < 6 || password.length > 128) {
+    throw new ValidationError('Password must be between 6 and 128 characters');
+  }
+  if (password.trim().length === 0) {
+    throw new ValidationError('Password cannot be composed solely of whitespace');
   }
 
   const normalizedEmail = email.trim().toLowerCase();
-  const normalizedPhone = phone.trim().replace(/\D/g, '');
-
-  if (normalizedPhone.length < 10 || normalizedPhone.length > 15) {
-    throw new ValidationError('Mobile number must be 10-15 digits');
-  }
 
   // 1. Check if email or phone is reserved for staff
   const staffWithEmail = await User.findOne({ email: normalizedEmail });
@@ -271,15 +271,25 @@ const guestVerifyOtp = async (identifier, otp, auditCtx = {}) => {
  * Guest login with email or phone + password
  */
 const guestPasswordLogin = async (identifier, password, auditCtx = {}) => {
-  if (!identifier || !password) {
-    throw new ValidationError('Email or mobile number and password are required');
+  if (!identifier || typeof identifier !== 'string' || !identifier.trim()) {
+    throw new ValidationError('Email address or mobile number is required');
+  }
+  if (!password || typeof password !== 'string' || password.length === 0) {
+    throw new ValidationError('Password is required');
+  }
+  if (password.length > 128) {
+    throw new ValidationError('Password length exceeds maximum allowed');
   }
 
-  const rawIdentifier = String(identifier).trim();
+  const rawIdentifier = identifier.trim();
   let user;
   let method = 'guest_password';
 
   if (rawIdentifier.includes('@')) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(rawIdentifier)) {
+      throw new ValidationError('Please enter a valid email address');
+    }
     const email = rawIdentifier.toLowerCase();
     user = await User.findOne({
       email,
@@ -288,8 +298,8 @@ const guestPasswordLogin = async (identifier, password, auditCtx = {}) => {
     method = 'guest_password_email';
   } else {
     const phone = rawIdentifier.replace(/\D/g, '');
-    if (phone.length < 10) {
-      throw new ValidationError('Please enter a valid 10-digit mobile number or email address');
+    if (phone.length < 10 || phone.length > 15) {
+      throw new ValidationError('Please enter a valid 10-15 digit mobile number or email address');
     }
     user = await User.findOne({
       phone,
