@@ -354,29 +354,36 @@ const guestPasswordLogin = async (identifier, password, auditCtx = {}) => {
 };
 
 /**
- * Staff/Admin login with email + password
+ * Administrator login with email + password (Strictly ADMIN role)
  */
-const staffLogin = async (email, password, auditCtx = {}) => {
+const adminLogin = async (email, password, auditCtx = {}) => {
   if (!email || !password) {
     throw new ValidationError('Email and password are required');
   }
 
+  const normalizedEmail = email.trim().toLowerCase();
   const user = await User.findOne({
-    email,
-    role: { $in: [ROLES.STAFF, ROLES.ADMIN] },
+    email: normalizedEmail,
   }).select('+password +refreshToken');
 
-  if (!user) {
-    throw new AuthenticationError('Invalid credentials');
+  if (!user || !user.password) {
+    throw new AuthenticationError('Invalid administrator credentials');
+  }
+
+  if (user.role !== ROLES.ADMIN) {
+    if (user.role === ROLES.STAFF) {
+      throw new AuthenticationError('Staff account detected. Please use the Staff Concierge Terminal at /staff/login.');
+    }
+    throw new AuthenticationError('Access denied. This portal is strictly restricted to Administrators.');
   }
 
   if (!user.isActive) {
-    throw new AuthenticationError('Account is deactivated');
+    throw new AuthenticationError('Administrator account is deactivated. Contact system management.');
   }
 
   const isMatch = await user.comparePassword(password);
   if (!isMatch) {
-    throw new AuthenticationError('Invalid credentials');
+    throw new AuthenticationError('Invalid administrator credentials');
   }
 
   user.lastLoginAt = new Date();
@@ -392,7 +399,62 @@ const staffLogin = async (email, password, auditCtx = {}) => {
     action: AUDIT_ACTIONS.LOGIN,
     entityType: ENTITY_TYPES.USER,
     entityId: user._id,
-    metadata: { method: 'email_password' },
+    metadata: { method: 'admin_password' },
+  });
+
+  return {
+    user: user.toJSON(),
+    tokens,
+  };
+};
+
+/**
+ * Floor Staff / Concierge login with email + password (Strictly STAFF role)
+ */
+const staffLogin = async (email, password, auditCtx = {}) => {
+  if (!email || !password) {
+    throw new ValidationError('Email and password are required');
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const user = await User.findOne({
+    email: normalizedEmail,
+  }).select('+password +refreshToken');
+
+  if (!user || !user.password) {
+    throw new AuthenticationError('Invalid staff credentials');
+  }
+
+  if (user.role !== ROLES.STAFF) {
+    if (user.role === ROLES.ADMIN) {
+      throw new AuthenticationError('Administrator account detected. Please use the Administrator Portal at /admin/login.');
+    }
+    throw new AuthenticationError('Access denied. This terminal is strictly restricted to Concierge & Floor Staff.');
+  }
+
+  if (!user.isActive) {
+    throw new AuthenticationError('Staff account is deactivated. Contact administrator.');
+  }
+
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) {
+    throw new AuthenticationError('Invalid staff credentials');
+  }
+
+  user.lastLoginAt = new Date();
+  const tokens = generateTokens(user);
+  user.refreshToken = tokens.refreshToken;
+  await user.save();
+
+  // Audit
+  createAuditLog({
+    ...auditCtx,
+    actorId: user._id,
+    actorRole: user.role,
+    action: AUDIT_ACTIONS.LOGIN,
+    entityType: ENTITY_TYPES.USER,
+    entityId: user._id,
+    metadata: { method: 'staff_password' },
   });
 
   return {
@@ -545,6 +607,7 @@ module.exports = {
   customerRegister,
   guestVerifyOtp,
   guestPasswordLogin,
+  adminLogin,
   staffLogin,
   googleLogin,
   refreshAccessToken,

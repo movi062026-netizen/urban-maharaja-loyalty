@@ -29,8 +29,9 @@ router.post('/guest/register', guestOtpTokenBucket, customerRegisterRules, valid
 router.post('/google', googleAuthTokenBucket, googleAuthRules, validate, authController.googleLogin);
 router.post('/guest/google', googleAuthTokenBucket, googleAuthRules, validate, authController.googleLogin);
 
-// Staff/Admin auth (Email & Password Protected by Token Bucket rate limiter)
-router.post('/admin/login', passwordLoginTokenBucket, staffLoginRules, validate, authController.staffLogin);
+// Staff & Admin auth (Email & Password Protected by Token Bucket rate limiter)
+router.post('/admin/login', passwordLoginTokenBucket, staffLoginRules, validate, authController.adminLogin);
+router.post('/staff/login', passwordLoginTokenBucket, staffLoginRules, validate, authController.staffLogin);
 
 // Token management
 router.post('/refresh', refreshTokenRules, validate, authController.refreshToken);

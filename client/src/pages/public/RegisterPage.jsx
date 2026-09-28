@@ -580,15 +580,25 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* Links Back & Staff Switch */}
-          <div className="mt-5 pt-4 border-t border-outline-variant/20 flex items-center justify-between text-xs text-on-surface-variant/70">
-            <Link
-              to="/admin/login"
-              className="hover:text-primary transition-colors no-underline flex items-center gap-1 font-medium"
-            >
-              <span>Staff &amp; Concierge</span>
-              <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-            </Link>
+          {/* Links Back & Distinct Staff / Admin Portals */}
+          <div className="mt-5 pt-4 border-t border-outline-variant/20 flex flex-wrap items-center justify-between gap-2 text-xs text-on-surface-variant/70">
+            <div className="flex items-center gap-2.5">
+              <Link
+                to="/staff/login"
+                className="hover:text-secondary transition-colors no-underline flex items-center gap-1 font-medium"
+              >
+                <span className="material-symbols-outlined text-[14px]">badge</span>
+                <span>Staff Terminal</span>
+              </Link>
+              <span className="text-outline-variant/50">•</span>
+              <Link
+                to="/admin/login"
+                className="hover:text-primary transition-colors no-underline flex items-center gap-1 font-medium"
+              >
+                <span className="material-symbols-outlined text-[14px]">admin_panel_settings</span>
+                <span>Admin Portal</span>
+              </Link>
+            </div>
             <Link
               to="/"
               className="hover:text-secondary transition-colors no-underline flex items-center gap-1 font-medium"

@@ -16,6 +16,7 @@ import LoyaltyLandingPage from '../pages/public/LoyaltyLandingPage';
 import LoginPage from '../pages/public/LoginPage';
 import RegisterPage from '../pages/public/RegisterPage';
 import AdminLoginPage from '../pages/public/AdminLoginPage';
+import StaffLoginPage from '../pages/public/StaffLoginPage';
 
 // Guest Pages
 import MaharajaCardPage from '../pages/guest/MaharajaCardPage';
@@ -53,11 +54,11 @@ export default function AppRoutes() {
         <Route path="/loyalty" element={<LoyaltyLandingPage />} />
       </Route>
 
-      {/* Authentication Portals (Distinct for Customers & Staff/Admin) */}
+      {/* Authentication Portals (Distinct for Customers, Staff, and Admin) */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/admin/login" element={<AdminLoginPage />} />
-      <Route path="/staff/login" element={<AdminLoginPage defaultRole="STAFF" />} />
+      <Route path="/staff/login" element={<StaffLoginPage />} />
 
       {/* ── GUEST / PATRON ROUTES (Distinguished under /guest/*) ── */}
       <Route

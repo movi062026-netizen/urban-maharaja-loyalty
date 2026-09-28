@@ -50,6 +50,19 @@ const guestVerifyOtp = async (req, res, next) => {
   }
 };
 
+const adminLogin = async (req, res, next) => {
+  try {
+    const result = await authService.adminLogin(
+      req.body.email,
+      req.body.password,
+      auditContext(req)
+    );
+    success(res, result, 'Administrator authentication successful');
+  } catch (error) {
+    next(error);
+  }
+};
+
 const staffLogin = async (req, res, next) => {
   try {
     const result = await authService.staffLogin(
@@ -57,7 +70,7 @@ const staffLogin = async (req, res, next) => {
       req.body.password,
       auditContext(req)
     );
-    success(res, result, 'Login successful');
+    success(res, result, 'Staff authentication successful');
   } catch (error) {
     next(error);
   }
@@ -118,6 +131,7 @@ module.exports = {
   customerRegister,
   guestVerifyOtp,
   guestPasswordLogin,
+  adminLogin,
   staffLogin,
   googleLogin,
   refreshToken,
