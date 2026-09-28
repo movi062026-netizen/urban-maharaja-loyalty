@@ -1,25 +1,25 @@
 const rateLimit = require('express-rate-limit');
+const {
+  createTokenBucketLimiter,
+  user100PerMinuteLimiter,
+  passwordLoginTokenBucket,
+  guestOtpTokenBucket,
+  googleAuthTokenBucket,
+  resolveUserKey,
+} = require('./tokenBucketLimiter');
 
 /**
- * General API rate limiter
+ * 100 Requests Per User Per Minute Token Bucket Limiter
+ * - Capacity: 100 tokens
+ * - Refill Rate: 100 tokens per 60 seconds (1.6667 tokens/sec)
+ * - Identifies by authenticated User ID (req.user.id / JWT), falls back to IP
+ * - Independent per user: User A hitting the limit never impacts User B
  */
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 200,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    success: false,
-    error: {
-      code: 'RATE_LIMIT',
-      message: 'Too many requests, please try again later',
-      details: [],
-    },
-  },
-});
+const apiLimiter = user100PerMinuteLimiter;
+const userRateLimiter = user100PerMinuteLimiter;
 
 /**
- * Stricter limiter for authentication endpoints
+ * Stricter limiter for authentication endpoints (window fallback)
  */
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -54,19 +54,15 @@ const operationLimiter = rateLimit({
   },
 });
 
-const {
-  createTokenBucketLimiter,
-  passwordLoginTokenBucket,
-  guestOtpTokenBucket,
-  googleAuthTokenBucket,
-} = require('./tokenBucketLimiter');
-
 module.exports = {
   apiLimiter,
+  userRateLimiter,
+  user100PerMinuteLimiter,
   authLimiter,
   operationLimiter,
   createTokenBucketLimiter,
   passwordLoginTokenBucket,
   guestOtpTokenBucket,
   googleAuthTokenBucket,
+  resolveUserKey,
 };

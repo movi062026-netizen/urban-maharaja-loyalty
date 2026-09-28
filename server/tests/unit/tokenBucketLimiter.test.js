@@ -1,68 +1,36 @@
-const { createTokenBucketLimiter } = require('../../src/middleware/tokenBucketLimiter');
+const {
+  createTokenBucketLimiter,
+  user100PerMinuteLimiter,
+} = require('../../src/middleware/tokenBucketLimiter');
 
-describe('Token Bucket Rate Limiter', () => {
-  it('allows requests within capacity and attaches rate limit headers', async () => {
-    const limiter = createTokenBucketLimiter({
-      capacity: 3,
-      refillRatePerSec: 1,
-      bucketName: 'test:bucket:allow',
-      keyGenerator: () => 'user-1',
-    });
-
-    const req = { ip: '127.0.0.1' };
-    const headers = {};
+describe('Token Bucket Rate Limiter — 100 Requests/Min', () => {
+  it('allows exactly 100 requests and rejects the 101st request with 429', async () => {
+    const userId = 'user-test-100-' + Date.now();
+    const req = { user: { id: userId }, headers: {} };
+    let statusCalled = null;
+    let jsonCalled = null;
     const res = {
-      setHeader: (k, v) => { headers[k] = v; },
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
+      setHeader: jest.fn(),
+      status: jest.fn((code) => {
+        statusCalled = code;
+        return { json: (body) => { jsonCalled = body; } };
+      }),
     };
     const next = jest.fn();
 
-    // Request 1: remaining should be 2
-    await limiter(req, res, next);
-    expect(next).toHaveBeenCalledTimes(1);
-    expect(headers['X-RateLimit-Limit']).toBe(3);
-    expect(headers['X-RateLimit-Remaining']).toBe(2);
+    // Send 100 requests in rapid succession
+    for (let i = 1; i <= 100; i++) {
+      await user100PerMinuteLimiter(req, res, next);
+    }
 
-    // Request 2: remaining should be 1
-    await limiter(req, res, next);
-    expect(next).toHaveBeenCalledTimes(2);
-    expect(headers['X-RateLimit-Remaining']).toBe(1);
+    expect(next).toHaveBeenCalledTimes(100);
+    expect(res.status).not.toHaveBeenCalled();
 
-    // Request 3: remaining should be 0
-    await limiter(req, res, next);
-    expect(next).toHaveBeenCalledTimes(3);
-    expect(headers['X-RateLimit-Remaining']).toBe(0);
-  });
-
-  it('rejects with 429 when bucket is depleted', async () => {
-    const limiter = createTokenBucketLimiter({
-      capacity: 2,
-      refillRatePerSec: 0.1, // slow refill
-      bucketName: 'test:bucket:deny',
-      keyGenerator: () => 'user-2',
-      errorMessage: 'Depleted',
-    });
-
-    const req = { ip: '192.168.1.1' };
-    const headers = {};
-    const res = {
-      setHeader: (k, v) => { headers[k] = v; },
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
-    const next = jest.fn();
-
-    // Consume 2 tokens
-    await limiter(req, res, next);
-    await limiter(req, res, next);
-    expect(next).toHaveBeenCalledTimes(2);
-
-    // 3rd attempt: should return 429
-    await limiter(req, res, next);
-    expect(next).toHaveBeenCalledTimes(2);
-    expect(res.status).toHaveBeenCalledWith(429);
-    expect(res.json).toHaveBeenCalledWith(
+    // 101st request should be rejected with 429
+    await user100PerMinuteLimiter(req, res, next);
+    expect(next).toHaveBeenCalledTimes(100); // not incremented
+    expect(statusCalled).toBe(429);
+    expect(jsonCalled).toEqual(
       expect.objectContaining({
         success: false,
         error: expect.objectContaining({
@@ -70,6 +38,105 @@ describe('Token Bucket Rate Limiter', () => {
         }),
       })
     );
-    expect(headers['Retry-After']).toBeGreaterThanOrEqual(1);
+  });
+
+  it('guarantees that User A reaching the limit does not affect User B', async () => {
+    const userA = 'userA-' + Date.now();
+    const userB = 'userB-' + Date.now();
+
+    const reqA = { user: { id: userA }, headers: {} };
+    const reqB = { user: { id: userB }, headers: {} };
+
+    const resA = {
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const resB = {
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const nextA = jest.fn();
+    const nextB = jest.fn();
+
+    // Exhaust User A's bucket (100 requests)
+    for (let i = 0; i < 100; i++) {
+      await user100PerMinuteLimiter(reqA, resA, nextA);
+    }
+    // 101st request for User A is rejected
+    await user100PerMinuteLimiter(reqA, resA, nextA);
+    expect(nextA).toHaveBeenCalledTimes(100);
+    expect(resA.status).toHaveBeenCalledWith(429);
+
+    // User B sends a request — MUST be allowed with full bucket
+    await user100PerMinuteLimiter(reqB, resB, nextB);
+    expect(nextB).toHaveBeenCalledTimes(1);
+    expect(resB.status).not.toHaveBeenCalled();
+  });
+
+  it('handles concurrent requests safely without race conditions bypassing the limit', async () => {
+    const userConcurrent = 'user-concurrent-' + Date.now();
+    const req = { user: { id: userConcurrent }, headers: {} };
+    const res = {
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    let allowedCount = 0;
+    let rejectedCount = 0;
+
+    // Fire 110 requests simultaneously
+    const promises = Array.from({ length: 110 }, async () => {
+      let allowed = false;
+      const localNext = () => { allowed = true; };
+      const localRes = {
+        setHeader: jest.fn(),
+        status: () => ({ json: () => {} }),
+      };
+      await user100PerMinuteLimiter(req, localRes, localNext);
+      if (allowed) allowedCount++;
+      else rejectedCount++;
+    });
+
+    await Promise.all(promises);
+
+    expect(allowedCount).toBe(100);
+    expect(rejectedCount).toBe(10);
+  });
+
+  it('tokens gradually refill over time', async () => {
+    // 5 tokens capacity, 10 tokens/sec refill (fast refill for testing)
+    const fastLimiter = createTokenBucketLimiter({
+      capacity: 5,
+      refillRatePerSec: 10,
+      bucketName: 'test:refill:' + Date.now(),
+      keyGenerator: () => 'refill-user',
+    });
+
+    const req = { ip: '127.0.0.1', headers: {} };
+    const res = {
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const next = jest.fn();
+
+    // Consume all 5 tokens
+    for (let i = 0; i < 5; i++) {
+      await fastLimiter(req, res, next);
+    }
+    expect(next).toHaveBeenCalledTimes(5);
+
+    // 6th request fails immediately
+    await fastLimiter(req, res, next);
+    expect(next).toHaveBeenCalledTimes(5);
+
+    // Wait 250ms -> at 10 tokens/sec, replenishes 2.5 tokens (floored to 2 available)
+    await new Promise((resolve) => setTimeout(resolve, 250));
+
+    // Next request should now succeed
+    await fastLimiter(req, res, next);
+    expect(next).toHaveBeenCalledTimes(6);
   });
 });
