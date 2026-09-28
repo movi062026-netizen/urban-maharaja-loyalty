@@ -12,7 +12,13 @@ export const authApi = {
     return api.post('/auth/guest/verify-otp', data);
   },
   registerCustomer: (data) => api.post('/auth/guest/register', data),
-  guestLogin: (email, password) => api.post('/auth/guest/login', { email, password }),
+  guestLogin: (identifier, password) => {
+    const clean = String(identifier).trim();
+    const payload = clean.includes('@')
+      ? { email: clean.toLowerCase(), identifier: clean, password }
+      : { phone: clean.replace(/\D/g, ''), identifier: clean, password };
+    return api.post('/auth/guest/login', payload);
+  },
   googleLogin: (idToken) => api.post('/auth/google', { idToken }),
   adminLogin: (email, password) => api.post('/auth/admin/login', { email, password }),
   refreshToken: (refreshToken) => api.post('/auth/refresh', { refreshToken }),

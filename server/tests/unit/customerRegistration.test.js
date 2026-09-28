@@ -46,8 +46,12 @@ describe('Customer Registration & Password Login Unit Tests', () => {
     ).rejects.toThrow(ValidationError);
   });
 
-  it('throws ValidationError in guestPasswordLogin if email or password missing', async () => {
+  it('throws ValidationError in guestPasswordLogin if identifier or password missing', async () => {
     await expect(authService.guestPasswordLogin('', 'password')).rejects.toThrow(ValidationError);
     await expect(authService.guestPasswordLogin('patron@example.com', '')).rejects.toThrow(ValidationError);
+  });
+
+  it('throws ValidationError in guestPasswordLogin if phone number has less than 10 digits', async () => {
+    await expect(authService.guestPasswordLogin('12345', 'password123')).rejects.toThrow(ValidationError);
   });
 });

@@ -24,8 +24,9 @@ const customerRegister = async (req, res, next) => {
 
 const guestPasswordLogin = async (req, res, next) => {
   try {
+    const identifier = req.body.identifier || req.body.email || req.body.phone;
     const result = await authService.guestPasswordLogin(
-      req.body.email,
+      identifier,
       req.body.password,
       auditContext(req)
     );

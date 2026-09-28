@@ -26,10 +26,17 @@ const customerRegisterRules = [
 ];
 
 const guestLoginRules = [
-  body('email')
-    .trim()
-    .notEmpty().withMessage('Email address is required')
-    .isEmail().withMessage('Please enter a valid email address'),
+  body().custom((value) => {
+    const raw = value.identifier || value.email || value.phone;
+    if (!raw || !String(raw).trim()) {
+      throw new Error('Email address or mobile number is required');
+    }
+    const clean = String(raw).trim();
+    if (!clean.includes('@') && clean.replace(/\D/g, '').length < 10) {
+      throw new Error('Please enter a valid email address or 10-digit mobile number');
+    }
+    return true;
+  }),
   body('password')
     .notEmpty().withMessage('Password is required'),
 ];

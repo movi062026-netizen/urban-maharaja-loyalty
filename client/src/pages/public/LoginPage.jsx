@@ -10,6 +10,7 @@ export default function LoginPage() {
 
   // Input states
   const [email, setEmail] = useState('');
+  const [loginIdentifier, setLoginIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -79,15 +80,21 @@ export default function LoginPage() {
     }
   };
 
-  // Login with Email + Password
+  // Login with Email or Mobile Number + Password
   const handlePasswordLogin = async (e) => {
     e.preventDefault();
 
-    const cleanEmail = email.trim().toLowerCase();
-    if (!cleanEmail || !cleanEmail.includes('@')) {
-      toast.error('Please enter a valid royal email address');
+    const clean = loginIdentifier.trim();
+    if (!clean) {
+      toast.error('Please enter your royal email address or mobile number');
       return;
     }
+
+    if (!clean.includes('@') && clean.replace(/\D/g, '').length < 10) {
+      toast.error('Please enter a valid email address or 10-digit mobile number');
+      return;
+    }
+
     if (!password) {
       toast.error('Please enter your secret password');
       return;
@@ -95,12 +102,12 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      const { data } = await authApi.guestLogin(cleanEmail, password);
+      const { data } = await authApi.guestLogin(clean, password);
       login(data.data.user, data.data.tokens);
       toast.success(`Welcome back to the Court, ${data.data.user.name || 'Noble Patron'}!`);
       navigate('/guest/card');
     } catch (error) {
-      toast.error(error.response?.data?.error?.message || 'Invalid email or password');
+      toast.error(error.response?.data?.error?.message || 'Invalid credentials');
     } finally {
       setLoading(false);
     }
@@ -398,21 +405,25 @@ export default function LoginPage() {
                 /* Password Sign In Form */
                 <form onSubmit={handlePasswordLogin} className="space-y-4">
                   <div>
-                    <label htmlFor="pass-email" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-2">
-                      Patron Email Address
+                    <label htmlFor="pass-identifier" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-2">
+                      Email Address or Mobile Number
                     </label>
                     <div className="relative">
                       <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-[20px]">
-                        alternate_email
+                        {loginIdentifier.includes('@')
+                          ? 'alternate_email'
+                          : loginIdentifier.replace(/\D/g, '').length > 0
+                          ? 'phone_iphone'
+                          : 'badge'}
                       </span>
                       <input
-                        id="pass-email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="patron@urbanmaharaja.com"
+                        id="pass-identifier"
+                        type="text"
+                        value={loginIdentifier}
+                        onChange={(e) => setLoginIdentifier(e.target.value)}
+                        placeholder="patron@urbanmaharaja.com or 9876543210"
                         className="w-full pl-11 pr-4 py-3.5 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
-                        autoComplete="email"
+                        autoComplete="username"
                         required
                         autoFocus
                       />
@@ -469,17 +480,35 @@ export default function LoginPage() {
 
               {/* Quick Demo Fill Helper */}
               <div className="pt-4 border-t border-outline-variant/30">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail('patron@urbanmaharaja.com');
-                    toast.success('Loaded patron@urbanmaharaja.com');
-                  }}
-                  className="w-full p-2.5 rounded-lg bg-surface-container-high/70 hover:bg-surface-container-highest border border-outline-variant/30 text-xs text-primary font-mono text-center transition-colors cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <span className="material-symbols-outlined text-[16px]">account_circle</span>
-                  <span>Fill Demo Patron (patron@urbanmaharaja.com)</span>
-                </button>
+                <p className="text-[11px] uppercase tracking-wider text-on-surface-variant/70 text-center font-semibold mb-2">
+                  One-Click Demo Patrons
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmail('patron@urbanmaharaja.com');
+                      setLoginIdentifier('patron@urbanmaharaja.com');
+                      setPassword('password123');
+                      toast.success('Loaded patron@urbanmaharaja.com');
+                    }}
+                    className="p-2 rounded-lg bg-surface-container-high/70 hover:bg-surface-container-highest border border-outline-variant/30 text-xs text-primary font-mono text-center transition-colors cursor-pointer"
+                  >
+                    Email Patron
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLoginMethod('password');
+                      setLoginIdentifier('9876543210');
+                      setPassword('password123');
+                      toast.success('Loaded 9876543210');
+                    }}
+                    className="p-2 rounded-lg bg-surface-container-high/70 hover:bg-surface-container-highest border border-outline-variant/30 text-xs text-secondary font-mono text-center transition-colors cursor-pointer"
+                  >
+                    Mobile Patron
+                  </button>
+                </div>
               </div>
             </div>
           )}

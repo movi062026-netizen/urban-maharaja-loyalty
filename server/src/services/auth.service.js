@@ -268,18 +268,35 @@ const guestVerifyOtp = async (identifier, otp, auditCtx = {}) => {
 };
 
 /**
- * Guest login with email + password
+ * Guest login with email or phone + password
  */
-const guestPasswordLogin = async (email, password, auditCtx = {}) => {
-  if (!email || !password) {
-    throw new ValidationError('Email and password are required');
+const guestPasswordLogin = async (identifier, password, auditCtx = {}) => {
+  if (!identifier || !password) {
+    throw new ValidationError('Email or mobile number and password are required');
   }
 
-  const normalizedEmail = email.trim().toLowerCase();
-  const user = await User.findOne({
-    email: normalizedEmail,
-    role: ROLES.GUEST,
-  }).select('+password +refreshToken');
+  const rawIdentifier = String(identifier).trim();
+  let user;
+  let method = 'guest_password';
+
+  if (rawIdentifier.includes('@')) {
+    const email = rawIdentifier.toLowerCase();
+    user = await User.findOne({
+      email,
+      role: ROLES.GUEST,
+    }).select('+password +refreshToken');
+    method = 'guest_password_email';
+  } else {
+    const phone = rawIdentifier.replace(/\D/g, '');
+    if (phone.length < 10) {
+      throw new ValidationError('Please enter a valid 10-digit mobile number or email address');
+    }
+    user = await User.findOne({
+      phone,
+      role: ROLES.GUEST,
+    }).select('+password +refreshToken');
+    method = 'guest_password_phone';
+  }
 
   if (!user || !user.password) {
     throw new AuthenticationError('Invalid credentials. If you signed up with Google or Email OTP, please use that method.');
@@ -291,7 +308,7 @@ const guestPasswordLogin = async (email, password, auditCtx = {}) => {
 
   const isMatch = await user.comparePassword(password);
   if (!isMatch) {
-    throw new AuthenticationError('Invalid email or password');
+    throw new AuthenticationError('Invalid email/mobile number or password');
   }
 
   user.lastLoginAt = new Date();
@@ -317,7 +334,7 @@ const guestPasswordLogin = async (email, password, auditCtx = {}) => {
     action: AUDIT_ACTIONS.LOGIN,
     entityType: ENTITY_TYPES.USER,
     entityId: user._id,
-    metadata: { method: 'guest_password' },
+    metadata: { method },
   });
 
   return {
