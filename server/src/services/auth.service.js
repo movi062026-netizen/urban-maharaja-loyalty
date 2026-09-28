@@ -94,45 +94,56 @@ const guestRequestOtp = async (identifier) => {
 };
 
 /**
- * Customer Registration — Name + Email (+ Phone optional)
+ * Customer Registration — Name + Email + Phone + Password
  */
-const customerRegister = async ({ name, email, phone }) => {
+const customerRegister = async ({ name, email, phone, password }) => {
   if (!name || name.trim().length < 2) {
     throw new ValidationError('Please provide your noble name (at least 2 characters)');
   }
   if (!email || !email.includes('@')) {
     throw new ValidationError('A valid email address is required');
   }
+  if (!phone || phone.trim().length < 10) {
+    throw new ValidationError('A valid 10-digit mobile number is required');
+  }
+  if (!password || password.length < 6) {
+    throw new ValidationError('Password must be at least 6 characters');
+  }
 
   const normalizedEmail = email.trim().toLowerCase();
-  const normalizedPhone = phone?.trim() ? phone.trim().replace(/\s+/g, '') : undefined;
+  const normalizedPhone = phone.trim().replace(/\D/g, '');
 
-  // 1. Check if email is reserved for staff
+  if (normalizedPhone.length < 10 || normalizedPhone.length > 15) {
+    throw new ValidationError('Mobile number must be 10-15 digits');
+  }
+
+  // 1. Check if email or phone is reserved for staff
   const staffWithEmail = await User.findOne({ email: normalizedEmail });
   if (staffWithEmail && staffWithEmail.role !== ROLES.GUEST) {
     throw new ValidationError('This email is reserved for staff terminal access.');
   }
 
-  // 2. Check if a guest already exists with this email OR phone
-  const queryConditions = [{ email: normalizedEmail }];
-  if (normalizedPhone) {
-    queryConditions.push({ phone: normalizedPhone });
+  const staffWithPhone = await User.findOne({ phone: normalizedPhone });
+  if (staffWithPhone && staffWithPhone.role !== ROLES.GUEST) {
+    throw new ValidationError('This phone number is reserved for staff terminal access.');
   }
 
+  // 2. Check if a guest already exists with this email OR phone
   let existingUser = await User.findOne({
     role: ROLES.GUEST,
-    $or: queryConditions,
-  });
+    $or: [{ email: normalizedEmail }, { phone: normalizedPhone }],
+  }).select('+password');
 
   if (existingUser) {
-    // If found, update profile details and dispatch OTP
-    if (name && (!existingUser.name || existingUser.name === 'Guest' || existingUser.name === 'Sovereign Guest')) {
-      existingUser.name = name.trim();
+    if (existingUser.password) {
+      throw new ValidationError('An account with this email or mobile number already exists. Please sign in.');
     }
+
+    // Existing guest without password (e.g. created via OTP earlier) -> set password & update details
+    existingUser.name = name.trim();
     existingUser.email = normalizedEmail;
-    if (normalizedPhone) {
-      existingUser.phone = normalizedPhone;
-    }
+    existingUser.phone = normalizedPhone;
+    existingUser.password = password; // Trigger pre('save') hash
     await existingUser.save();
 
     // Ensure active loyalty card exists
@@ -146,11 +157,10 @@ const customerRegister = async ({ name, email, phone }) => {
   const userData = {
     name: name.trim(),
     email: normalizedEmail,
+    phone: normalizedPhone,
+    password, // Trigger pre('save') hash in User model
     role: ROLES.GUEST,
   };
-  if (normalizedPhone) {
-    userData.phone = normalizedPhone;
-  }
 
   const user = await User.create(userData);
 
@@ -158,7 +168,7 @@ const customerRegister = async ({ name, email, phone }) => {
   const { getOrCreateActiveCard } = require('./loyalty.service');
   await getOrCreateActiveCard(user._id);
 
-  // Generate and dispatch OTP
+  // Generate and dispatch verification OTP
   const otp = env.isDevelopment ? '123456' : String(Math.floor(100000 + Math.random() * 900000));
   await cache.storeOtp(normalizedEmail, otp);
 
@@ -249,6 +259,65 @@ const guestVerifyOtp = async (identifier, otp, auditCtx = {}) => {
     entityType: ENTITY_TYPES.USER,
     entityId: user._id,
     metadata: { method: 'email_otp', otpSource: redisOtp ? 'redis' : 'mongodb' },
+  });
+
+  return {
+    user: user.toJSON(),
+    tokens,
+  };
+};
+
+/**
+ * Guest login with email + password
+ */
+const guestPasswordLogin = async (email, password, auditCtx = {}) => {
+  if (!email || !password) {
+    throw new ValidationError('Email and password are required');
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const user = await User.findOne({
+    email: normalizedEmail,
+    role: ROLES.GUEST,
+  }).select('+password +refreshToken');
+
+  if (!user || !user.password) {
+    throw new AuthenticationError('Invalid credentials. If you signed up with Google or Email OTP, please use that method.');
+  }
+
+  if (!user.isActive) {
+    throw new AuthenticationError('Account is deactivated. Please contact restaurant concierge.');
+  }
+
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) {
+    throw new AuthenticationError('Invalid email or password');
+  }
+
+  user.lastLoginAt = new Date();
+  const tokens = generateTokens(user);
+  user.refreshToken = tokens.refreshToken;
+  await user.save();
+
+  // Provision loyalty card if missing
+  const { getOrCreateActiveCard } = require('./loyalty.service');
+  await getOrCreateActiveCard(user._id);
+
+  // Store session in Redis
+  await cache.setSession(user._id.toString(), {
+    role: user.role,
+    loginAt: new Date().toISOString(),
+  });
+
+  // Audit
+  createAuditLog({
+    ...auditCtx,
+    actorId: user._id,
+    actorRole: user.role,
+    action: AUDIT_ACTIONS.LOGIN,
+    entityType: ENTITY_TYPES.USER,
+    entityId: user._id,
+    metadata: { method: 'guest_password' },
   });
 
   return {
@@ -448,6 +517,7 @@ module.exports = {
   guestRequestOtp,
   customerRegister,
   guestVerifyOtp,
+  guestPasswordLogin,
   staffLogin,
   googleLogin,
   refreshAccessToken,

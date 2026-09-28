@@ -12,6 +12,7 @@ const {
   guestOtpRules,
   guestVerifyRules,
   customerRegisterRules,
+  guestLoginRules,
   staffLoginRules,
   googleAuthRules,
   refreshTokenRules,
@@ -19,6 +20,7 @@ const {
 } = require('../validators/auth.validator');
 
 // Guest auth (Protected by Token Bucket rate limiter)
+router.post('/guest/login', passwordLoginTokenBucket, guestLoginRules, validate, authController.guestPasswordLogin);
 router.post('/guest/request-otp', guestOtpTokenBucket, guestOtpRules, validate, authController.guestRequestOtp);
 router.post('/guest/verify-otp', guestOtpTokenBucket, guestVerifyRules, validate, authController.guestVerifyOtp);
 router.post('/guest/register', guestOtpTokenBucket, customerRegisterRules, validate, authController.customerRegister);

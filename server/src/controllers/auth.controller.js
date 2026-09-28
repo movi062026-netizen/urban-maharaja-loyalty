@@ -14,9 +14,22 @@ const guestRequestOtp = async (req, res, next) => {
 
 const customerRegister = async (req, res, next) => {
   try {
-    const { name, email, phone } = req.body;
-    const result = await authService.customerRegister({ name, email, phone });
+    const { name, email, phone, password } = req.body;
+    const result = await authService.customerRegister({ name, email, phone, password });
     success(res, result, result.message || 'Registration successful', 201);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const guestPasswordLogin = async (req, res, next) => {
+  try {
+    const result = await authService.guestPasswordLogin(
+      req.body.email,
+      req.body.password,
+      auditContext(req)
+    );
+    success(res, result, 'Login successful');
   } catch (error) {
     next(error);
   }
@@ -103,6 +116,7 @@ module.exports = {
   guestRequestOtp,
   customerRegister,
   guestVerifyOtp,
+  guestPasswordLogin,
   staffLogin,
   googleLogin,
   refreshToken,

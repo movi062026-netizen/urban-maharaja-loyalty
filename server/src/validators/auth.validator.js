@@ -10,15 +10,28 @@ const guestOtpRules = [
 const customerRegisterRules = [
   body('name')
     .trim()
-    .notEmpty().withMessage('Your name is required')
+    .notEmpty().withMessage('Your full name is required')
     .isLength({ min: 2, max: 100 }).withMessage('Name must be 2-100 characters'),
   body('email')
     .trim()
     .notEmpty().withMessage('Email address is required')
     .isEmail().withMessage('Please enter a valid email address'),
   body('phone')
-    .optional()
-    .trim(),
+    .trim()
+    .notEmpty().withMessage('Mobile number is required')
+    .isLength({ min: 10, max: 15 }).withMessage('Mobile number must be 10-15 digits'),
+  body('password')
+    .notEmpty().withMessage('Password is required')
+    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+];
+
+const guestLoginRules = [
+  body('email')
+    .trim()
+    .notEmpty().withMessage('Email address is required')
+    .isEmail().withMessage('Please enter a valid email address'),
+  body('password')
+    .notEmpty().withMessage('Password is required'),
 ];
 
 const guestVerifyRules = [
@@ -71,6 +84,7 @@ module.exports = {
   guestOtpRules,
   guestVerifyRules,
   customerRegisterRules,
+  guestLoginRules,
   staffLoginRules,
   googleAuthRules,
   refreshTokenRules,

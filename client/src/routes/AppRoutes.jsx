@@ -14,6 +14,7 @@ import MenuPage from '../pages/public/MenuPage';
 import ContactPage from '../pages/public/ContactPage';
 import LoyaltyLandingPage from '../pages/public/LoyaltyLandingPage';
 import LoginPage from '../pages/public/LoginPage';
+import RegisterPage from '../pages/public/RegisterPage';
 import AdminLoginPage from '../pages/public/AdminLoginPage';
 
 // Guest Pages
@@ -54,7 +55,7 @@ export default function AppRoutes() {
 
       {/* Authentication Portals (Distinct for Customers & Staff/Admin) */}
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<LoginPage defaultMode="register" />} />
+      <Route path="/register" element={<RegisterPage />} />
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route path="/staff/login" element={<AdminLoginPage defaultRole="STAFF" />} />
 

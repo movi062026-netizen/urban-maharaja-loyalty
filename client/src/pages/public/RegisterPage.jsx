@@ -4,12 +4,13 @@ import { useAuth } from '../../context/AuthContext';
 import { authApi } from '../../services/api';
 import toast from 'react-hot-toast';
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [step, setStep] = useState('input'); // 'input' | 'otp'
-  const [loginMethod, setLoginMethod] = useState('otp'); // 'otp' | 'password'
 
   // Input states
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -51,9 +52,14 @@ export default function LoginPage() {
     }
   }, [step]);
 
-  // Request Email OTP for patron login
-  const handleRequestOtp = async (e) => {
-    if (e) e.preventDefault();
+  // Register new patron account ("Join Royalty")
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    if (!name || name.trim().length < 2) {
+      toast.error('Please enter your full noble name (at least 2 characters)');
+      return;
+    }
 
     const cleanEmail = email.trim().toLowerCase();
     if (!cleanEmail || !cleanEmail.includes('@')) {
@@ -61,10 +67,27 @@ export default function LoginPage() {
       return;
     }
 
+    const cleanPhone = phone.trim().replace(/\D/g, '');
+    if (!cleanPhone || cleanPhone.length < 10) {
+      toast.error('Please enter a valid 10-digit mobile number');
+      return;
+    }
+
+    if (!password || password.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+
     setLoading(true);
     try {
-      const { data } = await authApi.requestOtp({ email: cleanEmail });
-      toast.success(data.message || 'Royal verification seal dispatched to your email!');
+      const { data } = await authApi.registerCustomer({
+        name: name.trim(),
+        email: cleanEmail,
+        phone: cleanPhone,
+        password,
+      });
+
+      toast.success(data.message || 'Royal account created! Verification seal dispatched to your email');
       if (data.data?.devOtp) {
         setDevOtpHint(data.data.devOtp);
       }
@@ -73,34 +96,7 @@ export default function LoginPage() {
       setOtpDigits(['', '', '', '', '', '']);
       setStep('otp');
     } catch (error) {
-      toast.error(error.response?.data?.error?.message || 'Failed to dispatch verification code');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Login with Email + Password
-  const handlePasswordLogin = async (e) => {
-    e.preventDefault();
-
-    const cleanEmail = email.trim().toLowerCase();
-    if (!cleanEmail || !cleanEmail.includes('@')) {
-      toast.error('Please enter a valid royal email address');
-      return;
-    }
-    if (!password) {
-      toast.error('Please enter your secret password');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const { data } = await authApi.guestLogin(cleanEmail, password);
-      login(data.data.user, data.data.tokens);
-      toast.success(`Welcome back to the Court, ${data.data.user.name || 'Noble Patron'}!`);
-      navigate('/guest/card');
-    } catch (error) {
-      toast.error(error.response?.data?.error?.message || 'Invalid email or password');
+      toast.error(error.response?.data?.error?.message || 'Registration failed');
     } finally {
       setLoading(false);
     }
@@ -126,7 +122,7 @@ export default function LoginPage() {
         verifyCode(newDigits.join(''));
       }
     } else {
-      // Handle paste of multiple characters into this box
+      // Handle paste
       const pasteChars = cleanVal.slice(0, 6).split('');
       for (let i = 0; i < 6; i++) {
         newDigits[i] = pasteChars[i] || '';
@@ -248,7 +244,7 @@ export default function LoginPage() {
       return;
     }
 
-    // Direct Google prompt
+    // Direct Google prompt fallback
     const promptEmail = window.prompt(
       'Enter Google email to continue via Google OAuth:',
       email || 'patron@gmail.com'
@@ -264,13 +260,7 @@ export default function LoginPage() {
       const { data } = await authApi.googleLogin(idToken);
       login(data.data.user, data.data.tokens);
       toast.success(data.message || `Welcome, ${data.data.user.name}!`);
-      if (data.data.user.role === 'ADMIN') {
-        navigate('/admin/dashboard');
-      } else if (data.data.user.role === 'STAFF') {
-        navigate('/staff/dashboard');
-      } else {
-        navigate('/guest/card');
-      }
+      navigate('/guest/card');
     } catch (error) {
       toast.error(error.response?.data?.error?.message || 'Google authentication failed');
     } finally {
@@ -278,7 +268,6 @@ export default function LoginPage() {
     }
   };
 
-  // Active target identifier string for display
   const activeIdentifier = email.trim() || 'your royal email';
 
   return (
@@ -304,184 +293,151 @@ export default function LoginPage() {
               URBAN MAHARAJA
             </h1>
             <p className="text-xs uppercase tracking-[0.26em] text-secondary font-semibold mt-1">
-              DIGITAL MAHARAJA PORTAL
+              JOIN ROYAL MEMBERSHIP
             </p>
           </Link>
         </div>
 
-        {/* Authentication Card */}
+        {/* Registration Card */}
         <div className="glass-card-royal p-5 sm:p-7 lg:p-9">
           {/* Header Title */}
           <div className="mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-mono uppercase tracking-wider text-primary font-semibold mb-2">
+              <span className="material-symbols-outlined text-[13px]">stars</span>
+              <span>Exclusive Patron Privileges</span>
+            </div>
             <h2 className="font-serif text-xl sm:text-2xl text-on-surface font-bold">
-              {step === 'otp' ? 'Verify Royal Seal' : 'Patron Authentication'}
+              {step === 'otp' ? 'Verify Royal Seal' : 'Join the Royal Court'}
             </h2>
             <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">
               {step === 'otp'
                 ? `Enter the 6-digit seal dispatched to ${activeIdentifier}`
-                : 'Sign in to access your Digital Maharaja Card, stamps, and rewards.'}
+                : 'Create your royal account to receive your Digital Maharaja Card, collect stamps, and redeem imperial rewards.'}
             </p>
           </div>
 
-          {/* ── STEP 1: PATRON SIGN IN ───────────────────────────────────── */}
+          {/* ── STEP 1: REGISTRATION FORM ─────────────────────────────────── */}
           {step === 'input' && (
-            <div className="space-y-5">
-              {/* Method Switcher Tabs: Email OTP vs Password */}
-              <div className="grid grid-cols-2 p-1 rounded-2xl bg-surface-container-lowest border border-outline-variant/30">
-                <button
-                  type="button"
-                  onClick={() => setLoginMethod('otp')}
-                  className={`py-2.5 rounded-xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                    loginMethod === 'otp'
-                      ? 'bg-primary-container/30 text-primary border border-primary/40 shadow-sm font-bold'
-                      : 'text-on-surface-variant hover:text-on-surface'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-[16px]">alternate_email</span>
-                  <span>Email OTP</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setLoginMethod('password')}
-                  className={`py-2.5 rounded-xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                    loginMethod === 'password'
-                      ? 'bg-primary-container/30 text-primary border border-primary/40 shadow-sm font-bold'
-                      : 'text-on-surface-variant hover:text-on-surface'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-[16px]">lock</span>
-                  <span>Password</span>
-                </button>
+            <form onSubmit={handleRegister} className="space-y-4">
+              <div>
+                <label htmlFor="reg-name" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-1.5">
+                  Full Noble Name
+                </label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-[20px]">
+                    person
+                  </span>
+                  <input
+                    id="reg-name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="e.g. Maharani Gayatri Devi"
+                    className="w-full pl-11 pr-4 py-3 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
+                    required
+                    autoFocus
+                  />
+                </div>
               </div>
 
-              {loginMethod === 'otp' ? (
-                /* Email OTP Sign In Form */
-                <form onSubmit={handleRequestOtp} className="space-y-4">
-                  <div>
-                    <label htmlFor="login-email" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-2">
-                      Patron Email Address
-                    </label>
-                    <div className="relative">
-                      <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-[20px]">
-                        alternate_email
-                      </span>
-                      <input
-                        id="login-email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="patron@urbanmaharaja.com"
-                        className="w-full pl-11 pr-4 py-3.5 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
-                        autoComplete="email"
-                        required
-                        autoFocus
-                      />
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full py-4 rounded-xl glass-btn-primary text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2"
-                  >
-                    {loading ? (
-                      <span className="w-5 h-5 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <>
-                        <span>Dispatch Verification Seal</span>
-                        <span className="material-symbols-outlined text-[18px]">send</span>
-                      </>
-                    )}
-                  </button>
-                </form>
-              ) : (
-                /* Password Sign In Form */
-                <form onSubmit={handlePasswordLogin} className="space-y-4">
-                  <div>
-                    <label htmlFor="pass-email" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-2">
-                      Patron Email Address
-                    </label>
-                    <div className="relative">
-                      <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-[20px]">
-                        alternate_email
-                      </span>
-                      <input
-                        id="pass-email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="patron@urbanmaharaja.com"
-                        className="w-full pl-11 pr-4 py-3.5 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
-                        autoComplete="email"
-                        required
-                        autoFocus
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="pass-password" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-2">
-                      Secret Password
-                    </label>
-                    <div className="relative">
-                      <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-[20px]">
-                        lock
-                      </span>
-                      <input
-                        id="pass-password"
-                        type={showPassword ? 'text' : 'password'}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter your secret password"
-                        className="w-full pl-11 pr-11 py-3.5 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
-                        autoComplete="current-password"
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/60 hover:text-on-surface transition-colors cursor-pointer"
-                        tabIndex={-1}
-                      >
-                        <span className="material-symbols-outlined text-[20px]">
-                          {showPassword ? 'visibility_off' : 'visibility'}
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full py-4 rounded-xl glass-btn-primary text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2"
-                  >
-                    {loading ? (
-                      <span className="w-5 h-5 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <>
-                        <span>Enter the Royal Court</span>
-                        <span className="material-symbols-outlined text-[18px]">login</span>
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
-
-              {/* Quick Demo Fill Helper */}
-              <div className="pt-4 border-t border-outline-variant/30">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail('patron@urbanmaharaja.com');
-                    toast.success('Loaded patron@urbanmaharaja.com');
-                  }}
-                  className="w-full p-2.5 rounded-lg bg-surface-container-high/70 hover:bg-surface-container-highest border border-outline-variant/30 text-xs text-primary font-mono text-center transition-colors cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <span className="material-symbols-outlined text-[16px]">account_circle</span>
-                  <span>Fill Demo Patron (patron@urbanmaharaja.com)</span>
-                </button>
+              <div>
+                <label htmlFor="reg-email" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-1.5">
+                  Royal Email Address
+                </label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-[20px]">
+                    alternate_email
+                  </span>
+                  <input
+                    id="reg-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="gayatri@royalmail.com"
+                    className="w-full pl-11 pr-4 py-3 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
+                    autoComplete="email"
+                    required
+                  />
+                </div>
               </div>
-            </div>
+
+              <div>
+                <label htmlFor="reg-phone" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-1.5">
+                  Mobile Number
+                </label>
+                <div className="relative flex">
+                  <div className="flex items-center px-3.5 bg-surface-container border border-r-0 border-outline-variant/40 rounded-l-xl text-xs text-secondary font-mono font-bold">
+                    +91
+                  </div>
+                  <input
+                    id="reg-phone"
+                    type="tel"
+                    maxLength={10}
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
+                    placeholder="9876543210"
+                    className="w-full px-4 py-3 bg-surface-container border border-outline-variant/40 rounded-r-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-mono tracking-wider"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="reg-password" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-1.5">
+                  Secret Password
+                </label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-[20px]">
+                    lock
+                  </span>
+                  <input
+                    id="reg-password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Min. 6 characters"
+                    className="w-full pl-11 pr-11 py-3 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
+                    autoComplete="new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/60 hover:text-on-surface transition-colors cursor-pointer"
+                    tabIndex={-1}
+                  >
+                    <span className="material-symbols-outlined text-[20px]">
+                      {showPassword ? 'visibility_off' : 'visibility'}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Royal Privilege Note */}
+              <div className="p-3 rounded-xl bg-surface-container-high/60 border border-secondary/30 flex items-start gap-2.5 text-xs text-on-surface-variant">
+                <span className="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5">
+                  card_membership
+                </span>
+                <span>
+                  Your active <strong className="text-secondary">Digital Maharaja Card</strong> will be automatically issued upon verification.
+                </span>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-4 mt-2 rounded-xl glass-btn-primary text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              >
+                {loading ? (
+                  <span className="w-5 h-5 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <span>Create Maharaja Account</span>
+                    <span className="material-symbols-outlined text-[18px]">verified</span>
+                  </>
+                )}
+              </button>
+            </form>
           )}
 
           {/* ── Social Google Login ────────────────────────────────────────── */}
@@ -529,7 +485,7 @@ export default function LoginPage() {
                     className="text-xs text-secondary hover:text-primary transition-colors cursor-pointer flex items-center gap-1 font-medium"
                   >
                     <span className="material-symbols-outlined text-[14px]">edit</span>
-                    <span>Change Email</span>
+                    <span>Edit Details</span>
                   </button>
                 </div>
 
@@ -548,7 +504,7 @@ export default function LoginPage() {
                       onKeyDown={(e) => handleOtpKeyDown(index, e)}
                       className={`w-full h-13 sm:h-14 text-center text-xl sm:text-2xl font-mono font-bold rounded-xl border bg-surface-container text-on-surface transition-all focus:outline-none ${
                         digit
-                          ? 'border-primary shadow-[0_0_12px_rgba(222,107,144,0.35)]'
+                           ? 'border-primary shadow-[0_0_12px_rgba(222,107,144,0.35)]'
                           : 'border-outline-variant/40 focus:border-secondary'
                       }`}
                     />
@@ -585,7 +541,7 @@ export default function LoginPage() {
                   <span className="w-5 h-5 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
-                    <span>Verify &amp; Enter Court</span>
+                    <span>Verify Seal &amp; Enter Court</span>
                     <span className="material-symbols-outlined text-[18px]">login</span>
                   </>
                 )}
@@ -611,15 +567,15 @@ export default function LoginPage() {
             </form>
           )}
 
-          {/* Switch to Register Link */}
+          {/* Switch to Login Link */}
           <div className="mt-7 pt-5 border-t border-outline-variant/30 text-center">
             <p className="text-xs text-on-surface-variant">
-              New to the Royal Court?{' '}
+              Already have a Royal account?{' '}
               <Link
-                to="/register"
+                to="/login"
                 className="text-primary hover:text-primary-fixed font-bold underline underline-offset-4 transition-colors"
               >
-                Join Royalty / Create Account
+                Sign In to Your Court
               </Link>
             </p>
           </div>
