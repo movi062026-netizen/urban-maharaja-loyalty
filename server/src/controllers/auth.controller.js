@@ -49,6 +49,19 @@ const staffLogin = async (req, res, next) => {
   }
 };
 
+const googleLogin = async (req, res, next) => {
+  try {
+    const idToken = req.body.idToken || req.body.credential || req.body.token;
+    const result = await authService.googleLogin(
+      idToken,
+      auditContext(req)
+    );
+    success(res, result, result.isNewUser ? 'Welcome to Urban Maharaja! Account created.' : 'Welcome back to Urban Maharaja!');
+  } catch (error) {
+    next(error);
+  }
+};
+
 const refreshToken = async (req, res, next) => {
   try {
     const result = await authService.refreshAccessToken(req.body.refreshToken);
@@ -91,6 +104,7 @@ module.exports = {
   customerRegister,
   guestVerifyOtp,
   staffLogin,
+  googleLogin,
   refreshToken,
   logout,
   getMe,

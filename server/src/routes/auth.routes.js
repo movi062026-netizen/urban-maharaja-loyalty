@@ -1,24 +1,34 @@
 const router = require('express').Router();
 const authController = require('../controllers/auth.controller');
 const { authenticate } = require('../middleware/auth');
-const { authLimiter } = require('../middleware/rateLimiter');
+const {
+  authLimiter,
+  passwordLoginTokenBucket,
+  guestOtpTokenBucket,
+  googleAuthTokenBucket,
+} = require('../middleware/rateLimiter');
 const validate = require('../middleware/validate');
 const {
   guestOtpRules,
   guestVerifyRules,
   customerRegisterRules,
   staffLoginRules,
+  googleAuthRules,
   refreshTokenRules,
   updateProfileRules,
 } = require('../validators/auth.validator');
 
-// Guest auth
-router.post('/guest/request-otp', authLimiter, guestOtpRules, validate, authController.guestRequestOtp);
-router.post('/guest/verify-otp', authLimiter, guestVerifyRules, validate, authController.guestVerifyOtp);
-router.post('/guest/register', authLimiter, customerRegisterRules, validate, authController.customerRegister);
+// Guest auth (Protected by Token Bucket rate limiter)
+router.post('/guest/request-otp', guestOtpTokenBucket, guestOtpRules, validate, authController.guestRequestOtp);
+router.post('/guest/verify-otp', guestOtpTokenBucket, guestVerifyRules, validate, authController.guestVerifyOtp);
+router.post('/guest/register', guestOtpTokenBucket, customerRegisterRules, validate, authController.customerRegister);
 
-// Staff/Admin auth
-router.post('/admin/login', authLimiter, staffLoginRules, validate, authController.staffLogin);
+// Google OAuth Login & Registration (Protected by Token Bucket rate limiter)
+router.post('/google', googleAuthTokenBucket, googleAuthRules, validate, authController.googleLogin);
+router.post('/guest/google', googleAuthTokenBucket, googleAuthRules, validate, authController.googleLogin);
+
+// Staff/Admin auth (Email & Password Protected by Token Bucket rate limiter)
+router.post('/admin/login', passwordLoginTokenBucket, staffLoginRules, validate, authController.staffLogin);
 
 // Token management
 router.post('/refresh', refreshTokenRules, validate, authController.refreshToken);

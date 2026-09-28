@@ -77,11 +77,21 @@ const updateProfileRules = [
     .isEmail().withMessage('Invalid email'),
 ];
 
+const googleAuthRules = [
+  body().custom((value) => {
+    if (!value.idToken && !value.credential && !value.token) {
+      throw new Error('Google credential or idToken is required');
+    }
+    return true;
+  }),
+];
+
 module.exports = {
   guestOtpRules,
   guestVerifyRules,
   customerRegisterRules,
   staffLoginRules,
+  googleAuthRules,
   refreshTokenRules,
   updateProfileRules,
 };

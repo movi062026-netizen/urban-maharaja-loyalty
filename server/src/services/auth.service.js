@@ -378,11 +378,102 @@ const updateGuestProfile = async (userId, { name, email }) => {
   return user.toJSON();
 };
 
+/**
+ * Google OAuth Login & Registration
+ */
+const googleLogin = async (idToken, auditCtx = {}) => {
+  const { verifyGoogleIdToken } = require('../integrations/google');
+  const googleProfile = await verifyGoogleIdToken(idToken);
+  const { googleId, email, name, picture } = googleProfile;
+
+  // Search for existing user by googleId OR email
+  let user = await User.findOne({
+    $or: [{ googleId }, { email: email.toLowerCase() }],
+  }).select('+refreshToken');
+
+  let isNewUser = false;
+
+  if (user) {
+    if (!user.isActive) {
+      throw new AuthenticationError('Account is deactivated. Please contact restaurant administration.');
+    }
+
+    // Link googleId and avatar if not present
+    let modified = false;
+    if (!user.googleId) {
+      user.googleId = googleId;
+      modified = true;
+    }
+    if (picture && !user.avatar) {
+      user.avatar = picture;
+      modified = true;
+    }
+    if (name && (!user.name || user.name === 'Guest' || user.name === 'Sovereign Guest')) {
+      user.name = name;
+      modified = true;
+    }
+
+    user.lastLoginAt = new Date();
+    if (modified) await user.save();
+  } else {
+    // Register new patron
+    user = await User.create({
+      name: name || email.split('@')[0],
+      email: email.toLowerCase(),
+      googleId,
+      avatar: picture,
+      role: ROLES.GUEST,
+      isActive: true,
+      lastLoginAt: new Date(),
+    });
+    isNewUser = true;
+  }
+
+  // Ensure active loyalty card exists if guest
+  if (user.role === ROLES.GUEST) {
+    const { getOrCreateActiveCard } = require('./loyalty.service');
+    await getOrCreateActiveCard(user._id);
+  }
+
+  const tokens = generateTokens(user);
+  user.refreshToken = tokens.refreshToken;
+  await user.save();
+
+  // Store session in Redis
+  await cache.setSession(user._id.toString(), {
+    role: user.role,
+    loginAt: new Date().toISOString(),
+    method: 'google',
+  });
+
+  // Audit log
+  createAuditLog({
+    ...auditCtx,
+    actorId: user._id,
+    actorRole: user.role,
+    action: AUDIT_ACTIONS.LOGIN,
+    entityType: ENTITY_TYPES.USER,
+    entityId: user._id,
+    metadata: {
+      method: 'google_oauth',
+      isNewUser,
+      email: user.email,
+    },
+  });
+
+  return {
+    user: user.toJSON(),
+    tokens,
+    isNewUser,
+  };
+};
+
 module.exports = {
   guestRequestOtp,
   customerRegister,
   guestVerifyOtp,
   staffLogin,
+  googleLogin,
   refreshAccessToken,
   logout,
   updateGuestProfile,

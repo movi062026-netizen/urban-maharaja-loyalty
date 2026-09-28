@@ -22,6 +22,8 @@ const env = {
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
   
   // Google
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || '',
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || '',
   GOOGLE_REVIEW_URL: process.env.GOOGLE_REVIEW_URL || '',
   GOOGLE_MAPS_URL: process.env.GOOGLE_MAPS_URL || '',
   RESERVATION_URL: process.env.RESERVATION_URL || '',

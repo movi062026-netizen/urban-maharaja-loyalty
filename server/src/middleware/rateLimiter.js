@@ -54,4 +54,19 @@ const operationLimiter = rateLimit({
   },
 });
 
-module.exports = { apiLimiter, authLimiter, operationLimiter };
+const {
+  createTokenBucketLimiter,
+  passwordLoginTokenBucket,
+  guestOtpTokenBucket,
+  googleAuthTokenBucket,
+} = require('./tokenBucketLimiter');
+
+module.exports = {
+  apiLimiter,
+  authLimiter,
+  operationLimiter,
+  createTokenBucketLimiter,
+  passwordLoginTokenBucket,
+  guestOtpTokenBucket,
+  googleAuthTokenBucket,
+};

@@ -14,6 +14,7 @@ export const authApi = {
     return api.post('/auth/guest/verify-otp', data);
   },
   registerCustomer: (data) => api.post('/auth/guest/register', data),
+  googleLogin: (idToken) => api.post('/auth/google', { idToken }),
   adminLogin: (email, password) => api.post('/auth/admin/login', { email, password }),
   refreshToken: (refreshToken) => api.post('/auth/refresh', { refreshToken }),
   logout: () => api.post('/auth/logout'),
