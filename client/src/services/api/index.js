@@ -2,14 +2,12 @@ import api from './client';
 
 export const authApi = {
   requestOtp: (payload) => {
-    const data = typeof payload === 'string'
-      ? (payload.includes('@') ? { email: payload } : { phone: payload })
-      : payload;
+    const data = typeof payload === 'string' ? { email: payload } : payload;
     return api.post('/auth/guest/request-otp', data);
   },
   verifyOtp: (identifier, otp) => {
     const data = typeof identifier === 'string'
-      ? (identifier.includes('@') ? { email: identifier, otp } : { phone: identifier, otp })
+      ? { email: identifier, otp }
       : { ...identifier, otp };
     return api.post('/auth/guest/verify-otp', data);
   },

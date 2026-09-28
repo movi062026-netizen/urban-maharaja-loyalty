@@ -4,7 +4,7 @@ const { success } = require('../utils/response');
 
 const guestRequestOtp = async (req, res, next) => {
   try {
-    const identifier = req.body.email || req.body.phone || req.body;
+    const identifier = req.body.email || req.body;
     const result = await authService.guestRequestOtp(identifier);
     success(res, result, result.message || 'OTP dispatched');
   } catch (error) {
@@ -24,7 +24,7 @@ const customerRegister = async (req, res, next) => {
 
 const guestVerifyOtp = async (req, res, next) => {
   try {
-    const identifier = req.body.email || req.body.phone || req.body;
+    const identifier = req.body.email || req.body;
     const result = await authService.guestVerifyOtp(
       identifier,
       req.body.otp,

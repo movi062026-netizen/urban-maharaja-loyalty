@@ -24,28 +24,22 @@ const generateTokens = (user) => {
 };
 
 /**
- * Guest login request — supports Email OTP (primary) and Phone OTP (fallback)
+ * Guest login request — Email OTP only
  */
 const guestRequestOtp = async (identifier) => {
   let email = null;
-  let phone = null;
 
   if (typeof identifier === 'object' && identifier !== null) {
     email = identifier.email?.trim().toLowerCase();
-    phone = identifier.phone?.trim();
   } else if (typeof identifier === 'string') {
-    if (identifier.includes('@')) {
-      email = identifier.trim().toLowerCase();
-    } else {
-      phone = identifier.trim();
-    }
+    email = identifier.trim().toLowerCase();
   }
 
-  if (!email && (!phone || phone.length < 10)) {
-    throw new ValidationError('A valid email address or 10-digit mobile number is required');
+  if (!email || !email.includes('@')) {
+    throw new ValidationError('A valid email address is required');
   }
 
-  const cacheKey = email || phone;
+  const cacheKey = email;
 
   // Rate limit OTP requests via Redis
   const attempts = await cache.trackOtpAttempt(cacheKey);
@@ -54,30 +48,20 @@ const guestRequestOtp = async (identifier) => {
   }
 
   // Find or create guest
-  const query = email ? { email, role: ROLES.GUEST } : { phone, role: ROLES.GUEST };
-  let user = await User.findOne(query);
+  let user = await User.findOne({ email, role: ROLES.GUEST });
 
   if (!user) {
-    // Check if email or phone already belongs to a staff/admin
-    if (email) {
-      const staffUser = await User.findOne({ email });
-      if (staffUser && staffUser.role !== ROLES.GUEST) {
-        throw new ValidationError('This email is associated with a staff terminal. Please use staff login.');
-      }
-    }
-    if (phone) {
-      const staffUser = await User.findOne({ phone });
-      if (staffUser && staffUser.role !== ROLES.GUEST) {
-        throw new ValidationError('This phone number is associated with a staff terminal. Please use staff login.');
-      }
+    // Check if email already belongs to a staff/admin
+    const staffUser = await User.findOne({ email });
+    if (staffUser && staffUser.role !== ROLES.GUEST) {
+      throw new ValidationError('This email is associated with a staff terminal. Please use staff login.');
     }
 
     const userData = {
-      name: email ? email.split('@')[0].replace(/[._-]/g, ' ') : `Patron ${phone ? phone.slice(-4) : ''}`,
+      name: email.split('@')[0].replace(/[._-]/g, ' '),
+      email,
       role: ROLES.GUEST,
     };
-    if (email) userData.email = email;
-    if (phone) userData.phone = phone;
 
     user = await User.create(userData);
 
@@ -103,10 +87,9 @@ const guestRequestOtp = async (identifier) => {
   await user.save();
 
   return {
-    message: email ? `Royal verification seal dispatched to ${email}` : `OTP dispatched to ${phone}`,
+    message: `Royal verification seal dispatched to ${email}`,
     devOtp: env.isDevelopment ? otp : undefined,
     email,
-    phone,
   };
 };
 
@@ -196,30 +179,23 @@ const customerRegister = async ({ name, email, phone }) => {
  */
 const guestVerifyOtp = async (identifier, otp, auditCtx = {}) => {
   let email = null;
-  let phone = null;
   let code = otp;
 
   if (typeof identifier === 'object' && identifier !== null) {
     email = identifier.email?.trim().toLowerCase();
-    phone = identifier.phone?.trim();
     code = identifier.otp || otp;
   } else if (typeof identifier === 'string') {
-    if (identifier.includes('@')) {
-      email = identifier.trim().toLowerCase();
-    } else {
-      phone = identifier.trim();
-    }
+    email = identifier.trim().toLowerCase();
   }
 
-  if (!email && !phone) {
-    throw new ValidationError('Email or phone number is required');
+  if (!email || !email.includes('@')) {
+    throw new ValidationError('A valid email address is required');
   }
   if (!code) {
     throw new ValidationError('OTP is required');
   }
 
-  const query = email ? { email, role: ROLES.GUEST } : { phone, role: ROLES.GUEST };
-  const user = await User.findOne(query).select('+devOtp +devOtpExpiry +refreshToken');
+  const user = await User.findOne({ email, role: ROLES.GUEST }).select('+devOtp +devOtpExpiry +refreshToken');
 
   if (!user) {
     throw new AuthenticationError('Guest account not found. Please register first.');
@@ -229,7 +205,7 @@ const guestVerifyOtp = async (identifier, otp, auditCtx = {}) => {
     throw new AuthenticationError('Account is deactivated. Please contact concierge.');
   }
 
-  const cacheKey = email || phone;
+  const cacheKey = email;
 
   // Verify OTP — try Redis first, fallback to MongoDB
   const redisOtp = await cache.getOtp(cacheKey);
@@ -272,7 +248,7 @@ const guestVerifyOtp = async (identifier, otp, auditCtx = {}) => {
     action: AUDIT_ACTIONS.LOGIN,
     entityType: ENTITY_TYPES.USER,
     entityId: user._id,
-    metadata: { method: email ? 'email_otp' : 'phone_otp', otpSource: redisOtp ? 'redis' : 'mongodb' },
+    metadata: { method: 'email_otp', otpSource: redisOtp ? 'redis' : 'mongodb' },
   });
 
   return {

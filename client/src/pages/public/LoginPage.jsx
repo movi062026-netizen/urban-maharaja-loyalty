@@ -6,7 +6,6 @@ import toast from 'react-hot-toast';
 
 export default function LoginPage({ defaultMode = 'login' }) {
   const [mode, setMode] = useState(defaultMode); // 'login' | 'register'
-  const [loginMethod, setLoginMethod] = useState('email'); // 'email' | 'phone'
   const [step, setStep] = useState('input'); // 'input' | 'otp'
 
   useEffect(() => {
@@ -15,7 +14,6 @@ export default function LoginPage({ defaultMode = 'login' }) {
 
   // Input states
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [name, setName] = useState('');
 
   // 6-digit OTP array state
@@ -56,31 +54,20 @@ export default function LoginPage({ defaultMode = 'login' }) {
     }
   }, [step]);
 
-  // Request OTP for returning patron login
+  // Request Email OTP for returning patron login
   const handleRequestOtp = async (e) => {
     if (e) e.preventDefault();
 
-    let payload = {};
-    if (loginMethod === 'email') {
-      const cleanEmail = email.trim();
-      if (!cleanEmail || !cleanEmail.includes('@')) {
-        toast.error('Please enter a valid royal email address');
-        return;
-      }
-      payload = { email: cleanEmail };
-    } else {
-      const cleanPhone = phone.trim().replace(/\D/g, '');
-      if (!cleanPhone || cleanPhone.length < 10) {
-        toast.error('Please enter a valid 10-digit mobile number');
-        return;
-      }
-      payload = { phone: cleanPhone };
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail || !cleanEmail.includes('@')) {
+      toast.error('Please enter a valid royal email address');
+      return;
     }
 
     setLoading(true);
     try {
-      const { data } = await authApi.requestOtp(payload);
-      toast.success(data.message || 'Royal verification seal dispatched!');
+      const { data } = await authApi.requestOtp({ email: cleanEmail });
+      toast.success(data.message || 'Royal verification seal dispatched to your email!');
       if (data.data?.devOtp) {
         setDevOtpHint(data.data.devOtp);
       }
@@ -102,7 +89,8 @@ export default function LoginPage({ defaultMode = 'login' }) {
       toast.error('Please enter your full noble name');
       return;
     }
-    if (!email || !email.includes('@')) {
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail || !cleanEmail.includes('@')) {
       toast.error('Please enter a valid royal email address');
       return;
     }
@@ -111,10 +99,9 @@ export default function LoginPage({ defaultMode = 'login' }) {
     try {
       const { data } = await authApi.registerCustomer({
         name: name.trim(),
-        email: email.trim().toLowerCase(),
-        phone: phone.trim() ? phone.trim().replace(/\D/g, '') : undefined,
+        email: cleanEmail,
       });
-      toast.success(data.message || 'Royal account created! Seal dispatched');
+      toast.success(data.message || 'Royal account created! Verification seal dispatched to your email');
       if (data.data?.devOtp) {
         setDevOtpHint(data.data.devOtp);
       }
@@ -208,11 +195,8 @@ export default function LoginPage({ defaultMode = 'login' }) {
 
     setLoading(true);
     try {
-      const identifier = loginMethod === 'email' || mode === 'register'
-        ? { email: email.trim().toLowerCase() }
-        : { phone: phone.trim().replace(/\D/g, '') };
-
-      const { data } = await authApi.verifyOtp(identifier, otpCode.trim());
+      const cleanEmail = email.trim().toLowerCase();
+      const { data } = await authApi.verifyOtp({ email: cleanEmail }, otpCode.trim());
       login(data.data.user, data.data.tokens);
       toast.success(`Welcome to the Court of Urban Maharaja, ${data.data.user.name || 'Noble Patron'}!`);
       navigate('/guest/card');
@@ -242,14 +226,9 @@ export default function LoginPage({ defaultMode = 'login' }) {
     if (!canResend || loading) return;
     setLoading(true);
     try {
-      let payload = {};
-      if (loginMethod === 'email' || mode === 'register') {
-        payload = { email: email.trim().toLowerCase() };
-      } else {
-        payload = { phone: phone.trim().replace(/\D/g, '') };
-      }
-      const { data } = await authApi.requestOtp(payload);
-      toast.success('Fresh royal verification seal dispatched!');
+      const cleanEmail = email.trim().toLowerCase();
+      const { data } = await authApi.requestOtp({ email: cleanEmail });
+      toast.success('Fresh royal verification seal dispatched to your email!');
       if (data.data?.devOtp) {
         setDevOtpHint(data.data.devOtp);
       }
@@ -312,9 +291,7 @@ export default function LoginPage({ defaultMode = 'login' }) {
   };
 
   // Active target identifier string for display
-  const activeIdentifier = mode === 'register' || loginMethod === 'email'
-    ? email.trim() || 'your royal email'
-    : `+91 ${phone.trim() || 'mobile'}`;
+  const activeIdentifier = email.trim() || 'your royal email';
 
   return (
     <div className="min-h-screen min-h-dvh flex items-center justify-center bg-background px-3 sm:px-4 py-6 sm:py-8 relative overflow-hidden text-on-surface">
@@ -403,80 +380,28 @@ export default function LoginPage({ defaultMode = 'login' }) {
           {/* ── STEP 1: PATRON SIGN IN ───────────────────────────────────── */}
           {step === 'input' && mode === 'login' && (
             <div className="space-y-5">
-              {/* Method Toggle: Email OTP vs Mobile OTP */}
-              <div className="flex items-center justify-center gap-2 p-1 rounded-xl bg-surface-container-high/60 border border-outline-variant/30">
-                <button
-                  type="button"
-                  onClick={() => setLoginMethod('email')}
-                  className={`flex-1 py-1.5 rounded-lg text-[11px] font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                    loginMethod === 'email'
-                      ? 'bg-surface-container-lowest text-primary shadow-sm border border-primary/30'
-                      : 'text-on-surface-variant hover:text-on-surface'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-[15px]">alternate_email</span>
-                  <span>Email OTP</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setLoginMethod('phone')}
-                  className={`flex-1 py-1.5 rounded-lg text-[11px] font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                    loginMethod === 'phone'
-                      ? 'bg-surface-container-lowest text-primary shadow-sm border border-primary/30'
-                      : 'text-on-surface-variant hover:text-on-surface'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-[15px]">phone_iphone</span>
-                  <span>Mobile OTP</span>
-                </button>
-              </div>
-
               <form onSubmit={handleRequestOtp} className="space-y-4">
-                {loginMethod === 'email' ? (
-                  <div>
-                    <label htmlFor="login-email" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-2">
-                      Patron Email Address
-                    </label>
-                    <div className="relative">
-                      <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-[20px]">
-                        alternate_email
-                      </span>
-                      <input
-                        id="login-email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="patron@urbanmaharaja.com"
-                        className="w-full pl-11 pr-4 py-3.5 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
-                        autoComplete="email"
-                        required
-                        autoFocus
-                      />
-                    </div>
+                <div>
+                  <label htmlFor="login-email" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-2">
+                    Patron Email Address
+                  </label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-[20px]">
+                      alternate_email
+                    </span>
+                    <input
+                      id="login-email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="patron@urbanmaharaja.com"
+                      className="w-full pl-11 pr-4 py-3.5 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
+                      autoComplete="email"
+                      required
+                      autoFocus
+                    />
                   </div>
-                ) : (
-                  <div>
-                    <label htmlFor="login-phone" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-2">
-                      Patron Mobile Number
-                    </label>
-                    <div className="relative flex">
-                      <div className="flex items-center px-3.5 bg-surface-container border border-r-0 border-outline-variant/40 rounded-l-xl text-xs text-secondary font-mono font-bold">
-                        +91
-                      </div>
-                      <input
-                        id="login-phone"
-                        type="tel"
-                        maxLength={10}
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
-                        placeholder="9876543210"
-                        className="w-full px-4 py-3.5 bg-surface-container border border-outline-variant/40 rounded-r-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-mono tracking-wider"
-                        required
-                        autoFocus
-                      />
-                    </div>
-                  </div>
-                )}
+                </div>
 
                 <button
                   type="submit"
@@ -496,33 +421,17 @@ export default function LoginPage({ defaultMode = 'login' }) {
 
               {/* Quick Demo Fill Helper */}
               <div className="pt-4 border-t border-outline-variant/30">
-                <p className="text-[11px] uppercase tracking-wider text-on-surface-variant/70 text-center font-semibold mb-2">
-                  One-Click Demo Patrons
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setLoginMethod('email');
-                      setEmail('patron@urbanmaharaja.com');
-                      toast.success('Loaded patron@urbanmaharaja.com');
-                    }}
-                    className="p-2 rounded-lg bg-surface-container-high/70 hover:bg-surface-container-highest border border-outline-variant/30 text-xs text-primary font-mono text-center transition-colors cursor-pointer"
-                  >
-                    Email Patron
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setLoginMethod('phone');
-                      setPhone('9876543210');
-                      toast.success('Loaded 9876543210 (Rahul Sharma)');
-                    }}
-                    className="p-2 rounded-lg bg-surface-container-high/70 hover:bg-surface-container-highest border border-outline-variant/30 text-xs text-secondary font-mono text-center transition-colors cursor-pointer"
-                  >
-                    Mobile Patron
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEmail('patron@urbanmaharaja.com');
+                    toast.success('Loaded patron@urbanmaharaja.com');
+                  }}
+                  className="w-full p-2.5 rounded-lg bg-surface-container-high/70 hover:bg-surface-container-highest border border-outline-variant/30 text-xs text-primary font-mono text-center transition-colors cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-[16px]">account_circle</span>
+                  <span>Fill Demo Patron (patron@urbanmaharaja.com)</span>
+                </button>
               </div>
             </div>
           )}
@@ -572,25 +481,7 @@ export default function LoginPage({ defaultMode = 'login' }) {
                 </div>
               </div>
 
-              <div>
-                <label htmlFor="reg-phone" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-1.5">
-                  Mobile Number <span className="text-[10px] text-on-surface-variant/60 lowercase">(optional for SMS stamps)</span>
-                </label>
-                <div className="relative">
-                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-[20px]">
-                    phone
-                  </span>
-                  <input
-                    id="reg-phone"
-                    type="tel"
-                    maxLength={10}
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
-                    placeholder="9876543210"
-                    className="w-full pl-11 pr-4 py-3 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
-                  />
-                </div>
-              </div>
+
 
               {/* Royal Privilege Note */}
               <div className="p-3 rounded-xl bg-surface-container-high/60 border border-secondary/30 flex items-start gap-2.5 text-xs text-on-surface-variant">
@@ -664,7 +555,7 @@ export default function LoginPage({ defaultMode = 'login' }) {
                     className="text-xs text-secondary hover:text-primary transition-colors cursor-pointer flex items-center gap-1 font-medium"
                   >
                     <span className="material-symbols-outlined text-[14px]">edit</span>
-                    <span>Change {loginMethod === 'email' || mode === 'register' ? 'Email' : 'Number'}</span>
+                    <span>Change Email</span>
                   </button>
                 </div>
 

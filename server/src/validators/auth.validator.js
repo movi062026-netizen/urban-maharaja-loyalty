@@ -2,19 +2,9 @@ const { body, oneOf } = require('express-validator');
 
 const guestOtpRules = [
   body('email')
-    .optional()
     .trim()
+    .notEmpty().withMessage('Email address is required')
     .isEmail().withMessage('Please enter a valid email address'),
-  body('phone')
-    .optional()
-    .trim()
-    .isLength({ min: 10, max: 15 }).withMessage('Phone number must be 10-15 characters'),
-  body().custom((value) => {
-    if (!value.email && !value.phone) {
-      throw new Error('Either email or phone number is required');
-    }
-    return true;
-  }),
 ];
 
 const customerRegisterRules = [
@@ -33,22 +23,13 @@ const customerRegisterRules = [
 
 const guestVerifyRules = [
   body('email')
-    .optional()
     .trim()
+    .notEmpty().withMessage('Email address is required')
     .isEmail().withMessage('Please enter a valid email address'),
-  body('phone')
-    .optional()
-    .trim(),
   body('otp')
     .trim()
     .notEmpty().withMessage('OTP code is required')
     .isLength({ min: 4, max: 6 }).withMessage('OTP must be 4-6 digits'),
-  body().custom((value) => {
-    if (!value.email && !value.phone) {
-      throw new Error('Either email or phone number is required to verify OTP');
-    }
-    return true;
-  }),
 ];
 
 const staffLoginRules = [
