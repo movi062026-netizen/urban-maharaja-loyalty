@@ -5,6 +5,8 @@ const { ROLES, AUDIT_ACTIONS, ENTITY_TYPES } = require('../constants');
 const { AuthenticationError, ValidationError, NotFoundError } = require('../utils/errors');
 const { createAuditLog } = require('./audit.service');
 const { cache } = require('../integrations/redis');
+const { sendPasswordResetEmail } = require('../integrations/email');
+const logger = require('../config/logger');
 
 /**
  * Generate access + refresh token pair
@@ -602,6 +604,164 @@ const googleLogin = async (idToken, auditCtx = {}) => {
   };
 };
 
+/**
+ * Forgot Password — Request royal password reset seal via Resend
+ * 
+ * Works universally for Patrons, Staff, and Admin users.
+ */
+const forgotPassword = async (email, auditCtx = {}) => {
+  if (!email || typeof email !== 'string') {
+    throw new ValidationError('A valid royal email address is required');
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(normalizedEmail)) {
+    throw new ValidationError('Please provide a valid royal email address');
+  }
+
+  // Rate limit password reset requests per email
+  const attempts = await cache.trackResetAttempt(normalizedEmail);
+  if (attempts && attempts > 5) {
+    throw new ValidationError('Too many password reset requests. Please wait 15 minutes before attempting again.');
+  }
+
+  // Search user across all roles
+  const user = await User.findOne({ email: normalizedEmail }).select('+password +resetPasswordOtp +resetPasswordExpires');
+
+  // Generic secure message to prevent email enumeration
+  const standardMessage = 'If an account exists with this email address, a royal password reset seal has been dispatched.';
+
+  if (!user) {
+    logger.info(`Password reset requested for non-existent email: ${normalizedEmail}`);
+    return {
+      message: standardMessage,
+      email: normalizedEmail,
+    };
+  }
+
+  if (!user.isActive) {
+    throw new AuthenticationError('This account has been deactivated. Please contact restaurant administration.');
+  }
+
+  // Generate 6-digit OTP code
+  const otp = env.isDevelopment && !env.RESEND_API_KEY ? '123456' : String(Math.floor(100000 + Math.random() * 900000));
+
+  // Store OTP in Redis with 15-minute TTL
+  await cache.storeResetOtp(normalizedEmail, otp);
+
+  // Fallback in MongoDB
+  user.resetPasswordOtp = otp;
+  user.resetPasswordExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+  await user.save();
+
+  // Send missive via Resend email service
+  const emailResult = await sendPasswordResetEmail({
+    to: user.email,
+    name: user.name,
+    otp,
+  });
+
+  if (!emailResult.success) {
+    logger.warn(`Resend email dispatch notice for ${normalizedEmail}: ${emailResult.error || 'Check Resend credentials'}`);
+  }
+
+  // Audit log
+  createAuditLog({
+    ...auditCtx,
+    actorId: user._id,
+    actorRole: user.role,
+    action: AUDIT_ACTIONS.PASSWORD_RESET_REQUESTED,
+    entityType: ENTITY_TYPES.USER,
+    entityId: user._id,
+    metadata: {
+      email: user.email,
+      dispatchedViaResend: emailResult.success,
+    },
+  });
+
+  return {
+    message: emailResult.success
+      ? `Royal password reset seal successfully dispatched to ${normalizedEmail} via Resend.`
+      : standardMessage,
+    email: normalizedEmail,
+    devOtp: env.isDevelopment ? otp : undefined,
+  };
+};
+
+/**
+ * Reset Password — Verify 6-digit seal and update secret password
+ */
+const resetPassword = async ({ email, otp, newPassword }, auditCtx = {}) => {
+  if (!email || typeof email !== 'string') {
+    throw new ValidationError('A valid royal email address is required');
+  }
+  if (!otp || typeof otp !== 'string' || !otp.trim()) {
+    throw new ValidationError('The 6-digit imperial verification seal is required');
+  }
+  if (!newPassword || typeof newPassword !== 'string' || newPassword.length < 6 || newPassword.length > 128) {
+    throw new ValidationError('New password must be between 6 and 128 characters');
+  }
+  if (newPassword.trim().length === 0) {
+    throw new ValidationError('Password cannot consist entirely of whitespace');
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const cleanOtp = String(otp).trim();
+
+  const user = await User.findOne({ email: normalizedEmail }).select('+password +resetPasswordOtp +resetPasswordExpires');
+
+  if (!user) {
+    throw new ValidationError('No royal account found matching this email address');
+  }
+
+  if (!user.isActive) {
+    throw new AuthenticationError('Account is deactivated. Please contact restaurant administration.');
+  }
+
+  // Verify OTP from Redis first, fallback to MongoDB
+  const redisOtp = await cache.getResetOtp(normalizedEmail);
+  const storedOtp = redisOtp || user.resetPasswordOtp;
+
+  if (!storedOtp || String(storedOtp).trim() !== cleanOtp) {
+    throw new AuthenticationError('Invalid imperial verification seal. Please verify the code or request a new seal.');
+  }
+
+  // Expiration check for MongoDB fallback
+  if (!redisOtp && user.resetPasswordExpires && user.resetPasswordExpires < new Date()) {
+    throw new AuthenticationError('Imperial verification seal has expired. Please request a new seal.');
+  }
+
+  // Update password & clear reset OTP
+  user.password = newPassword; // Triggers pre('save') bcrypt hash
+  user.resetPasswordOtp = undefined;
+  user.resetPasswordExpires = undefined;
+  user.refreshToken = null; // Revoke old sessions
+  await user.save();
+
+  // Clear Redis entries
+  await cache.deleteResetOtp(normalizedEmail);
+  await cache.removeSession(user._id.toString());
+
+  // Audit log
+  createAuditLog({
+    ...auditCtx,
+    actorId: user._id,
+    actorRole: user.role,
+    action: AUDIT_ACTIONS.PASSWORD_RESET_COMPLETED,
+    entityType: ENTITY_TYPES.USER,
+    entityId: user._id,
+    metadata: {
+      email: user.email,
+    },
+  });
+
+  return {
+    message: 'Imperial credentials updated successfully. You may now sign in with your new secret password.',
+    email: normalizedEmail,
+  };
+};
+
 module.exports = {
   guestRequestOtp,
   customerRegister,
@@ -614,5 +774,7 @@ module.exports = {
   logout,
   updateGuestProfile,
   generateTokens,
+  forgotPassword,
+  resetPassword,
 };
 

@@ -450,9 +450,17 @@ export default function LoginPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="pass-password" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-2">
-                      Secret Password
-                    </label>
+                    <div className="flex items-center justify-between mb-2">
+                      <label htmlFor="pass-password" className="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">
+                        Secret Password
+                      </label>
+                      <Link
+                        to={loginIdentifier.includes('@') ? `/forgot-password?email=${encodeURIComponent(loginIdentifier.trim())}` : '/forgot-password'}
+                        className="text-xs text-secondary hover:text-primary transition-colors font-semibold"
+                      >
+                        Forgot Password?
+                      </Link>
+                    </div>
                     <div className="relative">
                       <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-[20px]">
                         lock

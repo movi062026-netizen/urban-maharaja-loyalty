@@ -15,6 +15,7 @@ import ContactPage from '../pages/public/ContactPage';
 import LoyaltyLandingPage from '../pages/public/LoyaltyLandingPage';
 import LoginPage from '../pages/public/LoginPage';
 import RegisterPage from '../pages/public/RegisterPage';
+import ForgotPasswordPage from '../pages/public/ForgotPasswordPage';
 import AdminLoginPage from '../pages/public/AdminLoginPage';
 import StaffLoginPage from '../pages/public/StaffLoginPage';
 
@@ -57,6 +58,7 @@ export default function AppRoutes() {
       {/* Authentication Portals (Distinct for Customers, Staff, and Admin) */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route path="/staff/login" element={<StaffLoginPage />} />
 

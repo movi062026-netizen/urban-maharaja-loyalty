@@ -31,6 +31,10 @@ const env = {
   // Upstash Redis
   UPSTASH_REDIS_URL: process.env.UPSTASH_REDIS_URL || '',
   UPSTASH_REDIS_TOKEN: process.env.UPSTASH_REDIS_TOKEN || '',
+
+  // Resend Email
+  RESEND_API_KEY: process.env.RESEND_API_KEY || '',
+  RESEND_FROM: process.env.RESEND_FROM || 'Urban Maharaja <onboarding@resend.dev>',
   
   // Logging
   LOG_LEVEL: process.env.LOG_LEVEL || 'info',

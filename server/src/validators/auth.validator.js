@@ -110,6 +110,33 @@ const googleAuthRules = [
   }),
 ];
 
+const forgotPasswordRules = [
+  body('email')
+    .trim()
+    .notEmpty().withMessage('Royal email address is required')
+    .isEmail().withMessage('Please enter a valid royal email address'),
+];
+
+const resetPasswordRules = [
+  body('email')
+    .trim()
+    .notEmpty().withMessage('Royal email address is required')
+    .isEmail().withMessage('Please enter a valid royal email address'),
+  body('otp')
+    .trim()
+    .notEmpty().withMessage('Verification seal is required')
+    .isLength({ min: 4, max: 10 }).withMessage('Verification seal length is invalid'),
+  body('newPassword')
+    .notEmpty().withMessage('New secret password is required')
+    .isLength({ min: 6, max: 128 }).withMessage('Password must be between 6 and 128 characters')
+    .custom((password) => {
+      if (typeof password === 'string' && password.trim().length === 0) {
+        throw new Error('Password cannot be composed solely of whitespace');
+      }
+      return true;
+    }),
+];
+
 module.exports = {
   guestOtpRules,
   guestVerifyRules,
@@ -119,4 +146,7 @@ module.exports = {
   googleAuthRules,
   refreshTokenRules,
   updateProfileRules,
+  forgotPasswordRules,
+  resetPasswordRules,
 };
+

@@ -126,6 +126,26 @@ const updateProfile = async (req, res, next) => {
   }
 };
 
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const result = await authService.forgotPassword(email, auditContext(req));
+    success(res, result, result.message || 'Password reset seal dispatched');
+  } catch (error) {
+    next(error);
+  }
+};
+
+const resetPassword = async (req, res, next) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    const result = await authService.resetPassword({ email, otp, newPassword }, auditContext(req));
+    success(res, result, result.message || 'Password reset successfully');
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   guestRequestOtp,
   customerRegister,
@@ -138,6 +158,8 @@ module.exports = {
   logout,
   getMe,
   updateProfile,
+  forgotPassword,
+  resetPassword,
 };
 
 

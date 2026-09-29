@@ -22,6 +22,8 @@ const KEYS = {
   ACTIVE_REWARDS: 'cache:rewards:active',
   OTP: (phone) => `otp:${phone}`,
   OTP_ATTEMPTS: (phone) => `otp:attempts:${phone}`,
+  RESET_OTP: (email) => `reset_otp:${email}`,
+  RESET_ATTEMPTS: (email) => `reset_attempts:${email}`,
   SESSION: (userId) => `session:${userId}`,
   RATE_LIMIT: (key) => `rl:${key}`,
 };
@@ -35,6 +37,7 @@ const TTL = {
   ACTIVE_REWARDS: 300, // 5 minutes
   OTP: 300,            // 5 minutes
   OTP_ATTEMPTS: 900,   // 15 minutes
+  RESET_OTP: 900,      // 15 minutes
   SESSION: 86400,      // 24 hours
 };
 
@@ -147,6 +150,45 @@ const getOtpAttempts = async (phone) => {
   return (await redis.get(KEYS.OTP_ATTEMPTS(phone))) || 0;
 };
 
+// ── Reset Password OTP Management ──────────────────────
+
+/**
+ * Store password reset OTP for email with 15-minute TTL.
+ */
+const storeResetOtp = async (email, otp) => {
+  const normalized = email.trim().toLowerCase();
+  return redis.set(KEYS.RESET_OTP(normalized), otp, TTL.RESET_OTP);
+};
+
+/**
+ * Retrieve stored password reset OTP for email.
+ */
+const getResetOtp = async (email) => {
+  const normalized = email.trim().toLowerCase();
+  return redis.get(KEYS.RESET_OTP(normalized));
+};
+
+/**
+ * Delete password reset OTP after successful reset.
+ */
+const deleteResetOtp = async (email) => {
+  const normalized = email.trim().toLowerCase();
+  return redis.del(KEYS.RESET_OTP(normalized));
+};
+
+/**
+ * Track password reset attempts for rate limiting.
+ */
+const trackResetAttempt = async (email) => {
+  const normalized = email.trim().toLowerCase();
+  const key = KEYS.RESET_ATTEMPTS(normalized);
+  const count = await redis.incr(key);
+  if (count === 1) {
+    await redis.expire(key, TTL.RESET_OTP);
+  }
+  return count;
+};
+
 // ── Session / Token Blacklist ─────────────────────────
 
 /**
@@ -219,6 +261,11 @@ module.exports = {
   deleteOtp,
   trackOtpAttempt,
   getOtpAttempts,
+  // Password Reset OTP (Resend)
+  storeResetOtp,
+  getResetOtp,
+  deleteResetOtp,
+  trackResetAttempt,
   // Session
   setSession,
   getSession,

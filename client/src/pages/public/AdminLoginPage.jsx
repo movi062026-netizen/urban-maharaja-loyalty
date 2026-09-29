@@ -108,16 +108,24 @@ export default function AdminLoginPage() {
                 <label htmlFor="password" className="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">
                   Administrator Passkey
                 </label>
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="text-xs text-secondary hover:text-primary transition-colors flex items-center gap-1 cursor-pointer"
-                >
-                  <span className="material-symbols-outlined text-[15px]">
-                    {showPassword ? 'visibility_off' : 'visibility'}
-                  </span>
-                  <span>{showPassword ? 'Hide' : 'Show'}</span>
-                </button>
+                <div className="flex items-center gap-3">
+                  <Link
+                    to={email ? `/forgot-password?email=${encodeURIComponent(email.trim())}` : '/forgot-password'}
+                    className="text-xs text-primary hover:underline font-semibold"
+                  >
+                    Forgot Passkey?
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-xs text-secondary hover:text-primary transition-colors flex items-center gap-1 cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[15px]">
+                      {showPassword ? 'visibility_off' : 'visibility'}
+                    </span>
+                    <span>{showPassword ? 'Hide' : 'Show'}</span>
+                  </button>
+                </div>
               </div>
 
               <div className="relative">

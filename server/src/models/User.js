@@ -54,6 +54,15 @@ const userSchema = new mongoose.Schema(
       type: Date,
       select: false,
     },
+    // Password reset fields (powered by Resend)
+    resetPasswordOtp: {
+      type: String,
+      select: false,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      select: false,
+    },
     refreshToken: {
       type: String,
       select: false,
@@ -66,6 +75,8 @@ const userSchema = new mongoose.Schema(
         delete ret.password;
         delete ret.devOtp;
         delete ret.devOtpExpiry;
+        delete ret.resetPasswordOtp;
+        delete ret.resetPasswordExpires;
         delete ret.refreshToken;
         delete ret.__v;
         return ret;

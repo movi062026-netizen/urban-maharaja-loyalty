@@ -17,6 +17,8 @@ const {
   googleAuthRules,
   refreshTokenRules,
   updateProfileRules,
+  forgotPasswordRules,
+  resetPasswordRules,
 } = require('../validators/auth.validator');
 
 // Guest auth (Protected by Token Bucket rate limiter)
@@ -33,6 +35,10 @@ router.post('/guest/google', googleAuthTokenBucket, googleAuthRules, validate, a
 router.post('/admin/login', passwordLoginTokenBucket, staffLoginRules, validate, authController.adminLogin);
 router.post('/staff/login', passwordLoginTokenBucket, staffLoginRules, validate, authController.staffLogin);
 
+// Password Reset via Resend Email Verification Seal
+router.post('/forgot-password', guestOtpTokenBucket, forgotPasswordRules, validate, authController.forgotPassword);
+router.post('/reset-password', guestOtpTokenBucket, resetPasswordRules, validate, authController.resetPassword);
+
 // Token management
 router.post('/refresh', refreshTokenRules, validate, authController.refreshToken);
 router.post('/logout', authenticate, authController.logout);
@@ -42,3 +48,4 @@ router.get('/me', authenticate, authController.getMe);
 router.patch('/me', authenticate, updateProfileRules, validate, authController.updateProfile);
 
 module.exports = router;
+
