@@ -96,7 +96,7 @@ export default function RegisterPage() {
       setOtpDigits(['', '', '', '', '', '']);
       setStep('otp');
     } catch (error) {
-      toast.error(error.response?.data?.error?.message || 'Registration failed');
+      toast.error(error.response?.data?.error?.message || error.message || 'Registration failed');
     } finally {
       setLoading(false);
     }
@@ -137,7 +137,7 @@ export default function RegisterPage() {
     }
   };
 
-  // Handle Backspace and Arrow navigation in OTP boxes
+  // Handle Backspace and Arrow navigation
   const handleOtpKeyDown = (index, e) => {
     if (e.key === 'Backspace') {
       if (!otpDigits[index] && index > 0) {
@@ -150,7 +150,7 @@ export default function RegisterPage() {
     }
   };
 
-  // Handle Paste directly into segmented OTP boxes
+  // Handle Paste directly into OTP boxes
   const handleOtpPaste = (e) => {
     e.preventDefault();
     const pasteData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
@@ -228,8 +228,27 @@ export default function RegisterPage() {
   };
 
   // Google OAuth Sign In
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignIn = () => {
     const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+    // Use Google Identity Services OAuth2 token client
+    if (window.google?.accounts?.oauth2 && googleClientId) {
+      try {
+        const tokenClient = window.google.accounts.oauth2.initTokenClient({
+          client_id: googleClientId,
+          scope: 'email profile openid',
+          callback: async (tokenResponse) => {
+            if (tokenResponse.access_token) {
+              await submitGoogleToken(tokenResponse.access_token);
+            }
+          },
+        });
+        tokenClient.requestAccessToken();
+        return;
+      } catch (err) {
+        // Fallback
+      }
+    }
 
     if (window.google?.accounts?.id && googleClientId) {
       window.google.accounts.id.initialize({
@@ -244,14 +263,14 @@ export default function RegisterPage() {
       return;
     }
 
-    // Direct Google prompt fallback
+    // Direct Google prompt fallback for dev
     const promptEmail = window.prompt(
       'Enter Google email to continue via Google OAuth:',
       email || 'patron@gmail.com'
     );
     if (!promptEmail) return;
 
-    await submitGoogleToken(`mock_google_token_${promptEmail.trim().toLowerCase()}`);
+    submitGoogleToken(`mock_google_token_${promptEmail.trim().toLowerCase()}`);
   };
 
   const submitGoogleToken = async (idToken) => {
@@ -293,35 +312,32 @@ export default function RegisterPage() {
               URBAN MAHARAJA
             </h1>
             <p className="text-xs uppercase tracking-[0.26em] text-secondary font-semibold mt-1">
-              JOIN ROYAL MEMBERSHIP
+              JOIN ROYAL PATRONAGE
             </p>
           </Link>
         </div>
 
-        {/* Registration Card */}
+        {/* Card */}
         <div className="glass-card-royal p-5 sm:p-7 lg:p-9">
           {/* Header Title */}
           <div className="mb-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-mono uppercase tracking-wider text-primary font-semibold mb-2">
-              <span className="material-symbols-outlined text-[13px]">stars</span>
-              <span>Exclusive Patron Privileges</span>
-            </div>
             <h2 className="font-serif text-xl sm:text-2xl text-on-surface font-bold">
-              {step === 'otp' ? 'Verify Royal Seal' : 'Join the Royal Court'}
+              {step === 'otp' ? 'Confirm Royal Seal' : 'Create Patron Account'}
             </h2>
             <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">
               {step === 'otp'
                 ? `Enter the 6-digit seal dispatched to ${activeIdentifier}`
-                : 'Create your royal account to receive your Digital Maharaja Card, collect stamps, and redeem imperial rewards.'}
+                : 'Enroll in the Royal Loyalty Circle to earn complimentary dining, bespoke gifts, and exclusive privileges.'}
             </p>
           </div>
 
           {/* ── STEP 1: REGISTRATION FORM ─────────────────────────────────── */}
           {step === 'input' && (
             <form onSubmit={handleRegister} className="space-y-4">
+              {/* Full Name */}
               <div>
-                <label htmlFor="reg-name" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-1.5">
-                  Full Noble Name
+                <label htmlFor="reg-name" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-2">
+                  Noble Name
                 </label>
                 <div className="relative">
                   <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-[20px]">
@@ -332,16 +348,18 @@ export default function RegisterPage() {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Maharani Gayatri Devi"
-                    className="w-full pl-11 pr-4 py-3 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
+                    placeholder="Maharaja Vikramaditya"
+                    className="w-full pl-11 pr-4 py-3.5 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
+                    autoComplete="name"
                     required
                     autoFocus
                   />
                 </div>
               </div>
 
+              {/* Email Address */}
               <div>
-                <label htmlFor="reg-email" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-1.5">
+                <label htmlFor="reg-email" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-2">
                   Royal Email Address
                 </label>
                 <div className="relative">
@@ -353,37 +371,39 @@ export default function RegisterPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="gayatri@royalmail.com"
-                    className="w-full pl-11 pr-4 py-3 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
+                    placeholder="patron@urbanmaharaja.com"
+                    className="w-full pl-11 pr-4 py-3.5 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
                     autoComplete="email"
                     required
                   />
                 </div>
               </div>
 
+              {/* Mobile Phone Number */}
               <div>
-                <label htmlFor="reg-phone" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-1.5">
-                  Mobile Number
+                <label htmlFor="reg-phone" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-2">
+                  Mobile Number (For Royal Stamp Concierge)
                 </label>
-                <div className="relative flex">
-                  <div className="flex items-center px-3.5 bg-surface-container border border-r-0 border-outline-variant/40 rounded-l-xl text-xs text-secondary font-mono font-bold">
-                    +91
-                  </div>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-[20px]">
+                    phone_iphone
+                  </span>
                   <input
                     id="reg-phone"
                     type="tel"
-                    maxLength={10}
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
+                    onChange={(e) => setPhone(e.target.value)}
                     placeholder="9876543210"
-                    className="w-full px-4 py-3 bg-surface-container border border-outline-variant/40 rounded-r-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-mono tracking-wider"
+                    className="w-full pl-11 pr-4 py-3.5 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
+                    autoComplete="tel"
                     required
                   />
                 </div>
               </div>
 
+              {/* Secret Password */}
               <div>
-                <label htmlFor="reg-password" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-1.5">
+                <label htmlFor="reg-password" className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-2">
                   Secret Password
                 </label>
                 <div className="relative">
@@ -395,8 +415,8 @@ export default function RegisterPage() {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Min. 6 characters"
-                    className="w-full pl-11 pr-11 py-3 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
+                    placeholder="Create a secure password (min 6 characters)"
+                    className="w-full pl-11 pr-11 py-3.5 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
                     autoComplete="new-password"
                     required
                   />
@@ -413,58 +433,60 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              {/* Royal Privilege Note */}
-              <div className="p-3 rounded-xl bg-surface-container-high/60 border border-secondary/30 flex items-start gap-2.5 text-xs text-on-surface-variant">
-                <span className="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5">
-                  card_membership
-                </span>
-                <span>
-                  Your active <strong className="text-secondary">Digital Maharaja Card</strong> will be automatically issued upon verification.
-                </span>
-              </div>
-
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 mt-2 rounded-xl glass-btn-primary text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full py-4 rounded-xl glass-btn-primary text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2"
               >
                 {loading ? (
                   <span className="w-5 h-5 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
-                    <span>Create Maharaja Account</span>
-                    <span className="material-symbols-outlined text-[18px]">verified</span>
+                    <span>Enroll in Royal Court</span>
+                    <span className="material-symbols-outlined text-[18px]">how_to_reg</span>
                   </>
                 )}
               </button>
-            </form>
-          )}
 
-          {/* ── Social Google Login ────────────────────────────────────────── */}
-          {step === 'input' && (
-            <div className="mt-6 pt-5 border-t border-outline-variant/30">
-              <div className="relative mb-5 flex items-center justify-center">
-                <div className="w-full border-t border-outline-variant/30" />
-                <span className="bg-surface-container px-3 text-[10px] uppercase font-mono tracking-widest text-on-surface-variant font-bold absolute">
-                  OR ROYAL GOOGLE AUTH
-                </span>
+              {/* Social Google Login */}
+              <div className="mt-5 pt-4 border-t border-outline-variant/30">
+                <div className="relative mb-4 flex items-center justify-center">
+                  <div className="w-full border-t border-outline-variant/30" />
+                  <span className="bg-surface-container px-3 text-[10px] uppercase font-mono tracking-widest text-on-surface-variant font-bold absolute">
+                    OR INSTANT ENROLL
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                  disabled={loading}
+                  className="w-full py-3.5 px-4 rounded-xl glass-surface border border-outline-variant/40 hover:border-primary/50 text-xs uppercase tracking-wider font-bold transition-all flex items-center justify-center gap-3 cursor-pointer shadow-md hover:bg-surface-container-high"
+                >
+                  <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                  </svg>
+                  <span>Join with Google</span>
+                </button>
               </div>
 
-              <button
-                type="button"
-                onClick={handleGoogleSignIn}
-                disabled={loading}
-                className="w-full py-3.5 px-4 rounded-xl glass-surface border border-outline-variant/40 hover:border-primary/50 text-xs uppercase tracking-wider font-bold transition-all flex items-center justify-center gap-3 cursor-pointer shadow-md hover:bg-surface-container-high"
-              >
-                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-                </svg>
-                <span>Continue with Google</span>
-              </button>
-            </div>
+              {/* Login Redirect */}
+              <div className="text-center pt-3">
+                <p className="text-xs text-on-surface-variant">
+                  Already a Noble Patron?{' '}
+                  <Link
+                    to="/login"
+                    className="text-primary hover:text-primary/80 font-bold transition-colors ml-1"
+                  >
+                    Enter Court &rarr;
+                  </Link>
+                </p>
+              </div>
+            </form>
           )}
 
           {/* ── STEP 2: VERIFY ROYAL OTP SEAL ────────────────────────────── */}
@@ -504,7 +526,7 @@ export default function RegisterPage() {
                       onKeyDown={(e) => handleOtpKeyDown(index, e)}
                       className={`w-full h-13 sm:h-14 text-center text-xl sm:text-2xl font-mono font-bold rounded-xl border bg-surface-container text-on-surface transition-all focus:outline-none ${
                         digit
-                           ? 'border-primary shadow-[0_0_12px_rgba(222,107,144,0.35)]'
+                          ? 'border-primary shadow-[0_0_12px_rgba(222,107,144,0.35)]'
                           : 'border-outline-variant/40 focus:border-secondary'
                       }`}
                     />
@@ -541,72 +563,31 @@ export default function RegisterPage() {
                   <span className="w-5 h-5 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
-                    <span>Verify Seal &amp; Enter Court</span>
-                    <span className="material-symbols-outlined text-[18px]">login</span>
+                    <span>Confirm &amp; Access Digital Card</span>
+                    <span className="material-symbols-outlined text-[18px]">military_tech</span>
                   </>
                 )}
               </button>
 
-              {/* Resend OTP Row with Timer */}
-              <div className="text-center pt-2">
-                {canResend ? (
-                  <button
-                    type="button"
-                    onClick={handleResendOtp}
-                    disabled={loading}
-                    className="text-xs text-secondary hover:text-primary transition-colors cursor-pointer font-semibold underline underline-offset-4"
-                  >
-                    Resend Royal Verification Seal
-                  </button>
-                ) : (
-                  <p className="text-xs text-on-surface-variant/70 font-mono">
-                    Resend available in <span className="text-secondary font-bold">{resendTimer}s</span>
-                  </p>
-                )}
+              {/* Resend & Actions */}
+              <div className="text-center space-y-3 pt-2">
+                <button
+                  type="button"
+                  onClick={handleResendOtp}
+                  disabled={!canResend || loading}
+                  className="text-xs text-secondary hover:text-primary transition-colors disabled:opacity-50 cursor-pointer font-medium"
+                >
+                  {canResend ? (
+                    <span className="underline decoration-secondary/50 underline-offset-4">
+                      Dispatch fresh verification seal
+                    </span>
+                  ) : (
+                    <span>Dispatch new seal in ({resendTimer}s)</span>
+                  )}
+                </button>
               </div>
             </form>
           )}
-
-          {/* Switch to Login Link */}
-          <div className="mt-7 pt-5 border-t border-outline-variant/30 text-center">
-            <p className="text-xs text-on-surface-variant">
-              Already have a Royal account?{' '}
-              <Link
-                to="/login"
-                className="text-primary hover:text-primary-fixed font-bold underline underline-offset-4 transition-colors"
-              >
-                Sign In to Your Court
-              </Link>
-            </p>
-          </div>
-
-          {/* Links Back & Distinct Staff / Admin Portals */}
-          <div className="mt-5 pt-4 border-t border-outline-variant/20 flex flex-wrap items-center justify-between gap-2 text-xs text-on-surface-variant/70">
-            <div className="flex items-center gap-2.5">
-              <Link
-                to="/staff/login"
-                className="hover:text-secondary transition-colors no-underline flex items-center gap-1 font-medium"
-              >
-                <span className="material-symbols-outlined text-[14px]">badge</span>
-                <span>Staff Terminal</span>
-              </Link>
-              <span className="text-outline-variant/50">•</span>
-              <Link
-                to="/admin/login"
-                className="hover:text-primary transition-colors no-underline flex items-center gap-1 font-medium"
-              >
-                <span className="material-symbols-outlined text-[14px]">admin_panel_settings</span>
-                <span>Admin Portal</span>
-              </Link>
-            </div>
-            <Link
-              to="/"
-              className="hover:text-secondary transition-colors no-underline flex items-center gap-1 font-medium"
-            >
-              <span className="material-symbols-outlined text-[14px]">home</span>
-              <span>Back to Palace</span>
-            </Link>
-          </div>
         </div>
       </div>
     </div>

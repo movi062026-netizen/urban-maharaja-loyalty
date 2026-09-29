@@ -34,7 +34,7 @@ const env = {
   
   // Logging
   LOG_LEVEL: process.env.LOG_LEVEL || 'info',
-  
+
   // Helpers
   isDevelopment: (process.env.NODE_ENV || 'development') === 'development',
   isProduction: process.env.NODE_ENV === 'production',

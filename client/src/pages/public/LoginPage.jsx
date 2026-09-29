@@ -239,8 +239,27 @@ export default function LoginPage() {
   };
 
   // Google OAuth Sign In
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignIn = () => {
     const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+    // Use Google Identity Services OAuth2 token client
+    if (window.google?.accounts?.oauth2 && googleClientId) {
+      try {
+        const tokenClient = window.google.accounts.oauth2.initTokenClient({
+          client_id: googleClientId,
+          scope: 'email profile openid',
+          callback: async (tokenResponse) => {
+            if (tokenResponse.access_token) {
+              await submitGoogleToken(tokenResponse.access_token);
+            }
+          },
+        });
+        tokenClient.requestAccessToken();
+        return;
+      } catch (err) {
+        // Fallback to accounts.id
+      }
+    }
 
     if (window.google?.accounts?.id && googleClientId) {
       window.google.accounts.id.initialize({
@@ -255,14 +274,14 @@ export default function LoginPage() {
       return;
     }
 
-    // Direct Google prompt
+    // Direct Google prompt fallback for dev
     const promptEmail = window.prompt(
       'Enter Google email to continue via Google OAuth:',
       email || 'patron@gmail.com'
     );
     if (!promptEmail) return;
 
-    await submitGoogleToken(`mock_google_token_${promptEmail.trim().toLowerCase()}`);
+    submitGoogleToken(`mock_google_token_${promptEmail.trim().toLowerCase()}`);
   };
 
   const submitGoogleToken = async (idToken) => {
@@ -270,7 +289,7 @@ export default function LoginPage() {
     try {
       const { data } = await authApi.googleLogin(idToken);
       login(data.data.user, data.data.tokens);
-      toast.success(data.message || `Welcome, ${data.data.user.name}!`);
+      toast.success(data.message || `Welcome to Urban Maharaja, ${data.data.user.name}!`);
       if (data.data.user.role === 'ADMIN') {
         navigate('/admin/dashboard');
       } else if (data.data.user.role === 'STAFF') {
@@ -620,64 +639,62 @@ export default function LoginPage() {
                 )}
               </button>
 
-              {/* Resend OTP Row with Timer */}
-              <div className="text-center pt-2">
-                {canResend ? (
-                  <button
-                    type="button"
-                    onClick={handleResendOtp}
-                    disabled={loading}
-                    className="text-xs text-secondary hover:text-primary transition-colors cursor-pointer font-semibold underline underline-offset-4"
-                  >
-                    Resend Royal Verification Seal
-                  </button>
-                ) : (
-                  <p className="text-xs text-on-surface-variant/70 font-mono">
-                    Resend available in <span className="text-secondary font-bold">{resendTimer}s</span>
-                  </p>
-                )}
+              {/* Resend & Actions */}
+              <div className="text-center space-y-3 pt-2">
+                <button
+                  type="button"
+                  onClick={handleResendOtp}
+                  disabled={!canResend || loading}
+                  className="text-xs text-secondary hover:text-primary transition-colors disabled:opacity-50 cursor-pointer font-medium"
+                >
+                  {canResend ? (
+                    <span className="underline decoration-secondary/50 underline-offset-4">
+                      Dispatch fresh verification seal
+                    </span>
+                  ) : (
+                    <span>Dispatch new seal in ({resendTimer}s)</span>
+                  )}
+                </button>
               </div>
             </form>
           )}
 
-          {/* Switch to Register Link */}
-          <div className="mt-7 pt-5 border-t border-outline-variant/30 text-center">
-            <p className="text-xs text-on-surface-variant">
-              New to the Royal Court?{' '}
-              <Link
-                to="/register"
-                className="text-primary hover:text-primary-fixed font-bold underline underline-offset-4 transition-colors"
-              >
-                Join Royalty / Create Account
-              </Link>
-            </p>
-          </div>
-
-          {/* Links Back & Distinct Staff / Admin Portals */}
-          <div className="mt-5 pt-4 border-t border-outline-variant/20 flex flex-wrap items-center justify-between gap-2 text-xs text-on-surface-variant/70">
-            <div className="flex items-center gap-2.5">
-              <Link
-                to="/staff/login"
-                className="hover:text-secondary transition-colors no-underline flex items-center gap-1 font-medium"
-              >
-                <span className="material-symbols-outlined text-[14px]">badge</span>
-                <span>Staff Terminal</span>
-              </Link>
-              <span className="text-outline-variant/50">•</span>
-              <Link
-                to="/admin/login"
-                className="hover:text-primary transition-colors no-underline flex items-center gap-1 font-medium"
-              >
-                <span className="material-symbols-outlined text-[14px]">admin_panel_settings</span>
-                <span>Admin Portal</span>
-              </Link>
+          {/* Registration Footer Link */}
+          {step === 'input' && (
+            <div className="mt-6 pt-5 border-t border-outline-variant/30 text-center">
+              <p className="text-xs text-on-surface-variant">
+                New to the Royal Court?{' '}
+                <Link
+                  to="/register"
+                  className="text-primary hover:text-primary/80 font-bold transition-colors ml-1"
+                >
+                  Create Patron Account &rarr;
+                </Link>
+              </p>
             </div>
+          )}
+        </div>
+
+        {/* Portals Navigation / Staff Links */}
+        <div className="mt-8 text-center space-y-3">
+          <p className="text-[11px] uppercase tracking-widest text-on-surface-variant/70 font-mono">
+            Royal Staff &amp; Administrative Entrances
+          </p>
+          <div className="flex items-center justify-center gap-4 text-xs">
             <Link
-              to="/"
-              className="hover:text-secondary transition-colors no-underline flex items-center gap-1 font-medium"
+              to="/staff/login"
+              className="text-secondary hover:text-secondary/80 font-semibold transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container/60 hover:bg-surface-container border border-outline-variant/30"
             >
-              <span className="material-symbols-outlined text-[14px]">home</span>
-              <span>Back to Palace</span>
+              <span className="material-symbols-outlined text-[16px]">room_service</span>
+              <span>Staff Terminal</span>
+            </Link>
+            <span className="text-outline-variant">•</span>
+            <Link
+              to="/admin/login"
+              className="text-on-surface-variant hover:text-on-surface font-semibold transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container/60 hover:bg-surface-container border border-outline-variant/30"
+            >
+              <span className="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+              <span>Admin Portal</span>
             </Link>
           </div>
         </div>

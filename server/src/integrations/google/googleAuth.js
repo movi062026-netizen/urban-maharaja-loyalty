@@ -68,10 +68,33 @@ const verifyGoogleIdToken = async (idToken) => {
       emailVerified: Boolean(payload.email_verified),
     };
   } catch (error) {
+    // If verifyIdToken failed, try verifying as a Google OAuth2 access token
+    try {
+      const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${idToken}` },
+      });
+      if (userInfoRes.ok) {
+        const userInfo = await userInfoRes.json();
+        if (userInfo.email) {
+          return {
+            googleId: userInfo.sub,
+            email: userInfo.email.toLowerCase(),
+            name: userInfo.name || userInfo.given_name || userInfo.email.split('@')[0],
+            picture: userInfo.picture || '',
+            emailVerified: Boolean(userInfo.email_verified),
+          };
+        }
+      }
+    } catch (accessErr) {
+      // Fall through to error
+    }
+
     logger.error('Google token verification failed', { error: error.message });
     throw new AuthenticationError('Google verification failed: ' + (error.message || 'Invalid token'));
   }
 };
+
+
 
 module.exports = {
   getOAuthClient,
