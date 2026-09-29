@@ -38,6 +38,45 @@ const stampSchema = new mongoose.Schema(
       trim: true,
       maxlength: [500, 'Rejection reason cannot exceed 500 characters'],
     },
+    // Cloudinary Bill Receipt Details (Stored in WebP format)
+    billUrl: {
+      type: String,
+      trim: true,
+    },
+    billPublicId: {
+      type: String,
+      trim: true,
+    },
+    billAmount: {
+      type: Number,
+      min: [0, 'Bill amount cannot be negative'],
+    },
+    billNumber: {
+      type: String,
+      trim: true,
+      index: true,
+      sparse: true,
+    },
+    billDate: {
+      type: Date,
+    },
+    // Anti-Fraud Safeguards
+    billImageHash: {
+      type: String,
+      trim: true,
+      index: true,
+      sparse: true,
+    },
+    fraudRiskScore: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 100,
+    },
+    fraudWarnings: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,

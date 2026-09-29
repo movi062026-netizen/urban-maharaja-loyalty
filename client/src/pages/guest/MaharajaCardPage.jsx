@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import GuestTierBadge from '../../components/guest/GuestTierBadge';
 import GuestStampTracker from '../../components/guest/GuestStampTracker';
+import RequestStampModal from '../../components/guest/RequestStampModal';
 
 export default function MaharajaCardPage() {
   const { user } = useAuth();
@@ -16,6 +17,7 @@ export default function MaharajaCardPage() {
   const [requestingStamp, setRequestingStamp] = useState(false);
   const [startingCycle, setStartingCycle] = useState(false);
   const [selectedCycleIndex, setSelectedCycleIndex] = useState(0);
+  const [billModalOpen, setBillModalOpen] = useState(false);
 
   useEffect(() => {
     loadCard();
@@ -34,14 +36,19 @@ export default function MaharajaCardPage() {
     }
   };
 
-  const handleRequestStamp = async () => {
+  const handleOpenBillModal = () => {
+    setBillModalOpen(true);
+  };
+
+  const handleSubmitBill = async (formData) => {
     setRequestingStamp(true);
     try {
-      await loyaltyApi.requestMyStamp();
-      toast.success('Royal dining seal requested! Waiter/Concierge will confirm your visit.');
+      await loyaltyApi.requestMyStamp(formData);
+      toast.success('Royal dining bill uploaded & seal requested! Concierge will verify your visit.');
+      setBillModalOpen(false);
       loadCard();
     } catch (err) {
-      toast.error(err.response?.data?.error?.message || 'Failed to request seal');
+      toast.error(err.response?.data?.error?.message || 'Failed to submit bill');
     } finally {
       setRequestingStamp(false);
     }
@@ -142,7 +149,8 @@ export default function MaharajaCardPage() {
             currentStamps={card?.currentStamps || 0}
             targetStamps={card?.targetStamps || 5}
             cycleNumber={card?.cycleNumber || 1}
-            onRequestStamp={handleRequestStamp}
+            pendingStamp={data?.pendingStamp}
+            onRequestStamp={handleOpenBillModal}
             requesting={requestingStamp}
             isComplete={isCardFinished}
           />
@@ -289,6 +297,14 @@ export default function MaharajaCardPage() {
           </div>
         </div>
       </div>
+
+      {/* Bill Upload & Stamp Request Modal */}
+      <RequestStampModal
+        isOpen={billModalOpen}
+        onClose={() => setBillModalOpen(false)}
+        onSubmit={handleSubmitBill}
+        submitting={requestingStamp}
+      />
     </div>
   );
 }

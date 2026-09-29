@@ -35,6 +35,11 @@ const env = {
   // Resend Email
   RESEND_API_KEY: process.env.RESEND_API_KEY || '',
   RESEND_FROM: process.env.RESEND_FROM || 'Urban Maharaja <onboarding@resend.dev>',
+
+  // Cloudinary Storage
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || '',
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || '',
   
   // Logging
   LOG_LEVEL: process.env.LOG_LEVEL || 'info',

@@ -34,7 +34,14 @@ export const loyaltyApi = {
   getMyCard: () => api.get('/loyalty/cards/me'),
   getMyStamps: () => api.get('/loyalty/stamps/me'),
   getMyHistory: () => api.get('/loyalty/history/me'),
-  requestMyStamp: () => api.post('/loyalty/stamps/request-my-stamp'),
+  requestMyStamp: (formData) => {
+    if (formData instanceof FormData) {
+      return api.post('/loyalty/stamps/request-my-stamp', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    }
+    return api.post('/loyalty/stamps/request-my-stamp', formData || {});
+  },
   startNextCycle: () => api.post('/loyalty/cards/next-cycle'),
   searchGuest: (query) => {
     const params = typeof query === 'object'
@@ -42,7 +49,17 @@ export const loyaltyApi = {
       : (query?.includes('@') ? { email: query } : { query });
     return api.get('/loyalty/guests/search', { params });
   },
-  requestStamp: (guestId) => api.post('/loyalty/stamps', { guestId }),
+  requestStamp: (guestIdOrFormData, maybeData) => {
+    if (guestIdOrFormData instanceof FormData) {
+      return api.post('/loyalty/stamps', guestIdOrFormData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    }
+    if (typeof guestIdOrFormData === 'object') {
+      return api.post('/loyalty/stamps', guestIdOrFormData);
+    }
+    return api.post('/loyalty/stamps', { guestId: guestIdOrFormData, ...maybeData });
+  },
   approveStamp: (stampId) => api.patch(`/loyalty/stamps/${stampId}/approve`),
   rejectStamp: (stampId, reason) => api.patch(`/loyalty/stamps/${stampId}/reject`, { reason }),
 };

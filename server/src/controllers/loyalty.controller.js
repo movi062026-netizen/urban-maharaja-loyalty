@@ -35,10 +35,18 @@ const getMyHistory = async (req, res, next) => {
 // Staff requests a stamp for a guest
 const requestStamp = async (req, res, next) => {
   try {
+    const billPayload = {
+      billBuffer: req.file?.buffer,
+      billAmount: req.body.billAmount,
+      billNumber: req.body.billNumber,
+      billDate: req.body.billDate,
+      billUrl: req.body.billUrl,
+    };
     const stamp = await loyaltyService.requestStamp(
       req.body.guestId,
       req.user.id,
-      auditContext(req)
+      auditContext(req),
+      billPayload
     );
     success(res, { stamp }, 'Stamp requested', 201);
   } catch (error) {
@@ -127,10 +135,18 @@ const startNextCycle = async (req, res, next) => {
 // Guest requests a stamp for their current dining visit
 const requestMyStamp = async (req, res, next) => {
   try {
+    const billPayload = {
+      billBuffer: req.file?.buffer,
+      billAmount: req.body.billAmount,
+      billNumber: req.body.billNumber,
+      billDate: req.body.billDate,
+      billUrl: req.body.billUrl,
+    };
     const stamp = await loyaltyService.requestStamp(
       req.user.id,
       null,
-      auditContext(req)
+      auditContext(req),
+      billPayload
     );
     success(res, { stamp }, 'Dining seal requested from royal concierge', 201);
   } catch (error) {

@@ -2,6 +2,7 @@ const router = require('express').Router();
 const loyaltyController = require('../controllers/loyalty.controller');
 const { authenticate, authorize } = require('../middleware/auth');
 const { operationLimiter } = require('../middleware/rateLimiter');
+const { uploadBill } = require('../middleware/upload');
 const validate = require('../middleware/validate');
 const { ROLES } = require('../constants');
 const {
@@ -15,7 +16,14 @@ const {
 router.get('/cards/me', authenticate, authorize(ROLES.GUEST), loyaltyController.getMyCard);
 router.post('/cards/next-cycle', authenticate, authorize(ROLES.GUEST), loyaltyController.startNextCycle);
 router.get('/stamps/me', authenticate, authorize(ROLES.GUEST), loyaltyController.getMyStamps);
-router.post('/stamps/request-my-stamp', authenticate, authorize(ROLES.GUEST), operationLimiter, loyaltyController.requestMyStamp);
+router.post(
+  '/stamps/request-my-stamp',
+  authenticate,
+  authorize(ROLES.GUEST),
+  operationLimiter,
+  uploadBill,
+  loyaltyController.requestMyStamp
+);
 router.get('/history/me', authenticate, authorize(ROLES.GUEST), loyaltyController.getMyHistory);
 
 // Staff endpoints
@@ -33,6 +41,7 @@ router.post(
   authenticate,
   authorize(ROLES.STAFF, ROLES.ADMIN),
   operationLimiter,
+  uploadBill,
   stampRequestRules,
   validate,
   loyaltyController.requestStamp

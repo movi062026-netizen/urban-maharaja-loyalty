@@ -9,6 +9,9 @@ const { LOYALTY_STATUS, STAMP_STATUS, REDEMPTION_STATUS, AUDIT_ACTIONS, ENTITY_T
 const { NotFoundError, ConflictError, ValidationError, AuthorizationError } = require('../utils/errors');
 const { createAuditLog } = require('./audit.service');
 const { cache } = require('../integrations/redis');
+const crypto = require('crypto');
+const { uploadBillImage } = require('../integrations/storage');
+const logger = require('../config/logger');
 
 /**
  * Get or create active loyalty card for a guest
@@ -72,10 +75,18 @@ const getGuestLoyaltyCard = async (guestId) => {
   const totalCompletedCycles = allCards.filter(c => c.status === LOYALTY_STATUS.COMPLETED).length;
   const totalApprovedStamps = await Stamp.countDocuments({ guestId, status: STAMP_STATUS.APPROVED });
 
+  // Check if there is an active pending stamp awaiting concierge approval
+  const pendingStamp = await Stamp.findOne({
+    guestId,
+    loyaltyCardId: card._id,
+    status: STAMP_STATUS.PENDING,
+  }).sort({ createdAt: -1 });
+
   const result = {
     card,
     allCards,
     stamps,
+    pendingStamp,
     availableRedemptions,
     stampsRemaining: Math.max(0, card.targetStamps - card.currentStamps),
     isComplete: card.currentStamps >= card.targetStamps,
@@ -122,8 +133,9 @@ const startNextCycle = async (guestId) => {
 /**
  * Request a stamp for a guest visit (creates a PENDING stamp)
  * Can be called by staff OR guest requesting verification.
+ * Enforces Cloudinary WebP bill upload and multi-layered anti-fraud validation.
  */
-const requestStamp = async (guestId, staffId = null, auditCtx = {}) => {
+const requestStamp = async (guestId, staffId = null, auditCtx = {}, billPayload = {}) => {
   const card = await getOrCreateActiveCard(guestId);
 
   if (card.status !== LOYALTY_STATUS.ACTIVE) {
@@ -137,8 +149,106 @@ const requestStamp = async (guestId, staffId = null, auditCtx = {}) => {
     status: STAMP_STATUS.PENDING,
   });
   if (existingPending) {
-    return existingPending;
+    throw new ConflictError('A visit seal request with your bill is already pending verification with the floor concierge.');
   }
+
+  // Bill & Anti-Fraud Processing
+  let billUrl = billPayload.billUrl || null;
+  let billPublicId = billPayload.billPublicId || null;
+  let billAmount = billPayload.billAmount ? parseFloat(billPayload.billAmount) : undefined;
+  let billNumber = billPayload.billNumber ? String(billPayload.billNumber).trim() : undefined;
+  let billDate = billPayload.billDate ? new Date(billPayload.billDate) : undefined;
+  let billImageHash = null;
+
+  const fraudWarnings = [];
+  let fraudRiskScore = 0;
+
+  // 1. Image Upload to Cloudinary (in WebP format) and Image Content Hash
+  if (billPayload.billBuffer) {
+    // Generate SHA-256 hash of image content for perceptual/exact duplicate detection
+    billImageHash = crypto.createHash('sha256').update(billPayload.billBuffer).digest('hex');
+
+    // Check if identical receipt image was already used
+    const duplicateImageStamp = await Stamp.findOne({
+      billImageHash,
+      status: { $in: [STAMP_STATUS.APPROVED, STAMP_STATUS.PENDING] },
+    });
+
+    if (duplicateImageStamp) {
+      if (duplicateImageStamp.status === STAMP_STATUS.APPROVED) {
+        throw new ConflictError('Anti-Fraud Warning: This exact dining receipt image has already been approved for another loyalty seal.');
+      }
+      fraudWarnings.push('Duplicate receipt image: identical image already submitted in another pending request.');
+      fraudRiskScore += 50;
+    }
+
+    // Upload to Cloudinary transformed to WebP
+    try {
+      const uploadRes = await uploadBillImage(billPayload.billBuffer, {
+        folder: 'urban-maharaja/bills',
+        publicId: `bill_${guestId}_${Date.now()}`,
+      });
+      billUrl = uploadRes.secure_url;
+      billPublicId = uploadRes.public_id;
+    } catch (uploadErr) {
+      logger.error('Failed to upload bill image to Cloudinary:', uploadErr);
+      throw new ValidationError('Failed to upload bill receipt to Cloudinary');
+    }
+  }
+
+  // 2. Receipt Number Duplicate Check (Cross-Patron & Cross-Visit)
+  if (billNumber) {
+    const existingBillNumber = await Stamp.findOne({
+      billNumber: { $regex: new RegExp(`^${billNumber.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}$`, 'i') },
+      status: { $in: [STAMP_STATUS.APPROVED, STAMP_STATUS.PENDING] },
+    });
+
+    if (existingBillNumber) {
+      if (existingBillNumber.status === STAMP_STATUS.APPROVED) {
+        throw new ConflictError(`Anti-Fraud Protection: Receipt #${billNumber} has already been verified and credited on another visit.`);
+      }
+      fraudWarnings.push(`Receipt #${billNumber} is currently under review in another pending stamp.`);
+      fraudRiskScore += 45;
+    }
+  }
+
+  // 3. Minimum Dining Spend Verification (configurable in settings)
+  const settings = await RestaurantSettings.findOne();
+  const minSpend = settings?.loyaltyConfig?.minDiningSpend || 300;
+  if (billAmount !== undefined && billAmount < minSpend) {
+    fraudWarnings.push(`Bill amount (₹${billAmount}) is below minimum qualifying dining spend (₹${minSpend}).`);
+    fraudRiskScore += 30;
+  }
+
+  // 4. Dining Frequency / Cooldown Check (prevent multiple stamps within 4 hours)
+  const fourHoursAgo = new Date(Date.now() - 4 * 60 * 60 * 1000);
+  const recentVisit = await Stamp.findOne({
+    guestId,
+    status: { $in: [STAMP_STATUS.APPROVED, STAMP_STATUS.PENDING] },
+    createdAt: { $gte: fourHoursAgo },
+  });
+
+  if (recentVisit) {
+    fraudWarnings.push('Multiple visit requests submitted within 4 hours.');
+    fraudRiskScore += 25;
+  }
+
+  // 5. Bill Date Freshness Check (> 3 days old or future date)
+  if (billDate && !isNaN(billDate.getTime())) {
+    const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
+    const futureTolerance = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    if (billDate < threeDaysAgo) {
+      fraudWarnings.push('Receipt date is older than 3 days.');
+      fraudRiskScore += 20;
+    } else if (billDate > futureTolerance) {
+      fraudWarnings.push('Receipt date appears to be set in the future.');
+      fraudRiskScore += 35;
+    }
+  }
+
+  // Clamp fraud risk score between 0 and 100
+  fraudRiskScore = Math.min(100, fraudRiskScore);
 
   // Generate unique visit ID
   const visitId = `visit-${guestId}-${Date.now()}-${uuidv4().slice(0, 8)}`;
@@ -148,6 +258,14 @@ const requestStamp = async (guestId, staffId = null, auditCtx = {}) => {
     loyaltyCardId: card._id,
     visitId,
     status: STAMP_STATUS.PENDING,
+    billUrl,
+    billPublicId,
+    billAmount,
+    billNumber,
+    billDate,
+    billImageHash,
+    fraudRiskScore,
+    fraudWarnings,
   });
 
   createAuditLog({
@@ -155,13 +273,22 @@ const requestStamp = async (guestId, staffId = null, auditCtx = {}) => {
     action: AUDIT_ACTIONS.STAMP_REQUESTED,
     entityType: ENTITY_TYPES.STAMP,
     entityId: stamp._id,
-    metadata: { guestId, loyaltyCardId: card._id, requestedBy: staffId ? 'STAFF' : 'GUEST' },
+    metadata: {
+      guestId,
+      loyaltyCardId: card._id,
+      requestedBy: staffId ? 'STAFF' : 'GUEST',
+      hasBill: Boolean(billUrl),
+      billNumber,
+      fraudRiskScore,
+      fraudWarningsCount: fraudWarnings.length,
+    },
   });
 
   cache.invalidateGuestCaches(guestId).catch(() => {});
 
   return stamp;
 };
+
 
 /**
  * Approve a pending stamp — TRANSACTIONAL
@@ -176,6 +303,21 @@ const approveStamp = async (stampId, staffId, auditCtx = {}) => {
     if (!stamp) throw new NotFoundError('Stamp not found');
     if (stamp.status !== STAMP_STATUS.PENDING) {
       throw new ConflictError(`Stamp is already ${stamp.status.toLowerCase()}`);
+    }
+
+    // Anti-Fraud check on approval: verify receipt was not already approved elsewhere
+    if (stamp.billNumber) {
+      const alreadyApproved = await Stamp.findOne({
+        _id: { $ne: stamp._id },
+        billNumber: stamp.billNumber,
+        status: STAMP_STATUS.APPROVED,
+      }).session(session);
+
+      if (alreadyApproved) {
+        throw new ConflictError(
+          `Anti-Fraud Block: Receipt #${stamp.billNumber} has already been approved on another visit.`
+        );
+      }
     }
 
     // Update stamp

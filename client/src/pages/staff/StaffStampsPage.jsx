@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { adminApi, loyaltyApi } from '../../services/api';
-import { Stamp as StampIcon, Search, CheckCircle, XCircle, Clock, ChevronLeft, ChevronRight, Users, Sparkles } from 'lucide-react';
+import { Stamp as StampIcon, Search, CheckCircle, XCircle, Clock, ChevronLeft, ChevronRight, Users, Sparkles, Eye, X, Image as ImageIcon } from 'lucide-react';
 import StaffLiveQueue from '../../components/staff/StaffLiveQueue';
 import StaffStampModal from '../../components/staff/StaffStampModal';
 import toast from 'react-hot-toast';
@@ -18,6 +18,7 @@ export default function StaffStampsPage() {
   // Active / Recent guests for quick 1-click stamping
   const [recentGuests, setRecentGuests] = useState([]);
   const [pendingRequests, setPendingRequests] = useState([]);
+  const [selectedBill, setSelectedBill] = useState(null);
 
   // Search state
   const [searchQuery, setSearchQuery] = useState(guestQueryParam || '');
@@ -153,7 +154,11 @@ export default function StaffStampsPage() {
       </div>
 
       {/* Live Table Request Queue */}
-      <StaffLiveQueue pendingRequests={pendingRequests} onApprove={handleApprovePending} />
+      <StaffLiveQueue
+        pendingRequests={pendingRequests}
+        onApprove={handleApprovePending}
+        onReject={handleRejectPending}
+      />
 
       {/* Floor Stamping Panel */}
       <div className="glass-panel-elevated p-4 sm:p-6 space-y-5">
@@ -286,6 +291,7 @@ export default function StaffStampsPage() {
             <thead>
               <tr className="border-b border-outline-variant/30 bg-surface-container-lowest/60 text-xs uppercase tracking-wider text-secondary">
                 <th className="text-left px-5 py-3.5 font-semibold">Guest Patron</th>
+                <th className="text-left px-5 py-3.5 font-semibold">Dining Bill</th>
                 <th className="text-left px-5 py-3.5 font-semibold">Verification Seal</th>
                 <th className="text-left px-5 py-3.5 font-semibold hidden md:table-cell">Authorized Officer</th>
                 <th className="text-left px-5 py-3.5 font-semibold hidden md:table-cell">Visit Timestamp</th>
@@ -325,6 +331,26 @@ export default function StaffStampsPage() {
                           )}
                         </div>
                       </div>
+                    </td>
+                    <td className="px-5 py-4">
+                      {s.billUrl ? (
+                        <div className="flex items-center gap-2.5">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedBill({ url: s.billUrl, guestName, billNumber: s.billNumber, billAmount: s.billAmount })}
+                            className="w-10 h-10 rounded-lg border border-primary/40 overflow-hidden bg-black/40 hover:scale-105 transition-all cursor-pointer shrink-0"
+                            title="Inspect WebP Bill"
+                          >
+                            <img src={s.billUrl} alt="Bill" className="w-full h-full object-cover" />
+                          </button>
+                          <div className="text-[11px] font-mono leading-tight">
+                            {s.billNumber && <p className="text-secondary font-semibold">#{s.billNumber}</p>}
+                            {s.billAmount !== undefined && <p className="text-on-surface">₹{s.billAmount}</p>}
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-on-surface-variant/40 font-mono">—</span>
+                      )}
                     </td>
                     <td className="px-5 py-4">
                       {s.status === 'APPROVED' ? (
@@ -404,6 +430,52 @@ export default function StaffStampsPage() {
         onClose={() => setStampModalOpen(false)}
         onConfirm={handleModalConfirm}
       />
+
+      {/* Bill Lightbox Modal */}
+      {selectedBill && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-2xl rounded-3xl bg-surface-container/95 border border-primary/40 p-4 sm:p-6 shadow-[0_24px_60px_rgba(0,0,0,0.9)] text-on-surface flex flex-col max-h-[92vh]">
+            <div className="flex items-center justify-between pb-3 border-b border-outline-variant/30 mb-3">
+              <div>
+                <h3 className="font-serif text-sm sm:text-base font-bold text-on-surface">
+                  Dining Receipt: {selectedBill.guestName}
+                </h3>
+                <p className="text-[11px] text-on-surface-variant font-mono">
+                  {selectedBill.billNumber ? `Invoice #${selectedBill.billNumber}` : 'WebP Image Receipt'}
+                  {selectedBill.billAmount ? ` • ₹${selectedBill.billAmount}` : ''}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedBill(null)}
+                className="p-1.5 rounded-full hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-auto rounded-2xl bg-black/60 p-2 flex items-center justify-center">
+              <img
+                src={selectedBill.url}
+                alt="Enlarged Bill Receipt"
+                className="max-h-[68vh] w-auto max-w-full object-contain rounded-xl"
+              />
+            </div>
+
+            <div className="pt-3 flex items-center justify-between text-xs text-on-surface-variant">
+              <span className="font-mono text-[10px]">Cloudinary WebP Format</span>
+              <a
+                href={selectedBill.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-secondary hover:underline font-semibold"
+              >
+                Open Full Original ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

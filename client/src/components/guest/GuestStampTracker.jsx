@@ -1,9 +1,10 @@
-import { Crown, Sparkles, Stamp, CheckCircle2 } from 'lucide-react';
+import { Crown, Sparkles, Stamp, CheckCircle2, Clock, Upload, FileText, Image } from 'lucide-react';
 
 export default function GuestStampTracker({
   currentStamps = 0,
   targetStamps = 5,
   cycleNumber = 1,
+  pendingStamp = null,
   onRequestStamp,
   requesting = false,
   isComplete = false,
@@ -71,6 +72,35 @@ export default function GuestStampTracker({
         />
       </div>
 
+      {/* Pending Bill Verification Banner */}
+      {pendingStamp && (
+        <div className="mb-4 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0" />
+            <div className="min-w-0">
+              <p className="font-bold text-amber-300 flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span>Visit Seal Request Pending Verification</span>
+              </p>
+              <p className="text-[11px] text-amber-200/70 font-mono mt-0.5 truncate">
+                {pendingStamp.billNumber ? `Receipt #${pendingStamp.billNumber}` : 'Dining Bill Submitted'} • Awaiting concierge confirmation
+              </p>
+            </div>
+          </div>
+          {pendingStamp.billUrl && (
+            <a
+              href={pendingStamp.billUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 border border-amber-400/40 text-amber-200 font-semibold text-[11px] inline-flex items-center gap-1 shrink-0 transition-colors no-underline"
+            >
+              <Image className="w-3.5 h-3.5" />
+              <span>View WebP Bill</span>
+            </a>
+          )}
+        </div>
+      )}
+
       {/* Action and Explanations */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/10">
         <p className="text-xs text-on-surface-variant text-center sm:text-left leading-relaxed">
@@ -79,11 +109,11 @@ export default function GuestStampTracker({
               <CheckCircle2 className="w-4 h-4 text-primary" /> Card complete! Voucher unlocked in Royal Rewards.
             </span>
           ) : (
-            <span>Each dining visit earns 1 official seal verified by your table concierge.</span>
+            <span>Each dining visit earns 1 official seal verified by concierge with bill proof.</span>
           )}
         </p>
 
-        {!isComplete && (
+        {!isComplete && !pendingStamp && (
           <button
             type="button"
             onClick={onRequestStamp}
@@ -94,8 +124,8 @@ export default function GuestStampTracker({
               <span className="w-4 h-4 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />
             ) : (
               <>
-                <Stamp className="w-4 h-4" />
-                <span>Request Visit Seal</span>
+                <Upload className="w-4 h-4" />
+                <span>Upload Bill &amp; Request Seal</span>
               </>
             )}
           </button>

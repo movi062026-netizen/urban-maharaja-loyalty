@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { adminApi, loyaltyApi } from '../../services/api';
-import { Stamp as StampIcon, Search, CheckCircle, XCircle, Clock, ChevronLeft, ChevronRight, User, ShieldCheck, Sparkles, Users } from 'lucide-react';
+import { Stamp as StampIcon, Search, CheckCircle, XCircle, Clock, ChevronLeft, ChevronRight, User, ShieldCheck, Sparkles, Users, AlertTriangle, Eye, X, Image as ImageIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function StampsPage() {
@@ -15,6 +15,7 @@ export default function StampsPage() {
 
   // Pending stamp requests awaiting approval
   const [pendingRequests, setPendingRequests] = useState([]);
+  const [selectedBill, setSelectedBill] = useState(null);
 
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -179,31 +180,93 @@ export default function StampsPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {pendingRequests.map((p) => (
-              <div
-                key={p._id}
-                className="p-3.5 rounded-xl bg-surface-container/90 border border-outline-variant/40 flex items-center justify-between gap-3 shadow-sm"
-              >
-                <div className="min-w-0">
-                  <p className="font-semibold text-on-surface text-xs truncate">
-                    {p.guestId?.name || (p.guestId?.email ? p.guestId.email.split('@')[0] : 'Noble Patron')}
-                  </p>
-                  <p className="text-[11px] text-on-surface-variant font-mono truncate">
-                    {p.guestId?.email || p.guestId?.phone || 'Guest'}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleApprove(p._id)}
-                  className="px-3 py-1.5 rounded-lg bg-green-500/20 text-green-300 hover:bg-green-500/30 border border-green-500/30 text-xs font-bold transition-all cursor-pointer shrink-0"
+            {pendingRequests.map((p) => {
+              const guestName = p.guestId?.name || (p.guestId?.email ? p.guestId.email.split('@')[0] : 'Noble Patron');
+              const guestContact = p.guestId?.email || p.guestId?.phone || 'Guest';
+              const hasBill = Boolean(p.billUrl);
+              const isHighRisk = (p.fraudRiskScore || 0) >= 30 || (p.fraudWarnings && p.fraudWarnings.length > 0);
+
+              return (
+                <div
+                  key={p._id}
+                  className={`p-3.5 rounded-2xl glass-surface border flex flex-col justify-between gap-3 shadow-sm ${
+                    isHighRisk
+                      ? 'border-amber-500/60 bg-amber-500/5'
+                      : 'border-outline-variant/40'
+                  }`}
                 >
-                  Approve Seal
-                </button>
-              </div>
-            ))}
+                  <div className="flex items-start justify-between gap-2.5">
+                    <div className="min-w-0">
+                      <p className="font-semibold text-on-surface text-xs truncate">
+                        {guestName}
+                      </p>
+                      <p className="text-[10px] text-on-surface-variant font-mono truncate">
+                        {guestContact}
+                      </p>
+                      {p.billNumber && (
+                        <p className="text-[10px] text-secondary font-mono mt-0.5">
+                          Receipt #{p.billNumber}
+                        </p>
+                      )}
+                      {p.billAmount !== undefined && (
+                        <p className="text-[10px] text-on-surface font-semibold font-mono">
+                          Spend: ₹{p.billAmount}
+                        </p>
+                      )}
+                    </div>
+
+                    {hasBill && (
+                      <button
+                        type="button"
+                        onClick={() => setSelectedBill({ url: p.billUrl, guestName, billNumber: p.billNumber, billAmount: p.billAmount })}
+                        className="relative group shrink-0 w-12 h-12 rounded-xl border border-primary/40 overflow-hidden bg-black/40 hover:scale-105 transition-all cursor-pointer"
+                        title="Inspect WebP Receipt"
+                      >
+                        <img
+                          src={p.billUrl}
+                          alt="Receipt Preview"
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white">
+                          <Eye className="w-3.5 h-3.5" />
+                        </div>
+                      </button>
+                    )}
+                  </div>
+
+                  {isHighRisk && (
+                    <div className="p-2 rounded-xl bg-amber-500/15 border border-amber-500/30 text-[10px] text-amber-300 space-y-0.5">
+                      <div className="flex items-center gap-1 font-bold">
+                        <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+                        <span>Fraud Risk: {p.fraudRiskScore || 30}/100</span>
+                      </div>
+                      {p.fraudWarnings && p.fraudWarnings.map((warn, i) => (
+                        <p key={i} className="text-[9px] leading-tight text-amber-200/80">
+                          • {warn}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-between pt-1 border-t border-outline-variant/20">
+                    <span className="text-[9px] text-on-surface-variant font-mono">
+                      Awaiting verification
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleApprove(p._id)}
+                      className="px-3 py-1 rounded-lg bg-green-500/20 text-green-300 hover:bg-green-500/30 border border-green-500/30 text-xs font-bold transition-all cursor-pointer shrink-0"
+                    >
+                      Approve Seal
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
+
 
       {/* ── STAFF STAMP DESK PANEL ── */}
       <div className="glass-panel-elevated p-4 sm:p-6 space-y-5">
@@ -328,6 +391,7 @@ export default function StampsPage() {
             <thead>
               <tr className="border-b border-outline-variant/30 bg-surface-container-lowest/60 text-xs uppercase tracking-wider text-secondary">
                 <th className="text-left px-5 py-3.5 font-semibold">Guest Patron</th>
+                <th className="text-left px-5 py-3.5 font-semibold">Dining Bill</th>
                 <th className="text-left px-5 py-3.5 font-semibold">Verification Seal</th>
                 <th className="text-left px-5 py-3.5 font-semibold hidden md:table-cell">Authorized Officer</th>
                 <th className="text-left px-5 py-3.5 font-semibold hidden md:table-cell">Visit Timestamp</th>
@@ -337,14 +401,14 @@ export default function StampsPage() {
             <tbody className="divide-y divide-outline-variant/20">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-5 py-12 text-center text-on-surface-variant/50">
+                  <td colSpan={6} className="px-5 py-12 text-center text-on-surface-variant/50">
                     <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                     <span>Loading seal logs...</span>
                   </td>
                 </tr>
               ) : stamps.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-5 py-12 text-center text-on-surface-variant/50">
+                  <td colSpan={6} className="px-5 py-12 text-center text-on-surface-variant/50">
                     No seal requests found.
                   </td>
                 </tr>
@@ -367,6 +431,26 @@ export default function StampsPage() {
                           )}
                         </div>
                       </div>
+                    </td>
+                    <td className="px-5 py-4">
+                      {s.billUrl ? (
+                        <div className="flex items-center gap-2.5">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedBill({ url: s.billUrl, guestName, billNumber: s.billNumber, billAmount: s.billAmount })}
+                            className="w-10 h-10 rounded-lg border border-primary/40 overflow-hidden bg-black/40 hover:scale-105 transition-all cursor-pointer shrink-0"
+                            title="Inspect WebP Bill"
+                          >
+                            <img src={s.billUrl} alt="Bill" className="w-full h-full object-cover" />
+                          </button>
+                          <div className="text-[11px] font-mono leading-tight">
+                            {s.billNumber && <p className="text-secondary font-semibold">#{s.billNumber}</p>}
+                            {s.billAmount !== undefined && <p className="text-on-surface">₹{s.billAmount}</p>}
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-on-surface-variant/40 font-mono">—</span>
+                      )}
                     </td>
                     <td className="px-5 py-4">
                       {statusBadge(s.status)}
@@ -426,6 +510,52 @@ export default function StampsPage() {
           </div>
         )}
       </div>
+
+      {/* Bill Lightbox Modal */}
+      {selectedBill && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-2xl rounded-3xl bg-surface-container/95 border border-primary/40 p-4 sm:p-6 shadow-[0_24px_60px_rgba(0,0,0,0.9)] text-on-surface flex flex-col max-h-[92vh]">
+            <div className="flex items-center justify-between pb-3 border-b border-outline-variant/30 mb-3">
+              <div>
+                <h3 className="font-serif text-sm sm:text-base font-bold text-on-surface">
+                  Dining Receipt: {selectedBill.guestName}
+                </h3>
+                <p className="text-[11px] text-on-surface-variant font-mono">
+                  {selectedBill.billNumber ? `Invoice #${selectedBill.billNumber}` : 'WebP Image Receipt'}
+                  {selectedBill.billAmount ? ` • ₹${selectedBill.billAmount}` : ''}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedBill(null)}
+                className="p-1.5 rounded-full hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-auto rounded-2xl bg-black/60 p-2 flex items-center justify-center">
+              <img
+                src={selectedBill.url}
+                alt="Enlarged Bill Receipt"
+                className="max-h-[68vh] w-auto max-w-full object-contain rounded-xl"
+              />
+            </div>
+
+            <div className="pt-3 flex items-center justify-between text-xs text-on-surface-variant">
+              <span className="font-mono text-[10px]">Cloudinary WebP Transcoded</span>
+              <a
+                href={selectedBill.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-secondary hover:underline font-semibold"
+              >
+                Open Full Original ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
