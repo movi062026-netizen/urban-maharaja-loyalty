@@ -60,9 +60,10 @@ const uploadBillImage = async (buffer, options = {}) => {
         folder: options.folder || 'urban-maharaja/bills',
         format: 'webp', // Transcode directly to WebP on Cloudinary
         transformation: [
-          { quality: 'auto:good' },
-          { fetch_format: 'webp' },
-          { flags: 'strip_profile' }, // Strip EXIF data for privacy & anti-metadata leakage
+          { width: 1600, height: 2000, crop: 'limit' }, // Compress large phone camera resolutions down to crisp readable receipt size
+          { quality: 'auto:good' }, // Smart perceptual lossy compression
+          { fetch_format: 'webp' }, // Enforce WebP delivery format
+          { flags: 'strip_profile' }, // Strip heavy camera EXIF & metadata for privacy & file reduction
         ],
         public_id: options.publicId,
         resource_type: 'image',
