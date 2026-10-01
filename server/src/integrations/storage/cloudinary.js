@@ -39,7 +39,7 @@ const uploadBillImage = async (buffer, options = {}) => {
     throw new Error('Invalid image buffer provided for bill upload');
   }
 
-  if (!isCloudinaryConfigured()) {
+  if (!module.exports.isCloudinaryConfigured()) {
     logger.warn(
       'Cloudinary credentials missing in environment. Using fallback WebP bill preview for development.'
     );

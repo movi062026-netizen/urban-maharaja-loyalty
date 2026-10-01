@@ -12,6 +12,14 @@ const connectDB = async () => {
       database: conn.connection.name,
     });
 
+    // Synchronize User indexes to cleanly update legacy compound indexes with partialFilterExpression
+    try {
+      const User = require('../models/User');
+      await User.syncIndexes();
+    } catch (idxErr) {
+      logger.warn('Index synchronization notice (safe to continue):', { error: idxErr.message });
+    }
+
     // Connection event listeners
     mongoose.connection.on('error', (err) => {
       logger.error('MongoDB connection error', { error: err.message });

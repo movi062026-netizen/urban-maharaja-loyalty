@@ -1,7 +1,9 @@
-const { uploadBillImage, isCloudinaryConfigured } = require('../../src/integrations/storage');
+const cloudinaryModule = require('../../src/integrations/storage/cloudinary');
+const { uploadBillImage } = cloudinaryModule;
 
 describe('Cloudinary WebP Bill Upload & Anti-Fraud Unit Tests', () => {
   it('provides a valid fallback WebP response in development when credentials are not yet set', async () => {
+    jest.spyOn(cloudinaryModule, 'isCloudinaryConfigured').mockReturnValueOnce(false);
     const dummyBuffer = Buffer.from('fake-image-bytes-for-bill');
     const result = await uploadBillImage(dummyBuffer);
 

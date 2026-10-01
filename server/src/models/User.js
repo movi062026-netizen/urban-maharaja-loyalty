@@ -21,8 +21,6 @@ const userSchema = new mongoose.Schema(
     },
     googleId: {
       type: String,
-      sparse: true,
-      index: true,
     },
     avatar: {
       type: String,
@@ -85,10 +83,32 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Compound unique index: phone must be unique among guests
-userSchema.index({ phone: 1, role: 1 }, { unique: true, sparse: true });
-// Email must be unique for staff/admin
-userSchema.index({ email: 1 }, { unique: true, sparse: true });
+// Compound unique index: phone must be unique among guests only when phone is a string
+userSchema.index(
+  { phone: 1, role: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { phone: { $type: 'string' } },
+  }
+);
+
+// Email must be unique when present
+userSchema.index(
+  { email: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { email: { $type: 'string' } },
+  }
+);
+
+// Google ID must be unique when present
+userSchema.index(
+  { googleId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { googleId: { $type: 'string' } },
+  }
+);
 
 // Hash password before saving
 userSchema.pre('save', async function (next) {
