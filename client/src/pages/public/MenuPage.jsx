@@ -15,7 +15,52 @@ import {
   Clock
 } from 'lucide-react';
 
+import dishPaneerTikka from '../../assets/images/dish-paneer-tikka-premium.jpg';
+import dishBruschetta from '../../assets/images/dish-bruschetta-premium.jpg';
+import dishRoyalDosa from '../../assets/images/dish-royal-dosa-premium.jpg';
+import dishGrilledSandwich from '../../assets/images/dish-grilled-sandwich-premium.jpg';
+import brandLogo from '../../assets/images/logo.png';
+
 const MENU_LIVE_URL = 'https://urban-maharaja-premium-restaurant-menu-website-hbi32srb0.vercel.app/';
+
+const signatureDishes = [
+  {
+    id: 'sig-paneer',
+    name: 'Haryali Paneer Tikka Sizzler',
+    category: 'Tandoori Sizzlers',
+    price: 320,
+    badge: 'Chef Signature',
+    image: dishPaneerTikka,
+    description: 'Fresh cottage cheese cubes steeped in wild mountain herbs, roasted spices, and slow-grilled in our clay tandoor with bell peppers & onions.',
+  },
+  {
+    id: 'sig-bruschetta',
+    name: 'Cheesy Garlic Herb Bruschetta',
+    category: 'Starters',
+    price: 240,
+    badge: 'Artisan Oven',
+    image: dishBruschetta,
+    description: 'Crusty sourdough baguettes toasted with garlic-infused butter, roasted olives, bubbling mozzarella, and served with spiced house marinara.',
+  },
+  {
+    id: 'sig-dosa',
+    name: 'Royal Maharaja Masala Dosa Feast',
+    category: 'Breads & Rice',
+    price: 210,
+    badge: 'House Specialty',
+    image: dishRoyalDosa,
+    description: 'Paper-thin crispy crepe roasted with clarified butter, filled with spiced potato mash, served with lentil sambar, fresh coconut chutney & cottage cheese.',
+  },
+  {
+    id: 'sig-sandwich',
+    name: 'Artisan Grilled Club Sandwich Platter',
+    category: 'Starters',
+    price: 220,
+    badge: 'Gourmet Platter',
+    image: dishGrilledSandwich,
+    description: 'Multi-tier golden-brown grilled bread packed with shredded farm vegetables, spiced house spread, melted cheese, and fresh garden salad garnish.',
+  },
+];
 
 const categories = [
   'All Items',
@@ -186,6 +231,26 @@ const menuData = [
 
   // ── STARTERS ──
   {
+    id: 'sig-bruschetta',
+    category: 'Starters',
+    name: 'Cheesy Garlic Herb Bruschetta',
+    price: 240,
+    badge: 'Artisan Wood-Fired',
+    image: dishBruschetta,
+    description: 'Crusty sourdough baguettes toasted with garlic-infused butter, roasted olives, bubbling mozzarella, and served with spiced house marinara.',
+    popular: true,
+  },
+  {
+    id: 'sig-sandwich',
+    category: 'Starters',
+    name: 'Artisan Grilled Club Sandwich Platter',
+    price: 220,
+    badge: 'Royal Platter',
+    image: dishGrilledSandwich,
+    description: 'Multi-tier golden-brown grilled bread packed with shredded farm vegetables, spiced house spread, melted cheese, and fresh garden salad garnish.',
+    popular: true,
+  },
+  {
     id: 'st1',
     category: 'Starters',
     name: 'Honey Chilli Potato',
@@ -229,6 +294,16 @@ const menuData = [
   },
 
   // ── TANDOORI SIZZLERS ──
+  {
+    id: 'sig-paneer',
+    category: 'Tandoori Sizzlers',
+    name: 'Haryali Paneer Tikka Sizzler',
+    price: 320,
+    badge: 'Chef Signature Sizzler',
+    image: dishPaneerTikka,
+    description: 'Fresh cottage cheese cubes steeped in wild mountain herbs, roasted spices, and slow-grilled in our clay tandoor with bell peppers & onions.',
+    popular: true,
+  },
   {
     id: 't1',
     category: 'Tandoori Sizzlers',
@@ -335,6 +410,16 @@ const menuData = [
   },
 
   // ── BREADS & RICE ──
+  {
+    id: 'sig-dosa',
+    category: 'Breads & Rice',
+    name: 'Royal Maharaja Masala Dosa Feast',
+    price: 210,
+    badge: 'Imperial Dosa Feast',
+    image: dishRoyalDosa,
+    description: 'Paper-thin crispy crepe roasted with clarified butter, filled with spiced potato mash, served with lentil sambar, fresh coconut chutney & cottage cheese.',
+    popular: true,
+  },
   {
     id: 'b1',
     category: 'Breads & Rice',
@@ -590,6 +675,94 @@ export default function MenuPage() {
         </div>
       </div>
 
+      {/* ── CHEF'S SIGNATURE REAL DISHES SHOWCASE ── */}
+      <section className="relative w-full max-w-[1240px] mx-auto px-5 sm:px-8 pt-10 pb-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4 pb-3 border-b border-outline-variant/30">
+          <div>
+            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-1">
+              <Sparkles className="w-3.5 h-3.5 text-secondary" />
+              <span>Imperial Signature Creations</span>
+            </div>
+            <h2 className="font-serif text-2xl sm:text-3xl text-on-surface font-bold">
+              Chef's Authentic Plated Delicacies
+            </h2>
+            <p className="text-xs text-on-surface-variant mt-1">
+              Authentic royal house recipes prepared fresh with finest Himalayan herbs and pure vegetarian ghee
+            </p>
+          </div>
+          <a
+            href={MENU_LIVE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-amber-300 hover:text-amber-200 font-semibold flex items-center gap-1.5"
+          >
+            <span>View all in live menu</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {signatureDishes.map((dish) => (
+            <div
+              key={dish.id}
+              className="group rounded-3xl overflow-hidden bg-gradient-to-b from-[#240b12] to-[#160509] border border-primary/30 hover:border-amber-400/50 shadow-xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between"
+            >
+              <div>
+                <div className="relative h-52 overflow-hidden">
+                  <img
+                    src={dish.image}
+                    alt={dish.name}
+                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#160509] via-transparent to-black/25" />
+                  <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-black/75 backdrop-blur-md text-amber-300 font-bold uppercase text-[10px] tracking-wider border border-amber-400/30">
+                    {dish.badge}
+                  </span>
+                  <span className="absolute bottom-2.5 right-3 font-serif text-xl font-bold text-amber-300 drop-shadow">
+                    ₹{dish.price}
+                  </span>
+                </div>
+
+                <div className="p-5">
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <span className="w-3.5 h-3.5 rounded-[3px] border-2 border-emerald-500 flex items-center justify-center p-0.5 bg-white shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                    </span>
+                    <span className="text-[10px] uppercase font-mono text-secondary font-semibold tracking-wider">
+                      {dish.category}
+                    </span>
+                  </div>
+
+                  <h3 className="font-serif text-base font-bold text-on-surface group-hover:text-primary transition-colors leading-snug mb-2">
+                    {dish.name}
+                  </h3>
+
+                  <p className="text-xs text-on-surface-variant/80 leading-relaxed font-sans line-clamp-3">
+                    {dish.description}
+                  </p>
+                </div>
+              </div>
+
+              <div className="px-5 pb-5 pt-2 border-t border-outline-variant/20 flex items-center justify-between">
+                <span className="text-[10px] text-amber-300/80 font-bold uppercase tracking-wider">
+                  Pure Veg Specialty
+                </span>
+                <a
+                  href={MENU_LIVE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-semibold text-secondary hover:text-secondary-fixed flex items-center gap-1"
+                >
+                  <span>Details</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── DISHES GRID ── */}
       <section className="relative w-full py-12 overflow-hidden">
         <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
@@ -634,6 +807,22 @@ export default function MenuPage() {
                   className="group rounded-3xl p-5 sm:p-6 bg-gradient-to-b from-surface-container/80 to-surface-container-lowest/90 border border-outline-variant/40 backdrop-blur-xl shadow-lg flex flex-col justify-between hover:border-primary/50 hover:-translate-y-1 transition-all duration-300"
                 >
                   <div>
+                    {/* If item has custom photo, show it prominently */}
+                    {item.image && (
+                      <div className="relative h-44 -mx-5 -mt-5 sm:-mx-6 sm:-mt-6 mb-4 overflow-hidden rounded-t-[22px]">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-surface-container/90 via-transparent to-black/20" />
+                        <span className="absolute bottom-2.5 left-3 text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-black/70 backdrop-blur-md text-amber-300 border border-amber-400/30">
+                          Authentic Plating
+                        </span>
+                      </div>
+                    )}
+
                     {/* Header: Pure Veg Dot + Badge + Price */}
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div className="flex items-center gap-2">

@@ -51,10 +51,7 @@ export default function HomePage() {
               <img
                 alt="Urban Maharaja Logo"
                 className="w-28 h-28 sm:w-36 sm:h-36 object-cover rounded-2xl drop-shadow-[0_8px_16px_rgba(0,0,0,0.7)]"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsWqtkieOSn8K5iK0iO5qYJhpc58Wot5yv4gJ07LgSqa7agNcLQ-kiGVgGTifWV-01iZdv1bxmUhdF99lNYzbcK6oyRpedJZxI8rDclE1JY_rZVo6UdizRjSYMioskVsr6ZZFEslg_mpCL0_SVEzgGREnvTiCB6uNkWQSVvsCLh-RspcJWWp6TiP1s-tfTmlXKRVDicQlVKGMP6G463JBVYUlMit_iPPFHFAlaCgTAqQy3ClGC_wURgA"
-                onError={(e) => {
-                  e.target.src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=80';
-                }}
+                src="/logo.png"
               />
             </div>
           </div>
@@ -411,151 +408,208 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* 3 Showcase Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-            {/* Dish 1: Dal Bukhara */}
-            <div className="group rounded-3xl overflow-hidden bg-surface-container/70 border border-outline-variant/30 backdrop-blur-xl shadow-lg transition-all duration-500 hover:-translate-y-2 hover:border-primary/40 flex flex-col justify-between">
+          {/* 4 Authentic Showcase Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Dish 1: Haryali Paneer Tikka */}
+            <div className="group rounded-3xl overflow-hidden bg-surface-container/70 border border-outline-variant/30 backdrop-blur-xl shadow-lg transition-all duration-500 hover:-translate-y-2 hover:border-primary/50 flex flex-col justify-between">
               <div>
-                <div className="relative h-60 overflow-hidden">
+                <div className="relative h-56 overflow-hidden">
                   <img
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    alt="Dal Maharaja Bukhara"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAplJYTNJHyEIuBsMjYNIt4OltgBDJ5jP4R7jZx-asMAcnug39CEfjCSYBd3ol5poklHKsRSg-DunGr1uv4xEpaFPrHx_c1vCKnTkq2sVrOrC9niHyrow5BLVO7-b8Z3Zm1BSPwMmY_tF0H46QW1NexplLIFZrPqyKujrhFu8YVXpLEEq14J9_rfYY7qhGSqovDYRRNpwBzMQJ0Qb7LJZR3dHbqPhl92Fs4IawtC1xM"
-                    onError={(e) => {
-                      e.target.src = 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&auto=format&fit=crop&q=80';
-                    }}
+                    alt="Haryali Paneer Tikka Sizzler"
+                    src="/dishes/dish-paneer-tikka-premium.jpg"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-surface-container via-transparent to-transparent" />
-                  <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-surface/85 backdrop-blur-md border border-primary/30">
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">
-                      36-Hour Embers
+                  <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-surface/90 backdrop-blur-md border border-primary/30">
+                    <span className="text-[10px] uppercase tracking-[0.18em] text-primary font-bold">
+                      Chef's Special
                     </span>
                   </div>
-                  <div className="absolute bottom-3 right-4 font-serif text-2xl text-primary font-bold">
-                    ₹695
+                  <div className="absolute bottom-2.5 right-3 font-serif text-xl text-primary font-bold drop-shadow-md">
+                    ₹320
                   </div>
                 </div>
 
-                <div className="p-6">
-                  <div className="flex items-center gap-2 text-secondary mb-1">
-                    <span className="material-symbols-outlined text-[16px]">eco</span>
-                    <span className="text-[10px] uppercase tracking-widest font-semibold">Heritage Vegetarian</span>
+                <div className="p-5">
+                  <div className="flex items-center gap-1.5 text-secondary mb-1">
+                    <span className="w-3.5 h-3.5 rounded-[3px] border-2 border-emerald-500 flex items-center justify-center p-0.5 bg-white shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider font-semibold">Tandoori Sizzler</span>
                   </div>
-                  <h3 className="font-serif text-xl text-on-surface font-bold mb-2">Dal Maharaja Bukhara</h3>
-                  <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed line-clamp-3">
-                    Whole black lentils simmered continuously for thirty-six hours on smoldering charcoal, finished with hand-churned village butter, ripe plum tomatoes, and ginger juliennes.
+                  <h3 className="font-serif text-lg text-on-surface font-bold mb-1.5 group-hover:text-primary transition-colors">
+                    Haryali Paneer Tikka
+                  </h3>
+                  <p className="text-xs text-on-surface-variant leading-relaxed line-clamp-3">
+                    Fresh cottage cheese cubes steeped in wild mountain herbs, roasted spices, and slow-grilled in our clay tandoor with bell peppers &amp; onions.
                   </p>
                 </div>
               </div>
 
-              <div className="px-6 pb-6 pt-3 border-t border-outline-variant/30 flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-xs text-on-surface-variant/80">
-                  <span className="material-symbols-outlined text-[16px] text-primary">wine_bar</span>
-                  Pairing: Barolo Riserva 2018
+              <div className="px-5 pb-5 pt-3 border-t border-outline-variant/30 flex items-center justify-between">
+                <span className="text-[11px] text-on-surface-variant/80 font-sans">
+                  Char-Grilled In Tandoor
                 </span>
                 <Link
                   to="/menu"
-                  className="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant/40 hover:bg-primary-container hover:text-on-primary-container transition-colors flex items-center justify-center text-primary no-underline"
+                  className="text-xs font-semibold text-primary hover:text-primary-fixed flex items-center gap-1 no-underline transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[16px]">add</span>
+                  <span>Explore</span>
+                  <span className="material-symbols-outlined text-[15px]">arrow_outward</span>
                 </Link>
               </div>
             </div>
 
-            {/* Dish 2: Shahi Murgh Dum Biryani */}
-            <div className="group rounded-3xl overflow-hidden bg-surface-container/70 border border-outline-variant/30 backdrop-blur-xl shadow-lg transition-all duration-500 hover:-translate-y-2 hover:border-secondary/40 flex flex-col justify-between">
+            {/* Dish 2: Cheesy Garlic Herb Bruschetta */}
+            <div className="group rounded-3xl overflow-hidden bg-surface-container/70 border border-outline-variant/30 backdrop-blur-xl shadow-lg transition-all duration-500 hover:-translate-y-2 hover:border-secondary/50 flex flex-col justify-between">
               <div>
-                <div className="relative h-60 overflow-hidden">
+                <div className="relative h-56 overflow-hidden">
                   <img
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    alt="Shahi Murgh Dum Biryani"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuADMFqR0L62vzQiDlAzq60lvAuw1UweS5n-Cv63U9nOU_ENLTpDjYofQE81zMOyRP_pkVH9JMLU3Mh58uaOmZDEA44yMbOOvCCNtqYmgz56OCcjVaJ0yVR6iOgdBPgvuDaihy0-RH9rElqpwHD4AKmuGyEet2IVgq5PGMnqfFVbbUw_kGOjxzOmXvOMAkuVemUsOXFqB6ch4_814BHV1jttIRLTIWBL1FkBtruP4fgz"
-                    onError={(e) => {
-                      e.target.src = 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop&q=80';
-                    }}
+                    alt="Cheesy Garlic Herb Bruschetta"
+                    src="/dishes/dish-bruschetta-premium.jpg"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-surface-container via-transparent to-transparent" />
-                  <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-surface/85 backdrop-blur-md border border-secondary/30">
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-secondary font-bold">
-                      Chef's Signature
+                  <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-surface/90 backdrop-blur-md border border-secondary/30">
+                    <span className="text-[10px] uppercase tracking-[0.18em] text-secondary font-bold">
+                      Gourmet Starter
                     </span>
                   </div>
-                  <div className="absolute bottom-3 right-4 font-serif text-2xl text-primary font-bold">
-                    ₹895
+                  <div className="absolute bottom-2.5 right-3 font-serif text-xl text-primary font-bold drop-shadow-md">
+                    ₹240
                   </div>
                 </div>
 
-                <div className="p-6">
-                  <div className="flex items-center gap-2 text-primary mb-1">
-                    <span className="material-symbols-outlined text-[16px]">restaurant</span>
-                    <span className="text-[10px] uppercase tracking-widest font-semibold">Clay Pot Sealed Dum</span>
+                <div className="p-5">
+                  <div className="flex items-center gap-1.5 text-secondary mb-1">
+                    <span className="w-3.5 h-3.5 rounded-[3px] border-2 border-emerald-500 flex items-center justify-center p-0.5 bg-white shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider font-semibold">Artisan Starter</span>
                   </div>
-                  <h3 className="font-serif text-xl text-on-surface font-bold mb-2">Shahi Murgh Dum Biryani</h3>
-                  <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed line-clamp-3">
-                    Aged Dehradun extra-long basmati steeped in Kashmiri saffron, wild rose water, and organic spring chicken, sealed under a whole wheat crust and baked over low tandoor heat.
+                  <h3 className="font-serif text-lg text-on-surface font-bold mb-1.5 group-hover:text-secondary transition-colors">
+                    Cheesy Herb Bruschetta
+                  </h3>
+                  <p className="text-xs text-on-surface-variant leading-relaxed line-clamp-3">
+                    Crusty sourdough baguettes toasted with garlic-infused butter, roasted olives, bubbling mozzarella, and served with spiced house marinara.
                   </p>
                 </div>
               </div>
 
-              <div className="px-6 pb-6 pt-3 border-t border-outline-variant/30 flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-xs text-on-surface-variant/80">
-                  <span className="material-symbols-outlined text-[16px] text-primary">wine_bar</span>
-                  Pairing: Meursault Premier Cru
+              <div className="px-5 pb-5 pt-3 border-t border-outline-variant/30 flex items-center justify-between">
+                <span className="text-[11px] text-on-surface-variant/80 font-sans">
+                  Wood-Fired Toasting
                 </span>
                 <Link
                   to="/menu"
-                  className="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant/40 hover:bg-primary-container hover:text-on-primary-container transition-colors flex items-center justify-center text-primary no-underline"
+                  className="text-xs font-semibold text-secondary hover:text-secondary-fixed flex items-center gap-1 no-underline transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[16px]">add</span>
+                  <span>Explore</span>
+                  <span className="material-symbols-outlined text-[15px]">arrow_outward</span>
                 </Link>
               </div>
             </div>
 
-            {/* Dish 3: Galouti & Sheermal */}
-            <div className="group rounded-3xl overflow-hidden bg-surface-container/70 border border-outline-variant/30 backdrop-blur-xl shadow-lg transition-all duration-500 hover:-translate-y-2 hover:border-primary/40 flex flex-col justify-between">
+            {/* Dish 3: Royal Maharaja Masala Dosa */}
+            <div className="group rounded-3xl overflow-hidden bg-surface-container/70 border border-outline-variant/30 backdrop-blur-xl shadow-lg transition-all duration-500 hover:-translate-y-2 hover:border-primary/50 flex flex-col justify-between">
               <div>
-                <div className="relative h-60 overflow-hidden">
+                <div className="relative h-56 overflow-hidden">
                   <img
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    alt="Nawabi Galouti & Sheermal"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkiAbNb6hPuMMWTxl0g4f70NrMaOGJpwcp5HcS9SFfXmo1ebTRJSa9UlqtPhGuevcckhHj4hPqIctkpNq4fP7XpCAv3t0yPaGrTa2_W1XyIBtCYAe-exf9fhBesQgrCsZ5WGu5CXkKrLRsDeqZeGbIk9SC3k5M9Y-lnTIgfIVe6xHcaOh-OKILwJJyhqB75MpQxlNHxFZNOGXrZUchdU6vEkrEEdpmg0ah1PT4rFXg"
-                    onError={(e) => {
-                      e.target.src = 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=800&auto=format&fit=crop&q=80';
-                    }}
+                    alt="Royal Maharaja Masala Dosa"
+                    src="/dishes/dish-royal-dosa-premium.jpg"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-surface-container via-transparent to-transparent" />
-                  <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-surface/85 backdrop-blur-md border border-primary/30">
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">
-                      Royal Court Special
+                  <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-surface/90 backdrop-blur-md border border-primary/30">
+                    <span className="text-[10px] uppercase tracking-[0.18em] text-primary font-bold">
+                      Royal Feast
                     </span>
                   </div>
-                  <div className="absolute bottom-3 right-4 font-serif text-2xl text-primary font-bold">
-                    ₹845
+                  <div className="absolute bottom-2.5 right-3 font-serif text-xl text-primary font-bold drop-shadow-md">
+                    ₹210
                   </div>
                 </div>
 
-                <div className="p-6">
-                  <div className="flex items-center gap-2 text-secondary mb-1">
-                    <span className="material-symbols-outlined text-[16px]">stars</span>
-                    <span className="text-[10px] uppercase tracking-widest font-semibold">160 Potent Spices</span>
+                <div className="p-5">
+                  <div className="flex items-center gap-1.5 text-secondary mb-1">
+                    <span className="w-3.5 h-3.5 rounded-[3px] border-2 border-emerald-500 flex items-center justify-center p-0.5 bg-white shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider font-semibold">Imperial Delicacy</span>
                   </div>
-                  <h3 className="font-serif text-xl text-on-surface font-bold mb-2">Nawabi Galouti &amp; Sheermal</h3>
-                  <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed line-clamp-3">
-                    Melt-in-the-mouth smoked baby lamb patties infused with raw papaya and pan-seared in rich clarified butter, served over warm saffron-cardamom brioche biscuits.
+                  <h3 className="font-serif text-lg text-on-surface font-bold mb-1.5 group-hover:text-primary transition-colors">
+                    Royal Maharaja Dosa
+                  </h3>
+                  <p className="text-xs text-on-surface-variant leading-relaxed line-clamp-3">
+                    Paper-thin crispy crepe roasted with clarified butter, filled with spiced masala, served with aromatic lentil sambar, fresh coconut chutney &amp; cottage cheese.
                   </p>
                 </div>
               </div>
 
-              <div className="px-6 pb-6 pt-3 border-t border-outline-variant/30 flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-xs text-on-surface-variant/80">
-                  <span className="material-symbols-outlined text-[16px] text-primary">wine_bar</span>
-                  Pairing: Syrah Rhône Valley
+              <div className="px-5 pb-5 pt-3 border-t border-outline-variant/30 flex items-center justify-between">
+                <span className="text-[11px] text-on-surface-variant/80 font-sans">
+                  Sambar &amp; Chutney Flight
                 </span>
                 <Link
                   to="/menu"
-                  className="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant/40 hover:bg-primary-container hover:text-on-primary-container transition-colors flex items-center justify-center text-primary no-underline"
+                  className="text-xs font-semibold text-primary hover:text-primary-fixed flex items-center gap-1 no-underline transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[16px]">add</span>
+                  <span>Explore</span>
+                  <span className="material-symbols-outlined text-[15px]">arrow_outward</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Dish 4: Artisan Grilled Club Sandwich */}
+            <div className="group rounded-3xl overflow-hidden bg-surface-container/70 border border-outline-variant/30 backdrop-blur-xl shadow-lg transition-all duration-500 hover:-translate-y-2 hover:border-secondary/50 flex flex-col justify-between">
+              <div>
+                <div className="relative h-56 overflow-hidden">
+                  <img
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    alt="Artisan Grilled Club Sandwich"
+                    src="/dishes/dish-grilled-sandwich-premium.jpg"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-surface-container via-transparent to-transparent" />
+                  <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-surface/90 backdrop-blur-md border border-secondary/30">
+                    <span className="text-[10px] uppercase tracking-[0.18em] text-secondary font-bold">
+                      Royal Platter
+                    </span>
+                  </div>
+                  <div className="absolute bottom-2.5 right-3 font-serif text-xl text-primary font-bold drop-shadow-md">
+                    ₹220
+                  </div>
+                </div>
+
+                <div className="p-5">
+                  <div className="flex items-center gap-1.5 text-secondary mb-1">
+                    <span className="w-3.5 h-3.5 rounded-[3px] border-2 border-emerald-500 flex items-center justify-center p-0.5 bg-white shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider font-semibold">Special Sandwich</span>
+                  </div>
+                  <h3 className="font-serif text-lg text-on-surface font-bold mb-1.5 group-hover:text-secondary transition-colors">
+                    Artisan Club Sandwich
+                  </h3>
+                  <p className="text-xs text-on-surface-variant leading-relaxed line-clamp-3">
+                    Multi-tier golden-brown grilled bread packed with shredded farm vegetables, spiced house spread, melted cheese, and fresh garden salad garnish.
+                  </p>
+                </div>
+              </div>
+
+              <div className="px-5 pb-5 pt-3 border-t border-outline-variant/30 flex items-center justify-between">
+                <span className="text-[11px] text-on-surface-variant/80 font-sans">
+                  Gourmet Salad &amp; Dip
+                </span>
+                <Link
+                  to="/menu"
+                  className="text-xs font-semibold text-secondary hover:text-secondary-fixed flex items-center gap-1 no-underline transition-colors"
+                >
+                  <span>Explore</span>
+                  <span className="material-symbols-outlined text-[15px]">arrow_outward</span>
                 </Link>
               </div>
             </div>

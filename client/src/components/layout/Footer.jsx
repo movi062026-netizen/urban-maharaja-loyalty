@@ -25,10 +25,7 @@ export default function Footer() {
               <img
                 alt="Urban Maharaja logo"
                 className="h-9 w-9 sm:h-10 sm:w-10 object-cover rounded-full border border-primary/40 shadow-sm"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXfNDYsMNpYnQyhMne22oWb4DIfAUVqXueX3fQTazODkKNaq6IpvuCe6yu7lv8L_lhENbBqd1cgSUVpqme1pDmXcF8kdOmsWW-xz4nTkD3tAJqwgEzZwvhUD_OtagFfWDTLe9rV4m0bd-kPRK7TbG269RThlqZhCdLFfV5bpAw7-c3L8UwduSZx61Qj3VRfiR96AzL9LrhoyzWY2fbYfPnnGaCG2XoTN48W0PTqBxGbc3rkEUpl_vp3g"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
+                src="/logo.png"
               />
               <div className="flex flex-col">
                 <span className="font-serif text-base sm:text-lg uppercase tracking-[0.15em] sm:tracking-[0.2em] text-primary font-bold">

@@ -63,10 +63,7 @@ export default function Navbar() {
             <img
               alt="Urban Maharaja logo"
               className="relative h-8 w-8 sm:h-10 sm:w-10 lg:h-11 lg:w-11 object-cover rounded-full border border-primary/40 shadow-sm"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcf8UOcN3_RUOnQhyxQhP2ixS08rMuoDfsKJGu59mnvG3HcqH_qs-FH3y4xM--xZ-45mAtObqgjZQRyJl9cHBE8hqzAiz59PvgfwvFLLuISA_UBWPHMMO1KqosgQ3d0J8iGNRewiGlSQR6eEDsAp9GCssgRPpnSxlt62cdJuOZ5LSeUW1-IY500nVNnMupWUNAeivZl3IVxpuZx9Oz_0FRzUojPZrvGMsVzad6lN_R_rAepPUIBLjXog"
-              onError={(e) => {
-                e.target.style.display = 'none';
-              }}
+              src="/logo.png"
             />
           </div>
           <div className="flex flex-col leading-tight">
