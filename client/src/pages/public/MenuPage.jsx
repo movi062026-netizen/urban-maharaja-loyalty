@@ -451,10 +451,10 @@ export default function MenuPage() {
       <div className="w-full bg-gradient-to-r from-[#6e1226] via-[#911833] to-[#6e1226] border-b border-primary/40 py-2.5 px-4 text-center">
         <div className="max-w-[1240px] mx-auto flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs">
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/30 text-amber-300 font-bold uppercase tracking-wider text-[10px] border border-amber-300/40">
-            <Sparkles className="w-3 h-3 text-amber-300 animate-spin" /> Live Ordering Platform
+            <Sparkles className="w-3 h-3 text-amber-300" /> Official Digital Menu
           </span>
           <span className="text-white/95 font-medium">
-            Explore our complete digital menu with real-time cart &amp; instant ordering!
+            Explore our complete pure vegetarian dining menu &amp; chef specials on our interactive website!
           </span>
           <a
             href={MENU_LIVE_URL}
@@ -462,7 +462,7 @@ export default function MenuPage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400 hover:bg-amber-300 text-black font-bold uppercase tracking-wider text-[11px] transition-all shadow-md hover:scale-105"
           >
-            <span>Open Menu App</span>
+            <span>Explore Digital Menu</span>
             <ExternalLink className="w-3 h-3" />
           </a>
         </div>
@@ -492,7 +492,7 @@ export default function MenuPage() {
           </h1>
 
           <p className="text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-8 font-sans">
-            A celebration of authentic North Indian, sizzling Tandoori specialties, and wok-fired Indo-Chinese delicacies crafted for royal palate indulgence.
+            A celebration of authentic North Indian curries, sizzling clay-oven tandoor creations, and wok-fired Indo-Chinese delicacies crafted for royal palate indulgence.
           </p>
 
           {/* Action CTAs */}
@@ -503,17 +503,16 @@ export default function MenuPage() {
               rel="noopener noreferrer"
               className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 text-black font-bold uppercase tracking-wider text-xs shadow-[0_10px_30px_rgba(245,197,66,0.3)] hover:brightness-110 hover:scale-[1.03] transition-all flex items-center gap-2 no-underline"
             >
-              <ShoppingBag className="w-4 h-4" />
-              <span>Order Online Now</span>
+              <UtensilsCrossed className="w-4 h-4" />
+              <span>Explore Interactive Menu</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
 
             <Link
-              to="/card"
+              to="/contact"
               className="px-6 py-3.5 rounded-2xl bg-surface-container-high/90 hover:bg-surface-container-highest border border-primary/40 text-primary font-bold uppercase tracking-wider text-xs shadow-md hover:scale-[1.03] transition-all flex items-center gap-2 no-underline"
             >
-              <Award className="w-4 h-4 text-secondary" />
-              <span>Earn Loyalty Stamps</span>
+              <span>Reserve a Table</span>
             </Link>
           </div>
 
@@ -563,15 +562,15 @@ export default function MenuPage() {
         <div className="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-[#2a0b13] via-[#1d060c] to-[#2a0b13] border border-amber-400/30 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-300 shrink-0">
-              <ShoppingBag className="w-6 h-6" />
+              <UtensilsCrossed className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-serif text-base sm:text-lg font-bold text-on-surface">
-                  Official Online Menu &amp; Ordering App
+                  Official Interactive Digital Menu
                 </h3>
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-green-500/20 text-green-300 border border-green-500/30">
-                  Online
+                  Live
                 </span>
               </div>
               <p className="text-xs text-on-surface-variant font-mono mt-0.5 truncate max-w-md sm:max-w-xl">
@@ -586,7 +585,7 @@ export default function MenuPage() {
             rel="noopener noreferrer"
             className="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-bold uppercase tracking-wider text-xs transition-all shadow-md flex items-center gap-2 shrink-0 no-underline"
           >
-            <span>Visit Full App ↗</span>
+            <span>Visit Menu Website ↗</span>
           </a>
         </div>
       </div>
@@ -610,7 +609,7 @@ export default function MenuPage() {
               rel="noopener noreferrer"
               className="text-xs text-secondary hover:underline font-semibold flex items-center gap-1"
             >
-              <span>Order via App</span>
+              <span>Full Interactive Menu</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -666,7 +665,7 @@ export default function MenuPage() {
                     </p>
                   </div>
 
-                  {/* Card Bottom: Order Button */}
+                  {/* Card Bottom: Category Tag & Detail Indicator */}
                   <div className="pt-3.5 border-t border-outline-variant/30 flex items-center justify-between">
                     <span className="text-[11px] font-mono text-secondary font-semibold uppercase tracking-wider">
                       {item.category}
@@ -676,11 +675,10 @@ export default function MenuPage() {
                       href={MENU_LIVE_URL}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black text-xs font-bold flex items-center gap-1.5 shadow transition-all no-underline"
-                      title="Add to cart on menu website"
+                      className="text-[11px] text-amber-300/90 hover:text-amber-200 font-semibold flex items-center gap-1 hover:underline transition-all"
+                      title="View on interactive menu"
                     >
-                      <span className="text-sm font-bold leading-none">+</span>
-                      <span>Order</span>
+                      <span>View details</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
@@ -716,7 +714,7 @@ export default function MenuPage() {
                 rel="noopener noreferrer"
                 className="px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-black text-xs uppercase tracking-wider font-bold shadow-lg transition-all flex items-center gap-1.5 no-underline"
               >
-                <span>Full Online Menu</span>
+                <span>Full Digital Menu</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
