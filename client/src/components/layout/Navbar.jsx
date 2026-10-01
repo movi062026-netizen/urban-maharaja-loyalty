@@ -106,17 +106,6 @@ export default function Navbar() {
 
         {/* Header Action Buttons */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0 ml-auto lg:ml-0">
-          <a
-            href="https://urban-maharaja-premium-restaurant-menu-website-hbi32srb0.vercel.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-1.5 text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.12em] px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-bold no-underline whitespace-nowrap shadow-md hover:scale-105 transition-all"
-            title="Open Interactive Digital Menu"
-          >
-            <span>Digital Menu</span>
-            <span className="text-[11px] font-bold">↗</span>
-          </a>
-
           <Link
             to="/contact"
             className="hidden sm:inline-flex items-center justify-center text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.14em] px-3 py-1.5 sm:px-4 sm:py-2 lg:px-5 lg:py-2.5 rounded-full glass-btn-secondary no-underline whitespace-nowrap"
@@ -200,16 +189,6 @@ export default function Navbar() {
           </div>
 
           <div className="pt-4 border-t border-outline-variant/30 flex flex-col gap-3">
-            <a
-              href="https://urban-maharaja-premium-restaurant-menu-website-hbi32srb0.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setIsOpen(false)}
-              className="w-full text-center py-3 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-black text-xs uppercase tracking-[0.16em] font-bold no-underline shadow-md flex items-center justify-center gap-1.5"
-            >
-              <span>Explore Digital Menu</span>
-              <span className="text-sm font-bold">↗</span>
-            </a>
             <Link
               to="/contact"
               onClick={() => setIsOpen(false)}
