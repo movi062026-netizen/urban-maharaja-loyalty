@@ -3,30 +3,30 @@ import { settingsApi, reviewApi } from '../../services/api';
 import { Star, ExternalLink, Heart } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+const DEFAULT_GOOGLE_REVIEW_URL = 'https://share.google/2nmScZz1II7jKmnKO';
+
 export default function ReviewPage() {
-  const [reviewUrl, setReviewUrl] = useState('');
+  const [reviewUrl, setReviewUrl] = useState(DEFAULT_GOOGLE_REVIEW_URL);
   const [clicked, setClicked] = useState(false);
 
   useEffect(() => {
     settingsApi.getSettings().then(({ data }) => {
-      setReviewUrl(data.data.settings?.googleReviewUrl || '');
+      const url = data.data.settings?.googleReviewUrl;
+      if (url && url !== 'REPLACE_WITH_GOOGLE_REVIEW_URL') {
+        setReviewUrl(url);
+      }
     }).catch(() => {});
   }, []);
 
   const handleClick = async () => {
+    const finalUrl = reviewUrl || DEFAULT_GOOGLE_REVIEW_URL;
     try {
       await reviewApi.trackClick('maharaja-card');
-      setClicked(true);
-      if (reviewUrl && reviewUrl !== 'REPLACE_WITH_GOOGLE_REVIEW_URL') {
-        window.open(reviewUrl, '_blank', 'noopener,noreferrer');
-      } else {
-        toast('Google Review URL is not yet configured', { icon: 'ℹ️' });
-      }
     } catch (err) {
-      // Still open the link even if tracking fails
-      if (reviewUrl && reviewUrl !== 'REPLACE_WITH_GOOGLE_REVIEW_URL') {
-        window.open(reviewUrl, '_blank', 'noopener,noreferrer');
-      }
+      // Non-fatal
+    } finally {
+      setClicked(true);
+      window.open(finalUrl, '_blank', 'noopener,noreferrer');
     }
   };
 

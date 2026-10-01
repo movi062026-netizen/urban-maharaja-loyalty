@@ -284,15 +284,27 @@ export default function ContactPage() {
                   </p>
                 </div>
               </div>
-              <a
-                href="https://www.google.com/maps/place/URBAN+MAHARAJA/@26.8069227,75.8578327,17z/data=!3m1!4b1!4m6!3m5!1s0x396dc90049d7c731:0xe9bd1d09e13e2817!8m2!3d26.8069227!4d75.8578327!16s%2Fg%2F11w2_b84t7"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-surface-container-high border border-primary/30 text-primary text-xs uppercase tracking-wider font-bold hover:bg-primary hover:text-on-primary transition-all no-underline w-fit"
-              >
-                <span>Get Driving Directions</span>
-                <span className="material-symbols-outlined text-[16px]">directions</span>
-              </a>
+              <div className="flex flex-wrap items-center gap-2.5">
+                <a
+                  href="https://share.google/2nmScZz1II7jKmnKO"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black text-xs uppercase tracking-wider font-bold shadow-md transition-all no-underline w-fit"
+                >
+                  <span>⭐ Rate on Google</span>
+                  <span className="material-symbols-outlined text-[15px]">open_in_new</span>
+                </a>
+
+                <a
+                  href="https://www.google.com/maps/place/URBAN+MAHARAJA/@26.8069227,75.8578327,17z/data=!3m1!4b1!4m6!3m5!1s0x396dc90049d7c731:0xe9bd1d09e13e2817!8m2!3d26.8069227!4d75.8578327!16s%2Fg%2F11w2_b84t7"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-high border border-primary/30 text-primary text-xs uppercase tracking-wider font-bold hover:bg-primary hover:text-on-primary transition-all no-underline w-fit"
+                >
+                  <span>Get Directions</span>
+                  <span className="material-symbols-outlined text-[16px]">directions</span>
+                </a>
+              </div>
             </div>
 
             <div className="w-full h-80 sm:h-[450px] rounded-2xl overflow-hidden border border-primary/20 bg-surface-container-lowest">

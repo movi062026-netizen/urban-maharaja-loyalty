@@ -120,12 +120,12 @@ const seed = async () => {
   await RestaurantSettings.create({
     restaurantName: 'Urban Maharaja',
     tagline: 'A Fine Dine',
-    address: 'REPLACE_WITH_RESTAURANT_ADDRESS',
-    phone: 'REPLACE_WITH_PHONE',
-    email: 'REPLACE_WITH_EMAIL',
-    googleReviewUrl: 'REPLACE_WITH_GOOGLE_REVIEW_URL',
-    googleMapsUrl: 'REPLACE_WITH_GOOGLE_MAPS_URL',
-    reservationUrl: 'REPLACE_WITH_RESERVATION_URL',
+    address: 'Plot No. AC-209, Central Spine, Mahal Road, Jagatpura, Jaipur, Rajasthan 302017',
+    phone: '+91 (800) MAHARAJA',
+    email: 'contact@urbanmaharaja.com',
+    googleReviewUrl: 'https://share.google/2nmScZz1II7jKmnKO',
+    googleMapsUrl: 'https://share.google/2nmScZz1II7jKmnKO',
+    reservationUrl: 'https://urban-maharaja-premium-restaurant-menu-website-hbi32srb0.vercel.app/',
     loyaltyConfig: {
       targetStamps: 5,
       isRoyalSurpriseEnabled: true,

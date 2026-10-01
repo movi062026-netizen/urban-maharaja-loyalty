@@ -44,9 +44,19 @@ export default function Footer() {
               An ultra-luxurious dining sanctuary breathing the majestic grandeur of Rajasthan and imperial Mughal courts into modern culinary artistry.
             </p>
 
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-chip w-fit">
-              <span className="material-symbols-outlined text-[14px] sm:text-[16px] text-secondary" aria-hidden="true">workspace_premium</span>
-              <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.18em] sm:tracking-[0.22em] font-bold text-secondary">Michelin Standard 2026</span>
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-chip w-fit">
+                <span className="material-symbols-outlined text-[14px] sm:text-[16px] text-secondary" aria-hidden="true">workspace_premium</span>
+                <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.18em] sm:tracking-[0.22em] font-bold text-secondary">Michelin Standard 2026</span>
+              </div>
+              <a
+                href="https://share.google/2nmScZz1II7jKmnKO"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 hover:bg-amber-400 hover:text-black transition-all text-[9px] sm:text-[10px] uppercase tracking-[0.14em] font-bold w-fit no-underline"
+              >
+                <span>⭐ Google Reviews</span>
+              </a>
             </div>
           </div>
 
@@ -77,9 +87,15 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-on-surface-variant hover:text-primary transition-colors no-underline">
-                  Jharokha Private Banquets
-                </Link>
+                <a
+                  href="https://share.google/2nmScZz1II7jKmnKO"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-amber-300/90 hover:text-amber-200 transition-colors no-underline font-medium inline-flex items-center gap-1"
+                >
+                  <span>Leave Google Review ⭐</span>
+                  <span className="text-[10px]">↗</span>
+                </a>
               </li>
             </ul>
           </nav>
