@@ -41,12 +41,12 @@ export default function ProfilePage() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="w-2 h-2 rounded-full bg-primary" />
-            <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-secondary">
+            <span className="text-[11px] uppercase font-black tracking-[0.2em] text-[#744d1c]">
               Noble Patron Account
             </span>
           </div>
           <h1 className="font-serif text-2xl sm:text-3xl text-on-surface font-bold">Patron Profile</h1>
-          <p className="text-xs text-on-surface-variant/80 mt-1">
+          <p className="text-xs text-[#3b241a] font-medium mt-1">
             Manage your personal profile, credentials, and notification contact details
           </p>
         </div>
@@ -60,7 +60,7 @@ export default function ProfilePage() {
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-700 bg-emerald-50 border border-emerald-300 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1">
+              <span className="text-[10px] uppercase font-black tracking-widest text-emerald-950 bg-emerald-100 border border-emerald-400 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
                 Verified Court Member
               </span>
@@ -68,7 +68,7 @@ export default function ProfilePage() {
             <h2 className="font-serif text-xl sm:text-2xl text-on-surface font-bold truncate mt-1">
               {user?.name || 'Noble Guest'}
             </h2>
-            <p className="text-xs text-secondary font-mono truncate mt-0.5">
+            <p className="text-xs text-[#744d1c] font-mono font-bold truncate mt-0.5">
               {user?.email || user?.phone}
             </p>
           </div>
@@ -76,7 +76,7 @@ export default function ProfilePage() {
 
         <form onSubmit={handleSave} className="space-y-5">
           <div>
-            <label htmlFor="name" className="block text-xs uppercase tracking-wider text-on-surface-variant font-bold mb-1.5">
+            <label htmlFor="name" className="block text-xs uppercase tracking-wider text-[#3b241a] font-black mb-1.5">
               Noble Full Name *
             </label>
             <input
@@ -84,13 +84,13 @@ export default function ProfilePage() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 bg-[#fdfaf6] border border-[#e4d3c2] rounded-xl text-on-surface text-sm focus:outline-none focus:border-primary focus:bg-white transition-all font-sans shadow-xs"
+              className="w-full px-4 py-3 bg-white border border-[#d8beaa] rounded-xl text-on-surface text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-sans shadow-xs font-medium"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-xs uppercase tracking-wider text-on-surface-variant font-bold mb-1.5">
+            <label htmlFor="email" className="block text-xs uppercase tracking-wider text-[#3b241a] font-black mb-1.5">
               Royal Email Address
             </label>
             <div className="relative">
@@ -100,14 +100,14 @@ export default function ProfilePage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 bg-[#fdfaf6] border border-[#e4d3c2] rounded-xl text-on-surface text-sm focus:outline-none focus:border-primary focus:bg-white transition-all font-sans shadow-xs"
+                className="w-full pl-11 pr-4 py-3 bg-white border border-[#d8beaa] rounded-xl text-on-surface text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-sans shadow-xs font-medium"
                 placeholder="patron@urbanmaharaja.com"
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-xs uppercase tracking-wider text-on-surface-variant font-bold mb-1.5">
+            <label htmlFor="phone" className="block text-xs uppercase tracking-wider text-[#3b241a] font-black mb-1.5">
               Mobile Contact <span className="text-[10px] text-on-surface-variant/60 font-normal lowercase">(used for SMS seal alerts)</span>
             </label>
             <div className="relative">

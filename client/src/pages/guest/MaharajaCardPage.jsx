@@ -220,7 +220,7 @@ export default function MaharajaCardPage() {
           {/* Loyalty Stats Overview */}
           <div className="grid grid-cols-3 gap-3">
             <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
-              <span className="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant/80 block mb-1">
+              <span className="text-[10px] uppercase font-black tracking-wider text-[#744d1c] block mb-1">
                 Current Seals
               </span>
               <span className="text-xl sm:text-2xl font-serif font-black text-primary">
@@ -228,18 +228,18 @@ export default function MaharajaCardPage() {
               </span>
             </div>
             <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
-              <span className="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant/80 block mb-1">
+              <span className="text-[10px] uppercase font-black tracking-wider text-[#744d1c] block mb-1">
                 Completed Cards
               </span>
-              <span className="text-xl sm:text-2xl font-serif font-black text-secondary">
+              <span className="text-xl sm:text-2xl font-serif font-black text-[#744d1c]">
                 {totalCompletedCycles} Passes
               </span>
             </div>
             <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
-              <span className="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant/80 block mb-1">
+              <span className="text-[10px] uppercase font-black tracking-wider text-[#744d1c] block mb-1">
                 Total Visits
               </span>
-              <span className="text-xl sm:text-2xl font-serif font-black text-on-surface">
+              <span className="text-xl sm:text-2xl font-serif font-black text-[#1d0f09]">
                 {totalApprovedStamps} Seals
               </span>
             </div>
@@ -254,7 +254,7 @@ export default function MaharajaCardPage() {
               <ShieldCheck className="w-4 h-4 text-primary" />
               <span>Maharaja Card Cycle Progression</span>
             </h3>
-            <p className="text-xs text-on-surface-variant/80 leading-relaxed mb-4">
+            <p className="text-xs text-[#3b241a] font-medium leading-relaxed mb-4">
               Every 5 dining visits completes a full cycle and awards an exclusive fine-dining perk. Once completed, your pass rolls over into Cycle 2, Cycle 3, and beyond with higher privileges!
             </p>
 
@@ -294,7 +294,7 @@ export default function MaharajaCardPage() {
           <div className="p-6 rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-serif text-base font-bold text-on-surface flex items-center gap-2">
-                <Gift className="w-4 h-4 text-secondary" />
+                <Gift className="w-4 h-4 text-primary" />
                 <span>Unlocked Reward Vouchers</span>
               </h3>
               <Link to="/guest/rewards" className="text-xs text-primary hover:text-primary-container transition-colors no-underline font-bold">
@@ -304,7 +304,7 @@ export default function MaharajaCardPage() {
 
             {availableRedemptions.length === 0 ? (
               <div className="p-5 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] text-center">
-                <p className="text-xs text-on-surface-variant/70 leading-relaxed">
+                <p className="text-xs text-[#3b241a] font-medium leading-relaxed">
                   No unredeemed vouchers at this moment. Complete your 5 seals to unlock your complimentary royal treat!
                 </p>
               </div>
@@ -317,9 +317,9 @@ export default function MaharajaCardPage() {
                   >
                     <div>
                       <p className="font-bold text-on-surface text-xs">{r.rewardId?.title || 'Complimentary Perk'}</p>
-                      <p className="text-[11px] text-on-surface-variant/80 mt-0.5">{r.rewardId?.description || 'Valid on your next dine-in'}</p>
+                      <p className="text-xs text-[#3b241a] font-medium mt-0.5">{r.rewardId?.description || 'Valid on your next dine-in'}</p>
                     </div>
-                    <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-300 text-[10px] font-bold uppercase">
+                    <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-950 border border-emerald-400 text-[10px] font-bold uppercase">
                       Ready
                     </span>
                   </div>

@@ -66,11 +66,11 @@ export default function GuestStampTracker({
               Imperial Dining Seals
             </h3>
           </div>
-          <div className="flex items-baseline gap-1.5 px-4 py-2 rounded-full bg-white/60 border border-outline-variant/30">
+          <div className="flex items-baseline gap-1.5 px-4 py-2 rounded-full bg-white/80 border border-[#e0c8b0]">
             <span className="font-serif text-2xl sm:text-3xl font-black text-primary leading-none">
               {currentStamps}
             </span>
-            <span className="text-on-surface-variant/60 text-xs sm:text-sm font-mono">/ {targetStamps} Seals</span>
+            <span className="text-[#3b241a] text-xs sm:text-sm font-mono font-bold">/ {targetStamps} Seals</span>
           </div>
         </div>
 
@@ -88,27 +88,27 @@ export default function GuestStampTracker({
                   border: `2px solid ${theme.ring}`,
                   transform: 'scale(1.05)',
                 } : {
-                  background: 'rgba(255,255,255,0.45)',
-                  border: '2px dashed rgba(195,165,135,0.6)',
+                  background: 'rgba(255,255,255,0.7)',
+                  border: '2px dashed rgba(160,130,105,0.7)',
                 }}
               >
                 {collected ? (
                   <div className="flex flex-col items-center justify-center text-center">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/85 flex items-center justify-center shadow-sm">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/90 flex items-center justify-center shadow-sm">
                       <span className="font-serif text-xs sm:text-sm font-black" style={{ color: theme.textColor }}>
                         #{index + 1}
                       </span>
                     </div>
-                    <span className="text-[7.5px] sm:text-[8.5px] font-bold uppercase tracking-wider mt-1" style={{ color: theme.textColor }}>
+                    <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-wider mt-1" style={{ color: theme.textColor }}>
                       SEALED
                     </span>
                   </div>
                 ) : (
                   <>
-                    <span className="text-sm sm:text-base font-serif font-bold text-on-surface-variant/40">
+                    <span className="text-sm sm:text-base font-serif font-black text-[#5c3a28]">
                       {index + 1}
                     </span>
-                    <span className="text-[7px] sm:text-[8px] uppercase tracking-wider text-on-surface-variant/30 font-mono">Open</span>
+                    <span className="text-[7.5px] sm:text-[8.5px] uppercase tracking-wider text-[#744d1c] font-mono font-bold">Open</span>
                   </>
                 )}
               </div>
@@ -117,7 +117,7 @@ export default function GuestStampTracker({
         </div>
 
         {/* Multi-gradient Progress Bar */}
-        <div className="w-full bg-white/40 h-2.5 rounded-full overflow-hidden mb-6 border border-outline-variant/25 p-[2px]">
+        <div className="w-full bg-[#f4ece3] h-2.5 rounded-full overflow-hidden mb-6 border border-[#e0c8b0] p-[2px]">
           <div
             className="h-full transition-all duration-700 rounded-full"
             style={{
@@ -130,15 +130,15 @@ export default function GuestStampTracker({
 
         {/* Pending Banner */}
         {pendingStamp && (
-          <div className="mb-5 p-4 rounded-2xl bg-amber-50 border border-amber-300/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+          <div className="mb-5 p-4 rounded-2xl bg-amber-50 border border-amber-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2.5 min-w-0">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0" />
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping shrink-0" />
               <div className="min-w-0">
-                <p className="font-bold text-amber-700 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                <p className="font-black text-amber-950 flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-amber-700 shrink-0" />
                   <span>Seal Request Pending Verification</span>
                 </p>
-                <p className="text-[11px] text-amber-600/70 font-mono mt-0.5 truncate">
+                <p className="text-[11px] text-amber-900 font-mono font-semibold mt-0.5 truncate">
                   {pendingStamp.billNumber ? `Receipt #${pendingStamp.billNumber}` : 'Bill Submitted'} • Awaiting concierge
                 </p>
               </div>
@@ -148,7 +148,7 @@ export default function GuestStampTracker({
                 href={pendingStamp.billUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 border border-amber-400/40 text-amber-700 font-semibold text-[11px] inline-flex items-center gap-1 shrink-0 transition-colors no-underline"
+                className="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 border border-amber-400 text-amber-950 font-bold text-[11px] inline-flex items-center gap-1 shrink-0 transition-colors no-underline"
               >
                 <Image className="w-3.5 h-3.5" />
                 <span>View Bill</span>
@@ -158,11 +158,11 @@ export default function GuestStampTracker({
         )}
 
         {/* Action Footer */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-outline-variant/15">
-          <p className="text-xs text-on-surface-variant text-center sm:text-left leading-relaxed">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[#e0c8b0]">
+          <p className="text-xs text-[#3b241a] font-medium text-center sm:text-left leading-relaxed">
             {isComplete ? (
-              <span className="text-primary font-semibold flex items-center gap-1.5 justify-center sm:justify-start">
-                <CheckCircle2 className="w-4 h-4" /> Card complete — reward voucher unlocked!
+              <span className="text-primary font-bold flex items-center gap-1.5 justify-center sm:justify-start">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Card complete — reward voucher unlocked!
               </span>
             ) : (
               <span>Each dining visit earns 1 seal. Upload your bill to get verified.</span>

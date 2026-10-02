@@ -20,7 +20,7 @@ export default function RewardCard({ reward, onRedeem, isRedeemable = false, isC
         isRedeemable
           ? 'bg-white border-2 border-primary/50 shadow-[0_20px_45px_-10px_rgba(155,40,78,0.22)] ring-4 ring-primary/10 hover:shadow-[0_24px_55px_-10px_rgba(155,40,78,0.3)] hover:-translate-y-1'
           : isClaimed
-          ? 'bg-stone-50/80 border border-dashed border-[#d4c4b4] opacity-75'
+          ? 'bg-[#faf6f1] border border-[#d8c7b6] shadow-xs'
           : 'bg-white border border-[#e4d3c2] hover:border-primary/40 shadow-[0_10px_30px_-10px_rgba(46,26,16,0.07)] hover:shadow-[0_18px_40px_-10px_rgba(46,26,16,0.12)] hover:-translate-y-1'
       }`}
     >
@@ -31,7 +31,7 @@ export default function RewardCard({ reward, onRedeem, isRedeemable = false, isC
           background: isRedeemable
             ? 'linear-gradient(90deg, #ba3461 0%, #e882a3 35%, #cca056 70%, #ba3461 100%)'
             : isClaimed
-            ? '#c8b6a5'
+            ? '#8c7664'
             : 'linear-gradient(90deg, #744d1c 0%, #cca056 50%, #744d1c 100%)',
         }}
       />
@@ -51,7 +51,7 @@ export default function RewardCard({ reward, onRedeem, isRedeemable = false, isC
                 <Icon className="w-5 h-5" />
               </div>
               <div className="min-w-0">
-                <span className="text-[9px] uppercase font-bold tracking-[0.18em] text-secondary block font-sans">
+                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#744d1c] block font-sans">
                   Palace Privilege
                 </span>
                 <h3 className="font-serif font-bold text-on-surface text-base sm:text-lg leading-snug line-clamp-1">
@@ -61,9 +61,9 @@ export default function RewardCard({ reward, onRedeem, isRedeemable = false, isC
             </div>
 
             <span
-              className={`text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border shrink-0 ${
+              className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border shrink-0 ${
                 isClaimed
-                  ? 'bg-stone-100 text-stone-600 border-stone-300'
+                  ? 'bg-stone-200 text-stone-900 border-stone-400'
                   : isRedeemable
                   ? 'bg-primary-container text-white border-transparent shadow-xs animate-pulse'
                   : 'bg-[#fdfaf6] text-primary border-primary/20'
@@ -74,14 +74,14 @@ export default function RewardCard({ reward, onRedeem, isRedeemable = false, isC
           </div>
 
           {/* Description */}
-          <p className="text-xs sm:text-[13px] text-on-surface-variant/80 leading-relaxed font-sans mb-4 min-h-[38px] line-clamp-2">
+          <p className="text-xs sm:text-[13px] text-[#3b241a] font-medium leading-relaxed font-sans mb-4 min-h-[38px] line-clamp-2">
             {reward.description || 'Complimentary luxury dining perk crafted by our royal khansamas.'}
           </p>
         </div>
 
         {/* Card Footer */}
         <div className="pt-3.5 border-t border-[#eee0d2] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-1.5 text-on-surface-variant/70 font-mono text-[11px]">
+          <div className="flex items-center gap-1.5 text-[#483328] font-mono text-xs font-semibold">
             <Clock className="w-3.5 h-3.5 text-secondary" />
             <span>Valid {reward.validityDays || 30} Days</span>
           </div>

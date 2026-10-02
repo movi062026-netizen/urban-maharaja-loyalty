@@ -39,7 +39,7 @@ export default function GuestRedemptionVoucher({ redemption }) {
       className={`rounded-[24px] relative overflow-hidden transition-all duration-300 group ${
         isAvailable
           ? 'bg-white border-2 border-[#e4d3c2] shadow-[0_14px_40px_-10px_rgba(46,26,16,0.1)] hover:shadow-[0_20px_48px_-10px_rgba(155,40,78,0.18)] hover:border-primary/40 hover:-translate-y-1'
-          : 'bg-[#fdfaf6] border border-[#d8c7b6] opacity-75'
+          : 'bg-[#faf6f1] border border-[#d8c7b6] shadow-xs'
       }`}
     >
       {/* Top Royal Accent Line */}
@@ -48,7 +48,7 @@ export default function GuestRedemptionVoucher({ redemption }) {
         style={{
           background: isAvailable
             ? 'linear-gradient(90deg, #ba3461 0%, #e882a3 35%, #cca056 70%, #ba3461 100%)'
-            : '#c8b6a5',
+            : '#8c7664',
         }}
       />
 
@@ -57,23 +57,23 @@ export default function GuestRedemptionVoucher({ redemption }) {
         <div className="flex items-start justify-between gap-3 mb-4">
           <div className="flex items-center gap-3.5">
             <div
-              className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-md ${
+              className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${
                 isAvailable
                   ? 'bg-gradient-to-br from-primary-container to-secondary text-white border border-white/40 shadow-[0_8px_20px_-4px_rgba(155,40,78,0.35)]'
-                  : 'bg-stone-100 text-stone-500 border border-stone-200'
+                  : 'bg-primary/10 text-primary border border-primary/25'
               }`}
             >
-              <Icon className="w-5 h-5 text-white" />
+              <Icon className={`w-6 h-6 ${isAvailable ? 'text-white' : 'text-primary'}`} />
             </div>
             <div className="min-w-0">
-              <span className="text-[9px] uppercase font-bold tracking-[0.18em] text-secondary block font-sans">
+              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#744d1c] block font-sans">
                 Dining Certificate
               </span>
-              <h4 className="font-serif text-base sm:text-lg font-bold text-on-surface leading-tight">
+              <h4 className="font-serif text-base sm:text-lg font-black text-on-surface leading-tight">
                 {redemption.reward?.title || 'Royal Privilege'}
               </h4>
               {redemption.reward?.description && (
-                <p className="text-[11px] text-on-surface-variant/80 mt-0.5 line-clamp-1">
+                <p className="text-xs text-[#3b241a] font-medium mt-1 leading-snug">
                   {redemption.reward.description}
                 </p>
               )}
@@ -81,26 +81,26 @@ export default function GuestRedemptionVoucher({ redemption }) {
           </div>
 
           <span
-            className={`inline-flex items-center gap-1.5 text-[9px] uppercase font-mono tracking-wider px-3 py-1 rounded-full font-bold border shrink-0 ${
+            className={`inline-flex items-center gap-1.5 text-[10px] uppercase font-mono tracking-wider px-3 py-1 rounded-full font-black border shrink-0 ${
               isAvailable
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+                ? 'bg-emerald-100 text-emerald-950 border-emerald-400'
                 : isRedeemed
-                ? 'bg-primary-container/10 text-primary border-primary/20'
-                : 'bg-stone-100 text-stone-600 border-stone-300'
+                ? 'bg-stone-200 text-stone-900 border-stone-400'
+                : 'bg-stone-100 text-stone-800 border-stone-300'
             }`}
           >
-            {isAvailable && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
+            {isAvailable && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />}
             {isAvailable ? 'Ready to Redeem' : redemption.status}
           </span>
         </div>
 
         {/* Voucher Code Box */}
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] flex items-center justify-between shadow-xs">
+        <div className="p-4 rounded-2xl bg-white border-2 border-[#e0c8b0] flex items-center justify-between shadow-xs">
           <div>
-            <span className="text-[9px] uppercase tracking-[0.18em] text-on-surface-variant/70 block font-mono font-bold mb-0.5">
+            <span className="text-[10px] uppercase tracking-[0.2em] text-[#483328] block font-mono font-black mb-1">
               Passcode for Concierge
             </span>
-            <span className="font-mono text-base sm:text-lg font-black text-primary tracking-[0.16em]">
+            <span className="font-mono text-lg sm:text-xl font-black text-primary tracking-[0.18em]">
               {voucherCode}
             </span>
           </div>
@@ -158,20 +158,20 @@ export default function GuestRedemptionVoucher({ redemption }) {
         )}
 
         {/* Visually secondary Terms toggle */}
-        <div className="pt-2.5 mt-2.5 border-t border-[#eee0d2]">
+        <div className="pt-2.5 mt-2.5 border-t border-[#e0c8b0]">
           <button
             type="button"
             onClick={() => setShowTerms(!showTerms)}
-            className="w-full flex items-center justify-between text-[10px] text-on-surface-variant/70 hover:text-primary transition-colors cursor-pointer"
+            className="w-full flex items-center justify-between text-[11px] text-[#483328] hover:text-primary transition-colors cursor-pointer group"
           >
-            <span className="flex items-center gap-1 font-bold uppercase tracking-wider">
-              <ShieldCheck className="w-3 h-3 text-secondary" />
-              <span>Voucher Terms &amp; Conditions</span>
+            <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#744d1c]" />
+              <span className="text-[#3b241a] group-hover:text-primary">Voucher Terms &amp; Conditions</span>
             </span>
-            {showTerms ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+            {showTerms ? <ChevronUp className="w-4 h-4 text-[#483328]" /> : <ChevronDown className="w-4 h-4 text-[#483328]" />}
           </button>
           {showTerms && (
-            <ul className="mt-2 space-y-1 text-[10px] text-on-surface-variant/80 pl-3 list-disc leading-relaxed font-sans">
+            <ul className="mt-2.5 space-y-1.5 text-[11px] text-[#3b241a] pl-4 list-disc leading-relaxed font-sans">
               {REWARDS_TERMS_AND_CONDITIONS.map((term, i) => (
                 <li key={i}>{term}</li>
               ))}
@@ -180,10 +180,10 @@ export default function GuestRedemptionVoucher({ redemption }) {
         </div>
 
         {/* Footer dates */}
-        <div className="flex items-center justify-between text-[11px] text-on-surface-variant/70 pt-3 border-t border-[#eee0d2] font-mono">
+        <div className="flex items-center justify-between text-xs text-[#483328] font-semibold pt-3 border-t border-[#e0c8b0] font-mono">
           <span>Issued: {formatDate(redemption.createdAt)}</span>
           {redemption.expiresAt && (
-            <span className={`flex items-center gap-1 ${isAvailable ? 'text-secondary font-bold' : ''}`}>
+            <span className={`flex items-center gap-1 ${isAvailable ? 'text-primary font-bold' : 'text-[#483328]'}`}>
               <Clock className="w-3.5 h-3.5 text-secondary" /> Exp: {formatDate(redemption.expiresAt)}
             </span>
           )}

@@ -41,12 +41,12 @@ export default function ReviewPage() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="w-2 h-2 rounded-full bg-primary" />
-            <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-secondary">
+            <span className="text-[11px] uppercase font-black tracking-[0.2em] text-[#744d1c]">
               Court Testimonial
             </span>
           </div>
           <h1 className="font-serif text-2xl sm:text-3xl text-on-surface font-bold">Royal Patronage Review</h1>
-          <p className="text-xs text-on-surface-variant/80 mt-1">
+          <p className="text-xs text-[#3b241a] font-medium mt-1">
             Share your dining impression with fellow food connoisseurs on Google
           </p>
         </div>
@@ -54,7 +54,7 @@ export default function ReviewPage() {
 
       <div className="rounded-[28px] bg-white border border-[#e4d3c2] shadow-[0_16px_45px_-12px_rgba(46,26,16,0.08)] p-6 sm:p-10 text-center">
         {/* Heart Medallion */}
-        <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary-container to-secondary flex items-center justify-center mx-auto mb-6 text-white shadow-lg border-2 border-white">
+        <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary-container to-secondary flex items-center justify-center mx-auto mb-6 text-white shadow-md border-2 border-white">
           <Heart className="w-10 h-10 text-white fill-white/20" />
         </div>
 
@@ -68,7 +68,7 @@ export default function ReviewPage() {
         <h2 className="font-serif text-2xl sm:text-3xl text-on-surface font-bold mb-2">
           Loved Your Palace Dining Experience?
         </h2>
-        <p className="text-on-surface-variant/80 text-xs sm:text-sm leading-relaxed mb-8 max-w-md mx-auto">
+        <p className="text-[#3b241a] font-medium text-xs sm:text-sm leading-relaxed mb-8 max-w-md mx-auto">
           Your words illuminate our dastarkhān and inspire our royal khansamas. Share your 5-star review on Google to help fellow patrons discover Urban Maharaja.
         </p>
 
@@ -82,7 +82,7 @@ export default function ReviewPage() {
         </button>
 
         {clicked && (
-          <div className="mt-5 p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-semibold inline-flex items-center gap-2 animate-fadeIn">
+          <div className="mt-5 p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-950 text-xs font-bold inline-flex items-center gap-2 animate-fadeIn">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>Thank you for your noble feedback and royal patronage!</span>
           </div>
@@ -90,7 +90,7 @@ export default function ReviewPage() {
       </div>
 
       <div className="rounded-2xl p-4 text-center bg-white border border-[#eee0d2] shadow-xs">
-        <p className="text-xs text-on-surface-variant/70">
+        <p className="text-xs text-[#3b241a] font-medium">
           You will be redirected directly to Urban Maharaja's verified Google Business profile.
         </p>
       </div>

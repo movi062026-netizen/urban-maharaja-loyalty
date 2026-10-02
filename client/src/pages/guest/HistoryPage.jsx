@@ -108,11 +108,11 @@ export default function HistoryPage() {
 
             {/* Seals Inscribed List */}
             <div className="space-y-2 mb-4">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/70 block mb-1">
+              <span className="text-[10px] uppercase font-black tracking-widest text-[#744d1c] block mb-1">
                 Dining Seals Inscribed ({stamps.length})
               </span>
               {stamps.length === 0 ? (
-                <p className="text-xs text-on-surface-variant/50 italic py-1">No seals requested yet in this cycle.</p>
+                <p className="text-xs text-[#5c3a28] font-medium py-1">No seals requested yet in this cycle.</p>
               ) : (
                 stamps.map((stamp) => (
                   <div
@@ -121,17 +121,17 @@ export default function HistoryPage() {
                   >
                     <div className="flex items-center gap-2.5">
                       {stampIcon(stamp.status)}
-                      <span className="text-on-surface font-bold capitalize">{stamp.status.toLowerCase()}</span>
+                      <span className="text-on-surface font-black capitalize">{stamp.status.toLowerCase()}</span>
                       {stamp.billAmount && (
-                        <span className="text-secondary font-mono font-semibold">₹{stamp.billAmount}</span>
+                        <span className="text-primary font-mono font-bold">₹{stamp.billAmount}</span>
                       )}
                       {stamp.approvedBy?.name && (
-                        <span className="text-on-surface-variant/70 text-[11px]">
+                        <span className="text-[#3b241a] text-xs font-medium">
                           endorsed by {stamp.approvedBy.name}
                         </span>
                       )}
                     </div>
-                    <span className="text-on-surface-variant/70 font-mono text-[11px]">
+                    <span className="text-[#3b241a] font-mono text-xs font-semibold">
                       {new Date(stamp.createdAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </span>
                   </div>
@@ -142,23 +142,23 @@ export default function HistoryPage() {
             {/* Redemptions Claimed In This Cycle */}
             {redemptions.length > 0 && (
               <div className="pt-3 border-t border-[#eee0d2] space-y-2">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-secondary block">
+                <span className="text-[10px] uppercase font-black tracking-widest text-[#744d1c] block">
                   Reward Privileges Claimed In This Cycle
                 </span>
                 {redemptions.map((r) => (
                   <div
                     key={r._id}
-                    className="flex items-center justify-between text-xs py-2 px-3.5 rounded-xl bg-amber-50/50 border border-amber-200/60"
+                    className="flex items-center justify-between text-xs py-2 px-3.5 rounded-xl bg-amber-50/70 border border-amber-200"
                   >
                     <div className="flex items-center gap-2">
                       <span className="material-symbols-outlined text-[16px] text-primary">redeem</span>
                       <span className="text-on-surface font-bold">{r.rewardId?.title || 'Palace Treat'}</span>
                     </div>
                     <span
-                      className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full ${
+                      className={`text-[10px] uppercase font-black tracking-wider px-2 py-0.5 rounded-full ${
                         r.status === 'REDEEMED'
-                          ? 'text-emerald-700 bg-emerald-100 border border-emerald-300'
-                          : 'text-amber-800 bg-amber-100 border border-amber-300'
+                          ? 'text-stone-900 bg-stone-200 border border-stone-400'
+                          : 'text-amber-950 bg-amber-100 border border-amber-400'
                       }`}
                     >
                       {r.status === 'AVAILABLE' ? 'Ready to Claim' : r.status}

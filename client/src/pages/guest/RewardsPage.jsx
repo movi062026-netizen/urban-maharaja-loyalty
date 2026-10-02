@@ -147,8 +147,10 @@ export default function RewardsPage() {
       {/* Active Unlocked Vouchers */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xs font-bold text-secondary uppercase tracking-[0.16em] flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-primary" />
+          <h2 className="text-sm font-black text-[#1d0f09] uppercase tracking-[0.18em] flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+              <Sparkles className="w-3.5 h-3.5" />
+            </div>
             <span>Active Dining Certificates &amp; Vouchers ({redemptions.length})</span>
           </h2>
         </div>
@@ -165,7 +167,7 @@ export default function RewardsPage() {
               <Gift className="w-7 h-7" />
             </div>
             <h3 className="font-serif text-lg text-on-surface font-bold">No Active Vouchers Yet</h3>
-            <p className="text-xs sm:text-sm text-on-surface-variant/80 mt-1 max-w-md mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#3b241a] font-medium mt-1 max-w-md mx-auto leading-relaxed">
               Complete your 5 seals on the digital Maharaja Card to unlock your choice of an exquisite fine dining dish or chef special.
             </p>
           </div>
@@ -177,8 +179,10 @@ export default function RewardsPage() {
         <div className="space-y-4 pt-6 border-t border-[#eee0d2]">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <h2 className="text-xs font-bold text-secondary uppercase tracking-[0.16em] flex items-center gap-2">
-                <Gift className="w-4 h-4 text-secondary" />
+              <h2 className="text-sm font-black text-[#1d0f09] uppercase tracking-[0.18em] flex items-center gap-2.5">
+                <div className="w-6 h-6 rounded-lg bg-secondary/15 border border-secondary/30 flex items-center justify-center text-[#744d1c]">
+                  <Gift className="w-3.5 h-3.5" />
+                </div>
                 <span>Imperial Rewards Catalog</span>
               </h2>
               {canChooseOneReward ? (
@@ -186,7 +190,7 @@ export default function RewardsPage() {
                   ★ Select your complimentary dish or privilege below (1 voucher per completed card)
                 </p>
               ) : (
-                <p className="text-xs text-on-surface-variant/70 mt-1">
+                <p className="text-xs text-[#3b241a] font-medium mt-1">
                   Preview the exclusive delicacies unlocked after completing your 5 seals
                 </p>
               )}
