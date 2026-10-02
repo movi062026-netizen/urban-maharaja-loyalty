@@ -1,10 +1,16 @@
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export default function AboutPage() {
   return (
     <div className="w-full bg-background min-h-screen text-on-surface">
       {/* ── Hero Banner ──────────────────────────────────────────────── */}
-      <section className="relative w-full pt-16 pb-20 overflow-hidden bg-gradient-to-b from-surface-container-lowest via-surface to-surface-container-low text-center">
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        className="relative w-full pt-16 pb-20 overflow-hidden bg-gradient-to-b from-surface-container-lowest via-surface to-surface-container-low text-center"
+      >
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-primary-container/15 rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[300px] bg-secondary-container/20 rounded-full blur-[110px] pointer-events-none" />
 
@@ -27,15 +33,21 @@ export default function AboutPage() {
             Resurrecting the lost culinary scrolls of Rajputana palaces and Awadh royal dastarkhāns, crafted for modern patrons of fine gastronomy.
           </p>
         </div>
-      </section>
+      </motion.section>
 
       {/* ── Main Heritage Narrative ──────────────────────────────────── */}
-      <section className="relative w-full py-20 bg-surface-container-lowest overflow-hidden">
+      <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.8 }}
+        className="relative w-full py-20 bg-surface-container-lowest overflow-hidden"
+      >
         <div className="max-w-[1200px] mx-auto px-6 lg:px-12">
           {/* Chapter 1: The Royal Origin */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24">
             <div className="lg:col-span-6 relative">
-              <div className="relative z-10 rounded-3xl overflow-hidden border border-outline-variant/40 shadow-[0_24px_50px_rgba(24,10,12,0.9)] bg-surface-container-high">
+              <div className="relative z-10 rounded-3xl overflow-hidden border border-outline-variant/40 shadow-[0_24px_50px_rgba(46,26,20,0.12)] bg-surface-container-high">
                 <img
                   className="w-full h-[440px] object-cover hover:scale-105 transition-transform duration-700"
                   alt="Historic Indian Palace Dining"
@@ -157,7 +169,7 @@ export default function AboutPage() {
             <div className="flex flex-wrap items-center justify-center gap-5">
               <Link
                 to="/contact"
-                className="px-8 py-3.5 rounded-full bg-gradient-to-r from-primary-container to-secondary text-surface-container-lowest font-label-md uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all no-underline"
+                className="px-8 py-3.5 rounded-full bg-gradient-to-r from-primary-container to-secondary text-white font-label-md uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all no-underline"
               >
                 Reserve A Sovereign Table
               </Link>
@@ -170,7 +182,7 @@ export default function AboutPage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 }

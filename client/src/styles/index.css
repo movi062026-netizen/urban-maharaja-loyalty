@@ -1,65 +1,66 @@
 @import "tailwindcss";
 
-/* ── Urban Maharaja Regal Rosewood Design System ──────────────────────── */
+/* ── Urban Maharaja — Imperial Luxe Theme ──────────────────────────── */
+/* Rich warm palette with deeper contrast and vibrant accents */
 @theme {
-  /* Surfaces & Containers */
-  --color-background: #1e0f11;
-  --color-surface: #1e0f11;
-  --color-surface-dim: #1e0f11;
-  --color-surface-bright: #473436;
-  --color-surface-container-lowest: #180a0c;
-  --color-surface-container-low: #271719;
-  --color-surface-container: #2c1b1d;
-  --color-surface-container-high: #372527;
-  --color-surface-container-highest: #423032;
-  --color-surface-variant: #423032;
-  --color-surface-tint: #ffb1c6;
-  --color-inverse-surface: #f9dbde;
-  --color-inverse-on-surface: #3e2c2e;
+  /* Surfaces & Containers — Luminous Warm Porcelain & Cream (No flat muddy tan) */
+  --color-background: #fdfaf6;
+  --color-surface: #ffffff;
+  --color-surface-dim: #f8f2e9;
+  --color-surface-bright: #ffffff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #fdfbf7;
+  --color-surface-container: #f7efe4;
+  --color-surface-container-high: #efe3d2;
+  --color-surface-container-highest: #e3d2be;
+  --color-surface-variant: #ebdcc9;
+  --color-surface-tint: #9b284e;
+  --color-inverse-surface: #22120b;
+  --color-inverse-on-surface: #fdfaf6;
 
-  /* Primary (Rose Blush / Royal Rose) */
-  --color-primary: #ffb1c6;
-  --color-primary-container: #de6b90;
-  --color-primary-fixed: #ffd9e1;
+  /* Primary (Royal Crimson Rose — Saturated, luminous, regal) */
+  --color-primary: #9b284e;
+  --color-primary-container: #ba3461;
+  --color-primary-fixed: #ffd9e2;
   --color-primary-fixed-dim: #ffb1c6;
-  --color-on-primary: #630630;
-  --color-on-primary-container: #590029;
-  --color-on-primary-fixed: #3f001b;
-  --color-on-primary-fixed-variant: #812146;
-  --color-inverse-primary: #a03a5e;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #ffffff;
+  --color-on-primary-fixed: #3f001c;
+  --color-on-primary-fixed-variant: #7a1538;
+  --color-inverse-primary: #ffb1c6;
 
-  /* Secondary (Imperial Champagne Gold) */
-  --color-secondary: #e4c194;
-  --color-secondary-container: #5d4422;
-  --color-secondary-fixed: #ffddb4;
-  --color-secondary-fixed-dim: #e4c194;
-  --color-on-secondary: #422c0b;
-  --color-on-secondary-container: #d5b387;
+  /* Secondary (Burnished Imperial Gold — Rich, radiant, high-end) */
+  --color-secondary: #744d1c;
+  --color-secondary-container: #cca056;
+  --color-secondary-fixed: #ffdfb6;
+  --color-secondary-fixed-dim: #d4a962;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #331e04;
   --color-on-secondary-fixed: #291800;
-  --color-on-secondary-fixed-variant: #5b4220;
+  --color-on-secondary-fixed-variant: #5a3810;
 
-  /* Tertiary */
-  --color-tertiary: #fdb1c9;
-  --color-tertiary-container: #c17d94;
+  /* Tertiary (Deep Rose Velvet) */
+  --color-tertiary: #842745;
+  --color-tertiary-container: #f49ab6;
   --color-tertiary-fixed: #ffd9e3;
-  --color-tertiary-fixed-dim: #fdb1c9;
-  --color-on-tertiary: #521f33;
-  --color-on-tertiary-container: #49182c;
+  --color-tertiary-fixed-dim: #f08caa;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #451327;
   --color-on-tertiary-fixed: #38091e;
-  --color-on-tertiary-fixed-variant: #6d3549;
+  --color-on-tertiary-fixed-variant: #69243c;
 
-  /* Content & Outlines */
-  --color-on-surface: #f9dbde;
-  --color-on-surface-variant: #dac0c5;
-  --color-on-background: #f9dbde;
-  --color-outline: #a28b90;
-  --color-outline-variant: #554246;
+  /* Content & Outlines — Deep crisp espresso for maximum readability */
+  --color-on-surface: #1d0f09;
+  --color-on-surface-variant: #483328;
+  --color-on-background: #1d0f09;
+  --color-outline: #7c6252;
+  --color-outline-variant: #d6c3b0;
 
   /* Error */
-  --color-error: #ffb4ab;
-  --color-error-container: #93000a;
-  --color-on-error: #690005;
-  --color-on-error-container: #ffdad6;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #410002;
 
   /* Fonts */
   --font-serif: 'Playfair Display', Georgia, serif;
@@ -202,8 +203,8 @@ html {
 }
 
 html, body, #root {
-  background-color: #1e0f11;
-  color: #f9dbde;
+  background-color: #fdfaf6;
+  color: #1d0f09;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   margin: 0;
   padding: 0;
@@ -234,7 +235,7 @@ img, video, svg {
 
 /* Improve focus visibility for accessibility */
 :focus-visible {
-  outline: 2px solid #ffb1c6;
+  outline: 2px solid #a03a5e;
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -249,179 +250,182 @@ img, video, svg {
   }
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar — Warm tones */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #180a0c;
+  background: #f5ebde;
 }
 ::-webkit-scrollbar-thumb {
-  background: #423032;
+  background: #d4c4b6;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #de6b90;
+  background: #a03a5e;
 }
 
 /* Firefox Scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #423032 #180a0c;
+  scrollbar-color: #d4c4b6 #f5ebde;
 }
 
 /* ══════════════════════════════════════════════════════════════════════
-   IMPERIAL ROYAL GLASSMORPHISM SYSTEM — PREMIUM LAYER HIERARCHY
+   IMPERIAL WARM GLASSMORPHISM SYSTEM — SANDY BEIGE PALETTE
    ══════════════════════════════════════════════════════════════════════ */
 
 /* ── Tier 1: Hero / Primary Cards — Maximum Visual Impact ──────────── */
 .glass-card-royal {
   background: linear-gradient(
     135deg,
-    rgba(71, 52, 54, 0.6) 0%,
-    rgba(44, 27, 29, 0.76) 45%,
-    rgba(24, 10, 12, 0.9) 100%
+    rgba(255, 252, 248, 0.92) 0%,
+    rgba(248, 235, 218, 0.88) 40%,
+    rgba(238, 218, 192, 0.95) 100%
   );
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-top: 1px solid rgba(255, 217, 225, 0.42);
-  border-left: 1px solid rgba(228, 193, 148, 0.35);
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border: 1.5px solid rgba(154, 45, 82, 0.12);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.85);
+  border-left: 1.5px solid rgba(212, 166, 106, 0.35);
   box-shadow: 
-    0 28px 56px -12px rgba(10, 3, 5, 0.9),
-    0 12px 28px -12px rgba(222, 107, 144, 0.3),
-    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.6);
-  border-radius: 20px;
+    0 32px 64px -12px rgba(38, 21, 16, 0.18),
+    0 16px 32px -8px rgba(154, 45, 82, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.3),
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 3px 0 rgba(0, 0, 0, 0.04);
+  border-radius: 24px;
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
 }
 
 .glass-card-royal:hover {
-  transform: translateY(-4px) scale(1.01);
+  transform: translateY(-6px) scale(1.015);
   box-shadow: 
-    0 36px 72px -16px rgba(10, 3, 5, 0.95),
-    0 16px 36px -8px rgba(222, 107, 144, 0.4),
-    inset 0 1px 2px 0 rgba(255, 255, 255, 0.5),
-    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.5);
+    0 40px 80px -16px rgba(38, 21, 16, 0.22),
+    0 20px 40px -8px rgba(154, 45, 82, 0.14),
+    0 0 0 1px rgba(255, 255, 255, 0.4),
+    inset 0 1px 3px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 3px 0 rgba(0, 0, 0, 0.04);
 }
 
 /* ── Tier 2: Elevated Panels — Dashboard & Navigation ──────────────── */
 .glass-panel-elevated {
   background: linear-gradient(
     145deg,
-    rgba(55, 37, 39, 0.7) 0%,
-    rgba(39, 23, 25, 0.82) 55%,
-    rgba(24, 10, 12, 0.94) 100%
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(254, 250, 245, 0.95) 50%,
+    rgba(251, 244, 235, 0.98) 100%
   );
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-top: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(215, 185, 150, 0.45);
+  border-top: 1.5px solid #ffffff;
   box-shadow: 
-    0 20px 40px -15px rgba(0, 0, 0, 0.8),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
-  border-radius: 16px;
+    0 24px 50px -12px rgba(46, 26, 16, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.02),
+    inset 0 1px 2px 0 #ffffff;
+  border-radius: 24px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .glass-panel-elevated:hover {
   transform: translateY(-2px);
   box-shadow: 
-    0 24px 48px -12px rgba(0, 0, 0, 0.85),
-    inset 0 1px 2px 0 rgba(255, 255, 255, 0.35);
+    0 32px 64px -14px rgba(46, 26, 16, 0.12),
+    0 6px 20px rgba(0, 0, 0, 0.03),
+    inset 0 1px 3px 0 #ffffff;
 }
 
 /* ── Tier 3: Subtle Surface Glass — Inner Cards & Sections ─────────── */
 .glass-surface {
   background: linear-gradient(
     160deg,
-    rgba(55, 37, 39, 0.45) 0%,
-    rgba(44, 27, 29, 0.55) 100%
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(253, 248, 241, 0.92) 100%
   );
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(220, 195, 170, 0.5);
+  border-top: 1px solid #ffffff;
   box-shadow:
-    0 10px 24px -8px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  border-radius: 14px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+    0 10px 24px -8px rgba(46, 26, 20, 0.05),
+    inset 0 1px 0 #ffffff;
+  border-radius: 16px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .glass-surface:hover {
   transform: translateY(-1px);
   box-shadow:
-    0 14px 32px -6px rgba(0, 0, 0, 0.7),
-    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    0 14px 30px -6px rgba(46, 26, 20, 0.09),
+    inset 0 1px 1px #ffffff;
 }
 
 /* ── Tier 4: Frosted Input & Form Glass ────────────────────────────── */
 .glass-input {
-  background: rgba(44, 27, 29, 0.65);
-  backdrop-filter: blur(12px) saturate(130%);
-  -webkit-backdrop-filter: blur(12px) saturate(130%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
-  border-radius: 12px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background: #ffffff;
+  border: 1.5px solid rgba(215, 190, 165, 0.6);
+  box-shadow: 0 2px 6px rgba(46, 26, 20, 0.03), inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  border-radius: 14px;
+  color: #1d0f09;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .glass-input:focus-within {
-  border-color: rgba(255, 177, 198, 0.5);
+  border-color: #9b284e;
   box-shadow: 
-    inset 0 2px 4px rgba(0, 0, 0, 0.3),
-    0 0 0 3px rgba(222, 107, 144, 0.15);
+    0 0 0 3px rgba(155, 40, 78, 0.14),
+    0 2px 8px rgba(46, 26, 20, 0.05);
 }
 
 /* ── Tier 5: Floating Chip / Badge ─────────────────────────────────── */
 .glass-chip {
-  background: linear-gradient(135deg, rgba(228, 193, 148, 0.25) 0%, rgba(93, 68, 34, 0.4) 100%);
+  background: linear-gradient(135deg, rgba(204, 160, 86, 0.2) 0%, rgba(204, 160, 86, 0.1) 100%);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(228, 193, 148, 0.45);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(204, 160, 86, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 6px rgba(46, 26, 20, 0.04);
   border-radius: 9999px;
 }
 
 .glass-chip-rose {
-  background: linear-gradient(135deg, rgba(222, 107, 144, 0.2) 0%, rgba(99, 6, 48, 0.35) 100%);
+  background: linear-gradient(135deg, rgba(155, 40, 78, 0.14) 0%, rgba(186, 52, 97, 0.08) 100%);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 177, 198, 0.4);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(155, 40, 78, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
   border-radius: 9999px;
 }
 
 /* ── Stamp Seal States ─────────────────────────────────────────────── */
 .glass-seal-unlocked {
-  background: radial-gradient(circle at 35% 30%, #ffd9e1 0%, #de6b90 45%, #630630 100%);
+  background: radial-gradient(circle at 35% 30%, #ffd9e2 0%, #ba3461 50%, #7a1538 100%);
   box-shadow: 
-    0 0 18px rgba(222, 107, 144, 0.7),
-    0 4px 10px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(155, 40, 78, 0.45),
+    0 4px 12px rgba(46, 26, 20, 0.15),
     inset 0 1.5px 2px rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 217, 225, 0.6);
+  border: 1.5px solid rgba(255, 217, 226, 0.8);
 }
 
 .glass-seal-locked {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: inset 0 1px 1.5px rgba(0, 0, 0, 0.4);
+  border: 1.5px dashed rgba(200, 175, 150, 0.6);
+  box-shadow: inset 0 1px 2px rgba(46, 26, 20, 0.04);
 }
 
 /* ── Glass Button Variants ─────────────────────────────────────────── */
 .glass-btn-primary {
-  background: linear-gradient(135deg, #de6b90 0%, #a03a5e 100%);
-  border: 1px solid rgba(255, 177, 198, 0.4);
+  background: linear-gradient(135deg, #9b284e 0%, #c43c68 50%, #ba3461 100%);
+  border: 1px solid rgba(255, 217, 226, 0.45);
   box-shadow: 
-    0 8px 24px -4px rgba(222, 107, 144, 0.45),
-    inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    0 8px 24px -4px rgba(155, 40, 78, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4);
   color: #fff;
   font-weight: 700;
-  border-radius: 12px;
+  border-radius: 14px;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
 }
@@ -429,8 +433,8 @@ img, video, svg {
 .glass-btn-primary:hover {
   transform: translateY(-2px) scale(1.02);
   box-shadow: 
-    0 12px 32px -4px rgba(222, 107, 144, 0.6),
-    inset 0 1px 2px rgba(255, 255, 255, 0.45);
+    0 12px 32px -4px rgba(155, 40, 78, 0.55),
+    inset 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 .glass-btn-primary:active {
@@ -438,64 +442,62 @@ img, video, svg {
 }
 
 .glass-btn-secondary {
-  background: linear-gradient(135deg, rgba(228, 193, 148, 0.2) 0%, rgba(93, 68, 34, 0.3) 100%);
+  background: linear-gradient(135deg, rgba(204, 160, 86, 0.25) 0%, rgba(204, 160, 86, 0.15) 100%);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(228, 193, 148, 0.4);
+  border: 1px solid rgba(116, 77, 28, 0.4);
   box-shadow: 
-    0 4px 16px -4px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  color: #e4c194;
+    0 4px 16px -4px rgba(46, 26, 20, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  color: #744d1c;
   font-weight: 600;
-  border-radius: 12px;
-  transition: all 0.3s ease;
+  border-radius: 14px;
+  transition: all 0.25s ease;
   cursor: pointer;
 }
 
 .glass-btn-secondary:hover {
-  background: linear-gradient(135deg, rgba(228, 193, 148, 0.35) 0%, rgba(93, 68, 34, 0.45) 100%);
+  background: linear-gradient(135deg, rgba(204, 160, 86, 0.38) 0%, rgba(204, 160, 86, 0.22) 100%);
   transform: translateY(-1px);
-  border-color: rgba(228, 193, 148, 0.6);
+  border-color: rgba(116, 77, 28, 0.55);
 }
 
 /* ── Glass Sidebar ─────────────────────────────────────────────────── */
 .glass-sidebar {
   background: linear-gradient(
     180deg,
-    rgba(24, 10, 12, 0.97) 0%,
-    rgba(30, 15, 17, 0.95) 50%,
-    rgba(24, 10, 12, 0.98) 100%
+    #ffffff 0%,
+    #fdfaf5 45%,
+    #fbf5eb 100%
   );
-  backdrop-filter: blur(24px) saturate(170%);
-  -webkit-backdrop-filter: blur(24px) saturate(170%);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 8px 0 32px -4px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border-right: 1.5px solid rgba(215, 185, 155, 0.45);
+  box-shadow: 
+    8px 0 36px -4px rgba(46, 26, 16, 0.06),
+    inset -1px 0 0 rgba(255, 255, 255, 0.8);
 }
 
 /* ── Glass Navbar ──────────────────────────────────────────────────── */
 .glass-navbar {
-  background: linear-gradient(
-    180deg,
-    rgba(24, 10, 12, 0.92) 0%,
-    rgba(30, 15, 17, 0.88) 100%
-  );
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border-bottom: 1.5px solid rgba(215, 185, 155, 0.35);
   box-shadow: 
-    0 16px 36px -8px rgba(24, 10, 12, 0.8),
-    0 0 24px 0 rgba(222, 107, 144, 0.12);
+    0 8px 30px -8px rgba(46, 26, 16, 0.06),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.8);
 }
 
 /* ── Glass Table Row ───────────────────────────────────────────────── */
 .glass-table-row {
-  background: rgba(44, 27, 29, 0.3);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.4);
+  border-bottom: 1px solid rgba(212, 196, 182, 0.3);
   transition: background 0.2s ease;
 }
 
 .glass-table-row:hover {
-  background: rgba(55, 37, 39, 0.5);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -504,7 +506,7 @@ img, video, svg {
 
 @keyframes holographic-shine {
   0% { transform: translateX(-150%) rotate(25deg); opacity: 0; }
-  25% { opacity: 0.6; }
+  25% { opacity: 0.5; }
   50% { transform: translateX(250%) rotate(25deg); opacity: 0; }
   100% { transform: translateX(250%) rotate(25deg); opacity: 0; }
 }
@@ -523,8 +525,8 @@ img, video, svg {
 }
 
 @keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 15px rgba(222, 107, 144, 0.3); }
-  50% { box-shadow: 0 0 30px rgba(222, 107, 144, 0.6), 0 0 60px rgba(222, 107, 144, 0.2); }
+  0%, 100% { box-shadow: 0 0 15px rgba(160, 58, 94, 0.15); }
+  50% { box-shadow: 0 0 30px rgba(160, 58, 94, 0.3), 0 0 60px rgba(160, 58, 94, 0.1); }
 }
 
 .animate-glow {
@@ -540,7 +542,7 @@ img, video, svg {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 217, 225, 0.15) 50%,
+    rgba(228, 193, 148, 0.25) 50%,
     transparent 100%
   );
   background-size: 200% 100%;
@@ -695,11 +697,11 @@ img, video, svg {
   width: auto;
   height: auto;
   padding: 12px 24px;
-  background: #de6b90;
+  background: #a03a5e;
   color: #fff;
   font-weight: 700;
   border-radius: 8px;
   text-decoration: none;
   z-index: 9999;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 16px rgba(46, 26, 20, 0.2);
 }

@@ -1,9 +1,12 @@
-import { Crown, Sparkles, Award } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Sparkles, ShieldCheck } from 'lucide-react';
 
 /**
- * Ultra-Luxury Glassmorphic Digital Maharaja Card
- * Crafted with multi-layer frosted glass, iridescent specular highlights,
- * authentic gold foil EMV circuit, and responsive royal seals.
+ * Ultra-Luxurious Digital Maharaja Card — Sovereign Edition
+ * - Light luminous jewel seal colors (no dark pink)
+ * - Exquisite circular royal seal crest for high visibility
+ * - Circular stamp badges with double-ring gold embroidery and clear contrast
+ * - Gold EMV chip, holographic light sweep, embossed patron details
  */
 export default function MaharajaCard({
   guestName,
@@ -15,155 +18,272 @@ export default function MaharajaCard({
   const stamps = currentStamps || 0;
   const target = targetStamps || 5;
 
-  const getTierLabel = () => {
-    if (isComplete || stamps >= target) return { label: 'Sovereign Reward', color: 'from-amber-400 via-rose-300 to-yellow-200' };
-    if (stamps >= 3) return { label: 'Ruby Sovereign', color: 'from-rose-400 via-pink-300 to-secondary' };
-    return { label: 'Emerald Noble', color: 'from-emerald-400 via-teal-300 to-primary' };
+  const getTier = () => {
+    if (isComplete || stamps >= target) {
+      return {
+        name: 'Sovereign Patron',
+        color: '#c99a4e',
+        bg: 'rgba(201, 154, 78, 0.14)',
+        border: 'rgba(201, 154, 78, 0.5)',
+        glow: 'rgba(201, 154, 78, 0.35)',
+      };
+    }
+    if (stamps >= 3) {
+      return {
+        name: 'Imperial Ruby',
+        color: '#b8446a',
+        bg: 'rgba(184, 68, 106, 0.12)',
+        border: 'rgba(184, 68, 106, 0.45)',
+        glow: 'rgba(184, 68, 106, 0.25)',
+      };
+    }
+    return {
+      name: 'Noble Member',
+      color: '#7a5420',
+      bg: 'rgba(122, 84, 32, 0.1)',
+      border: 'rgba(122, 84, 32, 0.35)',
+      glow: 'rgba(212, 166, 106, 0.2)',
+    };
   };
 
-  const tier = getTierLabel();
+  const tier = getTier();
+
+  // Premium Light Jewel Tones for Seals 1 to 5 (Soft Champagne, Rose Pearl, Jade Quartz, Royal Lavender, Sunburst Gold)
+  const sealThemes = [
+    {
+      name: 'Champagne Gold',
+      bg: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #f59e0b 100%)',
+      shadow: '0 6px 18px -2px rgba(245, 158, 11, 0.35)',
+      ring: 'rgba(217, 119, 6, 0.6)',
+      textColor: '#78350f',
+      accent: '#b45309',
+    },
+    {
+      name: 'Rose Pearl',
+      bg: 'linear-gradient(135deg, #ffe4e6 0%, #fecdd3 50%, #fb7185 100%)',
+      shadow: '0 6px 18px -2px rgba(251, 113, 133, 0.35)',
+      ring: 'rgba(225, 29, 72, 0.6)',
+      textColor: '#881337',
+      accent: '#be123c',
+    },
+    {
+      name: 'Crystal Jade',
+      bg: 'linear-gradient(135deg, #ecfdf5 0%, #a7f3d0 50%, #34d399 100%)',
+      shadow: '0 6px 18px -2px rgba(52, 211, 153, 0.35)',
+      ring: 'rgba(5, 150, 105, 0.6)',
+      textColor: '#064e3b',
+      accent: '#047857',
+    },
+    {
+      name: 'Amethyst Quartz',
+      bg: 'linear-gradient(135deg, #faf5ff 0%, #e9d5ff 50%, #c084fc 100%)',
+      shadow: '0 6px 18px -2px rgba(192, 132, 252, 0.35)',
+      ring: 'rgba(147, 51, 234, 0.6)',
+      textColor: '#581c87',
+      accent: '#7e22ce',
+    },
+    {
+      name: 'Sunburst Gold',
+      bg: 'linear-gradient(135deg, #fffbeb 0%, #fef08a 45%, #eab308 100%)',
+      shadow: '0 8px 22px -2px rgba(234, 179, 8, 0.45)',
+      ring: 'rgba(202, 138, 4, 0.7)',
+      textColor: '#713f12',
+      accent: '#a16207',
+    },
+  ];
 
   return (
-    <div
-      className="relative w-full max-w-[480px] aspect-[1.58/1] min-h-[230px] rounded-[28px] sm:rounded-[32px] p-5 sm:p-7 md:p-8 glass-card-royal overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_32px_70px_-15px_rgba(222,107,144,0.4)] text-on-surface select-none group"
+    <motion.div
+      initial={{ opacity: 0, y: 25, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      whileHover={{ y: -6, scale: 1.015 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="relative w-full max-w-[500px] aspect-[1.58/1] min-h-[250px] rounded-[28px] overflow-hidden text-[#2c1a14] select-none shadow-[0_24px_60px_-12px_rgba(46,26,20,0.18),0_12px_24px_-6px_rgba(201,154,78,0.12)] border border-[#e8d2ba]/70"
+      style={{
+        background: 'linear-gradient(135deg, #fffdfa 0%, #fcf5eb 35%, #f4e4ce 75%, #ebd7bd 100%)',
+      }}
       role="region"
       aria-label="Digital Maharaja Card"
     >
-      {/* ── Dynamic Iridescent Glass Glows ────────────────────────────── */}
-      <div className="absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br from-primary-container/30 to-secondary/20 rounded-full blur-3xl pointer-events-none group-hover:scale-110 transition-transform duration-700" />
-      <div className="absolute -bottom-20 -left-20 w-52 h-52 bg-gradient-to-tr from-secondary/20 to-primary-container/15 rounded-full blur-3xl pointer-events-none" />
-
-      {/* ── Holographic Specular Sweep Beam ──────────────────────────── */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[32px]">
-        <div className="w-[120%] h-full bg-gradient-to-r from-transparent via-white/12 to-transparent skew-x-12 animate-holographic-shine" />
-      </div>
-
-      {/* ── Traditional Palace Jaali Watermark ───────────────────────── */}
+      {/* ── Ambient Radial Sheen ────────────────────────────────────── */}
       <div
-        className="absolute inset-0 opacity-[0.035] pointer-events-none"
+        className="absolute -top-16 -right-16 w-64 h-64 rounded-full blur-3xl pointer-events-none opacity-50"
+        style={{ background: `radial-gradient(circle, ${tier.glow}, transparent 70%)` }}
+      />
+      <div
+        className="absolute -bottom-20 -left-12 w-52 h-52 rounded-full blur-3xl pointer-events-none opacity-30"
+        style={{ background: 'radial-gradient(circle, rgba(228,193,148,0.4), transparent 70%)' }}
+      />
+
+      {/* ── Diagonal Gold Guilloche Lines ───────────────────────────── */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.04]"
         style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, #ffb1c6 1px, transparent 0)`,
-          backgroundSize: '20px 20px',
+          backgroundImage:
+            'repeating-linear-gradient(45deg, #8a5a22, #8a5a22 1px, transparent 1px, transparent 12px)',
         }}
       />
 
-      {/* ── Card Content Container ───────────────────────────────────── */}
-      <div className="relative h-full flex flex-col justify-between z-10">
-        {/* Top Header Row */}
-        <div className="flex items-center justify-between gap-2">
-          {/* Brand Crest */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-primary-container/30 to-secondary/20 border border-primary/40 flex items-center justify-center shadow-inner shrink-0">
-              <Crown className="w-5 h-5 sm:w-5 sm:h-5 text-secondary" />
+      {/* ── Animated Holographic Light Sweep ────────────────────────── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[28px]">
+        <div className="w-[140%] h-full bg-gradient-to-r from-transparent via-white/25 to-transparent -skew-x-12 animate-holographic-shine" />
+      </div>
+
+      {/* ── Card Content ─────────────────────────────────────────────── */}
+      <div className="relative h-full flex flex-col justify-between z-10 p-5 sm:p-6 md:p-7">
+        {/* Top Header: Circular Royal Insignia & Member Tier */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            {/* High-Visibility Circular Seal Insignia */}
+            <div className="relative group/logo">
+              <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-gradient-to-br from-[#c99a4e] via-[#deb268] to-[#996d2b] p-[2px] shadow-md flex items-center justify-center">
+                <div className="w-full h-full rounded-full bg-[#fbf5ed] border border-[#d4a66a]/60 flex flex-col items-center justify-center p-1 relative overflow-hidden">
+                  {/* Subtle inner radial glow */}
+                  <div className="absolute inset-0 bg-radial from-white via-transparent to-[#ecdcc8]/30" />
+                  <span className="font-serif text-[11px] sm:text-xs font-black tracking-widest text-[#7a4e1a] uppercase leading-none">
+                    UM
+                  </span>
+                  <span className="text-[6px] sm:text-[7px] font-mono tracking-tighter text-[#b8446a] font-bold uppercase mt-0.5">
+                    ROYAL
+                  </span>
+                </div>
+              </div>
+              {/* Circular outer orbital ring */}
+              <div className="absolute -inset-1 rounded-full border border-[#d4a66a]/40 border-dashed pointer-events-none" />
             </div>
-            <div>
-              <span className="font-serif text-sm sm:text-base font-bold tracking-[0.16em] uppercase text-on-surface block leading-tight">
-                URBAN MAHARAJA
+
+            <div className="min-w-0">
+              <span className="font-serif text-[13px] sm:text-base font-bold tracking-[0.12em] uppercase text-[#331c15] block leading-tight">
+                Urban Maharaja
               </span>
-              <span className="text-[9px] sm:text-[10px] uppercase font-mono tracking-[0.25em] text-secondary font-semibold">
-                Imperial Dining Card
+              <span className="text-[9px] sm:text-[10px] uppercase font-mono tracking-[0.22em] text-[#8c602a] font-bold block mt-0.5">
+                Imperial Dining Privilege
               </span>
             </div>
           </div>
 
-          {/* Tier Glass Badge */}
-          <div className="px-2.5 py-1 sm:px-3 sm:py-1 rounded-full bg-surface-container-highest/60 backdrop-blur-md border border-white/15 shadow-sm shrink-0">
-            <span className={`text-[9px] sm:text-[10px] font-bold uppercase tracking-widest bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}>
-              {tier.label}
+          {/* Tier Badge Pill */}
+          <div
+            className="px-3.5 py-1.5 rounded-full border backdrop-blur-md shadow-sm shrink-0 flex items-center gap-1.5"
+            style={{
+              borderColor: tier.border,
+              background: tier.bg,
+            }}
+          >
+            <Sparkles className="w-3 h-3" style={{ color: tier.color }} />
+            <span
+              className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.16em]"
+              style={{ color: tier.color }}
+            >
+              {tier.name}
             </span>
           </div>
         </div>
 
-        {/* Middle Row: EMV Gold Chip & Contactless Waves */}
-        <div className="my-auto py-1 sm:py-2">
-          <div className="flex items-center justify-between mb-3 sm:mb-4">
-            <div className="flex items-center gap-3">
-              {/* Micro-etched Gold EMV Chip */}
-              <div className="w-10 h-7 sm:w-11 sm:h-8 rounded-lg glass-chip flex flex-col justify-between p-1.5 shrink-0 relative overflow-hidden">
-                <div className="w-full h-[1px] bg-secondary/50 my-auto" />
-                <div className="absolute inset-0 border border-secondary/30 rounded-lg pointer-events-none" />
-                <div className="flex justify-between items-center text-[7px] font-mono text-secondary/80">
-                  <span>UM</span>
-                  <Sparkles className="w-2.5 h-2.5 text-secondary" />
-                </div>
-              </div>
-
-              {/* Contactless Wave Icon */}
-              <div className="flex items-center text-on-surface-variant/80">
-                <span className="material-symbols-outlined text-[18px] sm:text-[20px]">
-                  contactless
-                </span>
-                <span className="text-[10px] sm:text-xs font-mono ml-2 text-on-surface-variant/70">
-                  {cycleNumber > 1 ? `Cycle #${cycleNumber}` : 'Pass #1'}
-                </span>
+        {/* Middle: Gold EMV Chip & Pass Counter */}
+        <div className="flex items-center justify-between my-auto py-1">
+          <div className="flex items-center gap-3">
+            {/* Authentic Gold Smart Chip */}
+            <div className="w-10 h-7 sm:w-11 sm:h-8 rounded-[6px] bg-gradient-to-br from-[#dfb470] via-[#c8994a] to-[#9c6f2a] border border-[#ecd5a8] relative overflow-hidden shadow-[inset_0_1px_2px_rgba(255,255,255,0.7),0_2px_6px_rgba(46,26,20,0.15)]">
+              <div className="absolute inset-0 flex flex-col justify-center px-1.5 gap-[2px]">
+                <div className="w-full h-[0.5px] bg-white/40" />
+                <div className="w-[65%] h-[0.5px] bg-white/30" />
+                <div className="w-full h-[0.5px] bg-white/40" />
               </div>
             </div>
-
-            {/* Seals Counter Pill */}
-            <div className="px-3 py-1 rounded-full bg-surface-container-lowest/80 border border-white/10 text-right">
-              <span className="font-serif text-xs sm:text-sm font-bold text-primary">
-                {stamps}
-              </span>
-              <span className="text-[10px] text-on-surface-variant/70 font-mono"> / {target} Seals</span>
+            <div className="text-[10px] sm:text-xs font-mono text-[#6d5138]">
+              <span className="font-bold text-[#3d241c]">Pass Cycle #{cycleNumber}</span>
+              <span className="text-[9px] block text-[#8a6e54]">DINING VERIFIED</span>
             </div>
           </div>
 
-          {/* ── 5 Imperial Seal Discs with Glassmorphism ────────────── */}
-          <div className="grid grid-cols-5 gap-2 sm:gap-3 py-1">
-            {Array.from({ length: target }, (_, i) => {
-              const collected = i < stamps;
-              return (
-                <div
-                  key={i}
-                  className={`aspect-square rounded-xl sm:rounded-2xl flex flex-col items-center justify-center relative transition-all duration-500 ${
-                    collected
-                      ? 'glass-seal-unlocked scale-105'
-                      : 'glass-seal-locked text-on-surface-variant/40'
-                  }`}
-                  title={collected ? `Seal #${i + 1} Approved` : `Seal #${i + 1} Open`}
-                >
-                  {collected ? (
-                    <>
-                      <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]" />
-                      <span className="text-[7px] sm:text-[8px] font-bold text-white uppercase tracking-tighter mt-0.5 drop-shadow">
+          {/* Counter Badge Pill */}
+          <div className="flex items-baseline gap-1.5 px-3.5 py-1.5 rounded-full bg-white/80 border border-[#d4ba9e]/50 shadow-sm backdrop-blur-sm">
+            <span className="font-serif text-lg sm:text-xl font-black text-[#9a2d52] leading-none">
+              {stamps}
+            </span>
+            <span className="text-[11px] text-[#74553b] font-mono font-medium">/ {target} Seals</span>
+          </div>
+        </div>
+
+        {/* Bottom: 5 Circular Royal Stamp Seals — Light, High-Visibility, Premium */}
+        <div className="flex items-center gap-2 sm:gap-3 my-1">
+          {Array.from({ length: target }, (_, i) => {
+            const collected = i < stamps;
+            const theme = sealThemes[i % sealThemes.length];
+
+            return (
+              <div
+                key={i}
+                className="flex-1 aspect-square rounded-full flex flex-col items-center justify-center relative transition-all duration-500"
+                style={
+                  collected
+                    ? {
+                        background: theme.bg,
+                        boxShadow: theme.shadow,
+                        border: `2px solid ${theme.ring}`,
+                        transform: 'scale(1.04)',
+                      }
+                    : {
+                        background: 'rgba(255, 255, 255, 0.45)',
+                        border: '1.5px dashed rgba(175, 142, 110, 0.55)',
+                      }
+                }
+              >
+                {collected ? (
+                  <div className="flex flex-col items-center justify-center text-center">
+                    {/* Inner Gold Circular Mandala Ring */}
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-white/80 flex items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_1px_3px_rgba(0,0,0,0.12)]">
+                      <span
+                        className="font-serif text-[11px] sm:text-xs font-black leading-none"
+                        style={{ color: theme.textColor }}
+                      >
                         #{i + 1}
                       </span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="text-[10px] sm:text-xs font-serif font-bold text-on-surface-variant/50">
-                        {i + 1}
-                      </span>
-                      <span className="text-[7px] uppercase tracking-tighter text-outline">Open</span>
-                    </>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                    </div>
+                    <span
+                      className="text-[6.5px] sm:text-[7.5px] font-bold uppercase tracking-wider mt-0.5"
+                      style={{ color: theme.accent }}
+                    >
+                      SEALED
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center text-center">
+                    <span className="text-xs sm:text-sm font-serif font-bold text-[#8a705b]/60 leading-none">
+                      {i + 1}
+                    </span>
+                    <span className="text-[6px] sm:text-[7px] uppercase tracking-wider text-[#9d836e]/50 font-mono mt-0.5">
+                      Open
+                    </span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
-        {/* Card Footer: Patron Name & Card Expiry */}
-        <div className="flex items-end justify-between pt-1 border-t border-white/10">
+        {/* Card Footer: Embossed Patron Name & Member Pass ID */}
+        <div className="flex items-end justify-between pt-1 border-t border-[#d8be9f]/40">
           <div>
-            <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.22em] text-secondary/90 font-mono block">
-              Noble Patron
+            <span className="text-[8px] uppercase tracking-[0.2em] font-mono text-[#8c6742] block font-semibold">
+              Honored Member
             </span>
-            <p className="font-serif text-xs sm:text-sm md:text-base font-bold text-on-surface tracking-wider uppercase truncate max-w-[220px] sm:max-w-[280px]">
-              {guestName || 'Valued Royal Guest'}
-            </p>
+            <span className="font-serif text-xs sm:text-sm font-bold text-[#351e16] tracking-wide block truncate max-w-[200px] sm:max-w-[260px]">
+              {guestName || 'Noble Patron'}
+            </span>
           </div>
 
-          <div className="text-right shrink-0">
-            <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-on-surface-variant/70 font-mono block">
-              Validity
+          <div className="text-right">
+            <span className="text-[8px] uppercase tracking-[0.2em] font-mono text-[#8c6742] block font-semibold">
+              Status
             </span>
-            <span className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-primary">
-              LIFETIME
+            <span className="text-[10px] sm:text-xs font-mono font-bold text-[#9a2d52]">
+              {isComplete || stamps >= target ? '★ VOUCHER READY' : `${target - stamps} TO REWARD`}
             </span>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

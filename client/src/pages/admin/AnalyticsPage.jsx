@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { adminApi } from '../../services/api';
 import { BarChart3, TrendingUp, Users, Stamp, Gift } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid, AreaChart, Area } from 'recharts';
@@ -21,14 +22,14 @@ export default function AnalyticsPage() {
   };
 
   const chartTheme = {
-    grid: '#3a2024',
-    tick: '#e6bdc5',
-    tooltipBg: '#210e11',
-    tooltipBorder: '#de6b90',
+    grid: '#d4c4b6',
+    tick: '#5c4a42',
+    tooltipBg: '#f5ebde',
+    tooltipBorder: '#a03a5e',
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn text-on-surface">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="space-y-6 animate-fadeIn text-on-surface">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-serif text-2xl text-on-surface font-bold">Palace Analytics &amp; Intelligence</h1>
@@ -102,7 +103,7 @@ export default function AnalyticsPage() {
           {/* Reward Redemptions */}
           <div className="glass-panel-elevated p-4 sm:p-6">
             <div className="flex items-center gap-2 mb-4">
-              <Gift className="w-5 h-5 text-green-400" />
+              <Gift className="w-5 h-5 text-green-600" />
               <h3 className="font-serif text-lg text-on-surface font-bold">Completed Voucher Redemptions</h3>
             </div>
             <div className="h-64">
@@ -119,6 +120,6 @@ export default function AnalyticsPage() {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

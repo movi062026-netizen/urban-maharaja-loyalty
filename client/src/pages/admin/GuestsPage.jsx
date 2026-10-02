@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { adminApi } from '../../services/api';
 import { Users, Search, ChevronLeft, ChevronRight, Eye, Phone, Mail, Calendar, ShieldCheck, X } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -45,7 +46,7 @@ export default function GuestsPage() {
   const maskPhone = (phone) => phone ? `${phone.slice(0, 4)}****${phone.slice(-2)}` : '—';
 
   return (
-    <div className="space-y-6 animate-fadeIn text-on-surface">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="space-y-6 animate-fadeIn text-on-surface">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-serif text-2xl text-on-surface font-bold">Royal Patron Registry</h1>
@@ -56,20 +57,20 @@ export default function GuestsPage() {
       </div>
 
       {/* Search Bar */}
-      <form onSubmit={handleSearch} className="flex gap-2">
+      <form onSubmit={handleSearch} className="flex gap-2.5">
         <div className="relative flex-1">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by patron name, email, or mobile number..."
-            className="w-full pl-10 pr-4 py-3 bg-surface-container/90 border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors"
+            placeholder="Search noble patron by name, email, or mobile..."
+            className="w-full pl-10 pr-4 py-3 bg-white border border-[#e0c8b0] rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary shadow-xs transition-colors"
           />
         </div>
         <button
           type="submit"
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 cursor-pointer"
+          className="px-7 py-3 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-white text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 cursor-pointer"
         >
           Search
         </button>
@@ -165,49 +166,52 @@ export default function GuestsPage() {
 
       {/* Guest Detail Modal */}
       {detail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4" onClick={() => setDetail(null)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4" onClick={() => setDetail(null)}>
           <div
-            className="bg-surface-container rounded-3xl p-6 sm:p-7 max-w-lg w-full max-h-[85vh] overflow-y-auto border border-outline-variant/40 shadow-2xl animate-scaleIn text-on-surface"
+            className="bg-white rounded-3xl p-6 sm:p-7 max-w-lg w-full max-h-[85vh] overflow-y-auto border border-[#e0c8b0] shadow-2xl animate-scaleIn text-on-surface"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-label="Patron Dossier"
           >
-            <div className="flex items-center justify-between mb-5 pb-4 border-b border-outline-variant/30">
+            <div className="flex items-center justify-between mb-5 pb-4 border-b border-[#eee0d2]">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary-container/20 border border-primary/40 flex items-center justify-center text-primary font-bold">
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary-container to-secondary flex items-center justify-center text-white font-bold shadow-md">
                   {detail.guest?.name?.charAt(0) || 'G'}
                 </div>
                 <div>
                   <h2 className="font-serif text-xl text-on-surface font-bold">{detail.guest?.name}</h2>
-                  <span className="text-xs text-secondary font-mono uppercase tracking-wider">Noble Patron Dossier</span>
+                  <span className="text-[10px] text-secondary font-mono uppercase tracking-widest font-bold">Noble Patron Dossier</span>
                 </div>
               </div>
               <button
                 onClick={() => setDetail(null)}
-                className="p-1.5 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface cursor-pointer"
+                className="p-2 rounded-xl hover:bg-stone-100 text-on-surface-variant hover:text-on-surface cursor-pointer border border-transparent hover:border-stone-200 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 mb-6 p-3.5 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 text-xs">
+            <div className="grid grid-cols-2 gap-3 mb-6 p-4 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] text-xs">
               <div>
-                <span className="text-on-surface-variant block text-[10px] uppercase tracking-wider mb-0.5">Email</span>
-                <span className="text-on-surface font-mono font-medium">{detail.guest?.email || '—'}</span>
+                <span className="text-on-surface-variant/70 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Email</span>
+                <span className="text-on-surface font-mono font-semibold">{detail.guest?.email || '—'}</span>
               </div>
               <div>
-                <span className="text-on-surface-variant block text-[10px] uppercase tracking-wider mb-0.5">Mobile</span>
-                <span className="text-on-surface font-mono font-medium">{detail.guest?.phone || '—'}</span>
+                <span className="text-on-surface-variant/70 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Mobile</span>
+                <span className="text-on-surface font-mono font-semibold">{detail.guest?.phone || '—'}</span>
               </div>
               <div>
-                <span className="text-on-surface-variant block text-[10px] uppercase tracking-wider mb-0.5">Member Since</span>
-                <span className="text-on-surface font-mono font-medium">
+                <span className="text-on-surface-variant/70 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Member Since</span>
+                <span className="text-on-surface font-mono font-semibold">
                   {new Date(detail.guest?.createdAt).toLocaleDateString('en-IN')}
                 </span>
               </div>
               <div>
-                <span className="text-on-surface-variant block text-[10px] uppercase tracking-wider mb-0.5">Status</span>
-                <span className="text-green-400 font-semibold uppercase tracking-wider text-[11px]">Active Court Member</span>
+                <span className="text-on-surface-variant/70 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Status</span>
+                <span className="text-emerald-700 font-bold uppercase tracking-wider text-[11px] inline-flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                  Active Court Member
+                </span>
               </div>
             </div>
 
@@ -218,17 +222,17 @@ export default function GuestsPage() {
               </h3>
               <div className="space-y-2">
                 {detail.cards?.map((c) => (
-                  <div key={c._id} className="bg-surface-container-high/80 rounded-xl p-3 border border-outline-variant/30 flex items-center justify-between text-xs">
+                  <div key={c._id} className="bg-[#fdfaf6] rounded-xl p-3.5 border border-[#ede0d2] flex items-center justify-between text-xs">
                     <div>
-                      <p className="font-semibold text-on-surface">Cycle #{c.cycleNumber}</p>
+                      <p className="font-bold text-on-surface">Pass Cycle #{c.cycleNumber}</p>
                       <p className="text-[11px] text-on-surface-variant mt-0.5">
                         {c.currentStamps} of {c.targetStamps} Seals Collected
                       </p>
                     </div>
                     <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
                       c.status === 'COMPLETED'
-                        ? 'bg-green-500/20 text-green-300 border-green-500/30'
-                        : 'bg-primary-container/20 text-primary border-primary/30'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+                        : 'bg-primary-container/10 text-primary border-primary/20'
                     }`}>
                       {c.status}
                     </span>
@@ -245,9 +249,9 @@ export default function GuestsPage() {
                   <p className="text-xs text-on-surface-variant/50 italic py-2">No seal history on record.</p>
                 ) : (
                   detail.stamps?.slice(0, 10).map((s) => (
-                    <div key={s._id} className="bg-surface-container-high/60 rounded-lg p-2.5 border border-outline-variant/20 flex items-center justify-between text-xs font-mono">
+                    <div key={s._id} className="bg-[#fdfaf6] rounded-xl p-2.5 border border-[#eee0d2] flex items-center justify-between text-xs font-mono">
                       <span className={`text-[11px] font-bold ${
-                        s.status === 'APPROVED' ? 'text-green-400' : s.status === 'REJECTED' ? 'text-red-400' : 'text-yellow-400'
+                        s.status === 'APPROVED' ? 'text-emerald-700' : s.status === 'REJECTED' ? 'text-red-600' : 'text-amber-600'
                       }`}>
                         {s.status}
                       </span>
@@ -262,6 +266,6 @@ export default function GuestsPage() {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

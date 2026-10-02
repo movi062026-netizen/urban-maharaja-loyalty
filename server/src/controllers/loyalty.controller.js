@@ -154,6 +154,22 @@ const requestMyStamp = async (req, res, next) => {
   }
 };
 
+// Guest claims ONE reward for their completed card cycle
+const claimReward = async (req, res, next) => {
+  try {
+    const { rewardId, loyaltyCardId } = req.body;
+    const result = await loyaltyService.claimReward(
+      req.user.id,
+      rewardId,
+      loyaltyCardId,
+      auditContext(req)
+    );
+    success(res, result, 'Reward claimed successfully! Your voucher is now available.', 201);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getMyCard,
   getMyStamps,
@@ -164,4 +180,5 @@ module.exports = {
   approveStamp,
   rejectStamp,
   searchGuest,
+  claimReward,
 };

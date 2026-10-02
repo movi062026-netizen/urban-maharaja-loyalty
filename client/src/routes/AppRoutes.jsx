@@ -21,6 +21,7 @@ import StaffLoginPage from '../pages/public/StaffLoginPage';
 
 // Guest Pages
 import MaharajaCardPage from '../pages/guest/MaharajaCardPage';
+import GuestStampsPage from '../pages/guest/GuestStampsPage';
 import RewardsPage from '../pages/guest/RewardsPage';
 import ProfilePage from '../pages/guest/ProfilePage';
 import HistoryPage from '../pages/guest/HistoryPage';
@@ -78,13 +79,13 @@ export default function AppRoutes() {
         <Route path="/guest/profile" element={<ProfilePage />} />
         <Route path="/guest/review" element={<ReviewPage />} />
 
-        {/* Backward Compatibility & Convenience Aliases */}
-        <Route path="/guest/stamps" element={<MaharajaCardPage />} />
-        <Route path="/guest/stamp" element={<MaharajaCardPage />} />
-        <Route path="/guest/stemp" element={<MaharajaCardPage />} />
-        <Route path="/guest/step" element={<MaharajaCardPage />} />
-        <Route path="/stamps" element={<Navigate to="/guest/card" replace />} />
-        <Route path="/stemp" element={<Navigate to="/guest/card" replace />} />
+        {/* Dedicated Stamp & Seal Tracker Desk */}
+        <Route path="/guest/stamps" element={<GuestStampsPage />} />
+        <Route path="/guest/stamp" element={<GuestStampsPage />} />
+        <Route path="/guest/stemp" element={<GuestStampsPage />} />
+        <Route path="/guest/step" element={<GuestStampsPage />} />
+        <Route path="/stamps" element={<Navigate to="/guest/stamps" replace />} />
+        <Route path="/stemp" element={<Navigate to="/guest/stamps" replace />} />
         <Route path="/maharaja-card" element={<Navigate to="/guest/card" replace />} />
         <Route path="/rewards" element={<Navigate to="/guest/rewards" replace />} />
         <Route path="/history" element={<Navigate to="/guest/history" replace />} />

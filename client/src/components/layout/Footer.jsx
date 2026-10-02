@@ -50,7 +50,7 @@ export default function Footer() {
                 href="https://share.google/2nmScZz1II7jKmnKO"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 hover:bg-amber-400 hover:text-black transition-all text-[9px] sm:text-[10px] uppercase tracking-[0.14em] font-bold w-fit no-underline"
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-amber-600/10 border border-amber-600/30 text-amber-700 hover:bg-amber-500 hover:text-white transition-all text-[9px] sm:text-[10px] uppercase tracking-[0.14em] font-bold w-fit no-underline"
               >
                 <span>⭐ Google Reviews</span>
               </a>
@@ -88,7 +88,7 @@ export default function Footer() {
                   href="https://share.google/2nmScZz1II7jKmnKO"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-amber-300/90 hover:text-amber-200 transition-colors no-underline font-medium inline-flex items-center gap-1"
+                  className="text-amber-700 hover:text-amber-500 transition-colors no-underline font-medium inline-flex items-center gap-1"
                 >
                   <span>Leave Google Review ⭐</span>
                   <span className="text-[10px]">↗</span>

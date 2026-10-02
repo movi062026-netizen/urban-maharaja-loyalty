@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 import { adminApi, loyaltyApi } from '../../services/api';
 import { Stamp as StampIcon, Search, CheckCircle, XCircle, Clock, ChevronLeft, ChevronRight, Users, Sparkles, Eye, X, Image as ImageIcon } from 'lucide-react';
@@ -97,7 +98,11 @@ export default function StaffStampsPage() {
 
   const handleGrantStamp = async (guestId) => {
     try {
-      await loyaltyApi.requestStamp(guestId);
+      const res = await loyaltyApi.requestStamp(guestId);
+      const stampId = res.data?.data?.stamp?._id;
+      if (stampId) {
+        await loyaltyApi.approveStamp(stampId);
+      }
       toast.success('Royal seal granted and verified for this visit!');
       setGuestResult(null);
       setSearchQuery('');
@@ -131,21 +136,26 @@ export default function StaffStampsPage() {
     }
   };
 
-  const handleModalConfirm = async ({ guestId }) => {
+  const handleModalConfirm = async (payload) => {
     try {
-      await loyaltyApi.requestStamp(guestId);
-      toast.success('Royal seal granted and registered!');
+      const res = await loyaltyApi.requestStamp(payload);
+      const stampId = res.data?.data?.stamp?._id;
+      if (stampId) {
+        await loyaltyApi.approveStamp(stampId);
+      }
+      toast.success('Royal seal verified and recorded with bill details!');
       setStampModalOpen(false);
+      setGuestResult(null);
+      setSearchQuery('');
       loadStamps();
       loadPendingRequests();
-      if (searchQuery) executeSearch(searchQuery);
     } catch (err) {
       toast.error(err.response?.data?.error?.message || 'Failed to grant seal');
     }
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn text-on-surface">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="space-y-6 animate-fadeIn text-on-surface">
       <div>
         <h1 className="font-serif text-2xl text-on-surface font-bold">Floor Stamp &amp; Seal Desk</h1>
         <p className="text-xs text-on-surface-variant mt-0.5 font-sans">
@@ -160,56 +170,59 @@ export default function StaffStampsPage() {
         onReject={handleRejectPending}
       />
 
-      {/* Floor Stamping Panel */}
-      <div className="glass-panel-elevated p-4 sm:p-6 space-y-5">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-secondary/20 border border-secondary/40 flex items-center justify-center text-secondary">
-            <StampIcon className="w-5 h-5" />
+      {/* Floor Stamping Panel — Palace Porcelain Aesthetic */}
+      <div className="glass-panel-elevated p-5 sm:p-7 space-y-6">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#c99a4e] via-[#deb268] to-[#996d2b] p-[2px] shadow-md flex items-center justify-center shrink-0">
+            <div className="w-full h-full rounded-full bg-white flex items-center justify-center border border-[#d4a66a]/40 text-[#9b284e]">
+              <StampIcon className="w-5 h-5" />
+            </div>
           </div>
           <div>
-            <h2 className="font-serif text-lg text-on-surface font-bold">Validate Guest Dining Visit</h2>
-            <p className="text-xs text-on-surface-variant">Grant official seal to dining guest</p>
+            <h2 className="font-serif text-lg sm:text-xl text-on-surface font-bold">Validate Guest Dining Visit</h2>
+            <p className="text-xs text-on-surface-variant font-medium">Search patron record or select active table guest to credit their royal seals</p>
           </div>
         </div>
 
-        {/* Quick Select Buttons */}
+        {/* Quick Select Buttons — Luminous Palace Pills */}
         <div>
-          <span className="text-[11px] uppercase tracking-wider text-secondary font-semibold block mb-2">
-            Active Patrons in Dining Room:
+          <span className="text-[11px] uppercase tracking-wider text-secondary font-bold block mb-2.5 flex items-center gap-1.5">
+            <Users className="w-3.5 h-3.5 text-primary" />
+            <span>Active Patrons in Dining Room:</span>
           </span>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2.5">
             {recentGuests.map((g) => (
               <button
                 key={g._id}
                 type="button"
                 onClick={() => handleSelectRecentGuest(g)}
-                className="px-3 py-1.5 rounded-xl bg-surface-container-high/80 hover:bg-secondary/20 border border-outline-variant/30 text-xs text-on-surface hover:text-secondary transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-3.5 py-2 rounded-2xl bg-white border border-[#e2d2c2] hover:border-primary hover:bg-[#fffbf6] text-on-surface shadow-[0_2px_8px_rgba(46,26,20,0.04)] hover:shadow-[0_4px_16px_rgba(155,40,78,0.12)] hover:-translate-y-0.5 transition-all cursor-pointer flex items-center gap-2 group"
               >
-                <span className="w-5 h-5 rounded-full bg-secondary/30 text-secondary flex items-center justify-center text-[10px] font-bold">
+                <span className="w-6 h-6 rounded-full bg-primary/10 group-hover:bg-primary text-primary group-hover:text-white border border-primary/20 flex items-center justify-center text-[10px] font-bold transition-colors">
                   {(g.name || 'G').charAt(0).toUpperCase()}
                 </span>
-                <span className="font-medium">{g.name}</span>
+                <span className="font-semibold text-xs text-on-surface">{g.name}</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Search Input Bar */}
-        <form onSubmit={handleSearchSubmit} className="flex gap-2.5">
+        {/* Search Input Bar — High-Contrast Porcelain & Royal Button */}
+        <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by patron email (e.g. patron@...), mobile (98765...), or name..."
-              className="w-full pl-10 pr-4 py-3 bg-surface-container-high/90 border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-secondary transition-colors"
+              placeholder="Search by patron email (patron@...), mobile (98765...), or name..."
+              className="w-full pl-11 pr-4 py-3.5 bg-white border-2 border-[#e2d0bd] rounded-2xl text-on-surface placeholder-[#8c7465] text-sm focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 shadow-sm transition-all"
             />
           </div>
           <button
             type="submit"
             disabled={searching}
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-secondary via-[#f3d3aa] to-primary-container text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 cursor-pointer disabled:opacity-50"
+            className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-primary via-[#b8335f] to-primary-container text-white text-xs uppercase tracking-widest font-black shadow-[0_6px_20px_-3px_rgba(155,40,78,0.45)] hover:shadow-[0_10px_26px_-3px_rgba(155,40,78,0.6)] hover:brightness-110 active:scale-95 transition-all cursor-pointer disabled:opacity-50 shrink-0"
           >
             {searching ? 'Locating...' : 'Locate Patron'}
           </button>
@@ -217,46 +230,46 @@ export default function StaffStampsPage() {
 
         {/* Found Result Card */}
         {guestResult && (
-          <div className="p-5 rounded-xl bg-surface-container-lowest border border-outline-variant/40 animate-scaleIn">
+          <div className="p-6 rounded-2xl bg-white border-2 border-secondary/40 shadow-lg animate-scaleIn">
             {guestResult.guest ? (
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-full bg-secondary/20 border border-secondary/30 flex items-center justify-center text-secondary font-bold text-sm">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-primary font-bold text-base shadow-sm">
                       {(guestResult.guest.name || 'G').charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="font-semibold text-on-surface text-base">{guestResult.guest.name}</p>
-                      <p className="text-xs text-on-surface-variant font-mono">
+                      <p className="font-serif font-bold text-on-surface text-lg leading-tight">{guestResult.guest.name}</p>
+                      <p className="text-xs text-on-surface-variant font-mono mt-0.5">
                         {guestResult.guest.email || guestResult.guest.phone || 'Court Patron'}
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="text-xl font-serif font-bold text-secondary">
+                    <span className="text-2xl font-serif font-black text-secondary">
                       {guestResult.loyalty?.card?.currentStamps || 0} / {guestResult.loyalty?.card?.targetStamps || 5}
                     </span>
-                    <p className="text-[10px] text-on-surface-variant uppercase tracking-wider">
+                    <p className="text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">
                       Cycle #{guestResult.loyalty?.card?.cycleNumber || 1} Pass
                     </p>
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2.5">
                   <button
                     type="button"
                     onClick={() => handleGrantStamp(guestResult.guest._id)}
-                    className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-secondary to-[#c29b38] text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-secondary to-[#c29b38] text-white text-xs uppercase tracking-widest font-black shadow-md hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <StampIcon className="w-4 h-4" />
-                    <span>Instant Seal (1-Click)</span>
+                    <span>Instant 1-Click Seal</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setStampModalOpen(true)}
-                    className="px-4 py-3.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/40 text-on-surface text-xs uppercase tracking-wider font-bold transition-all cursor-pointer flex items-center gap-1"
+                    className="px-6 py-3.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-primary/40 text-primary text-xs uppercase tracking-wider font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
                   >
-                    <span>Table Note...</span>
+                    <span>Attach Dining Bill...</span>
                   </button>
                 </div>
               </div>
@@ -267,16 +280,16 @@ export default function StaffStampsPage() {
         )}
       </div>
 
-      {/* Filter Tabs */}
-      <div className="flex gap-2">
+      {/* Filter Tabs — Segmented Luxury Control */}
+      <div className="inline-flex p-1.5 rounded-2xl bg-[#eee3d4] border border-[#ddcfbe] shadow-inner gap-1">
         {['', 'PENDING', 'APPROVED', 'REJECTED'].map((status) => (
           <button
             key={status}
             onClick={() => { setStatusFilter(status); setPagination(p => ({ ...p, page: 1 })); }}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
               statusFilter === status
-                ? 'bg-secondary text-surface-container-lowest shadow font-bold'
-                : 'bg-surface-container/70 text-on-surface-variant hover:bg-surface-container hover:text-on-surface border border-outline-variant/30'
+                ? 'bg-white text-primary shadow-sm border border-[#ddcfbe]/70'
+                : 'text-on-surface-variant hover:text-on-surface hover:bg-white/60'
             }`}
           >
             {status || 'All Verified Seals'}
@@ -338,7 +351,7 @@ export default function StaffStampsPage() {
                           <button
                             type="button"
                             onClick={() => setSelectedBill({ url: s.billUrl, guestName, billNumber: s.billNumber, billAmount: s.billAmount })}
-                            className="w-10 h-10 rounded-lg border border-primary/40 overflow-hidden bg-black/40 hover:scale-105 transition-all cursor-pointer shrink-0"
+                            className="w-10 h-10 rounded-lg border border-primary/40 overflow-hidden bg-surface-container hover:scale-105 transition-all cursor-pointer shrink-0"
                             title="Inspect WebP Bill"
                           >
                             <img src={s.billUrl} alt="Bill" className="w-full h-full object-cover" />
@@ -354,15 +367,15 @@ export default function StaffStampsPage() {
                     </td>
                     <td className="px-5 py-4">
                       {s.status === 'APPROVED' ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-green-500/20 text-green-300 border border-green-500/30">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-green-100 text-green-600 border border-green-500/30">
                           <CheckCircle className="w-3.5 h-3.5" /> Approved
                         </span>
                       ) : s.status === 'REJECTED' ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-500/20 text-red-300 border border-red-500/30">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-100 text-red-600 border border-red-500/30">
                           <XCircle className="w-3.5 h-3.5" /> Rejected
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-700 border border-amber-500/30">
                           <Clock className="w-3.5 h-3.5" /> Pending
                         </span>
                       )}
@@ -378,13 +391,13 @@ export default function StaffStampsPage() {
                         <div className="flex gap-2 justify-center">
                           <button
                             onClick={() => handleApprovePending(s._id)}
-                            className="px-3 py-1.5 rounded-lg bg-green-500/20 text-green-300 border border-green-500/30 text-xs font-bold hover:bg-green-500/30 cursor-pointer"
+                            className="px-3 py-1.5 rounded-lg bg-green-100 text-green-600 border border-green-500/30 text-xs font-bold hover:bg-green-500/30 cursor-pointer"
                           >
                             Approve
                           </button>
                           <button
                             onClick={() => handleRejectPending(s._id)}
-                            className="px-3 py-1.5 rounded-lg bg-red-500/20 text-red-300 border border-red-500/30 text-xs font-bold hover:bg-red-500/30 cursor-pointer"
+                            className="px-3 py-1.5 rounded-lg bg-red-100 text-red-600 border border-red-500/30 text-xs font-bold hover:bg-red-500/30 cursor-pointer"
                           >
                             Reject
                           </button>
@@ -433,8 +446,8 @@ export default function StaffStampsPage() {
 
       {/* Bill Lightbox Modal */}
       {selectedBill && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-fadeIn">
-          <div className="relative w-full max-w-2xl rounded-3xl bg-surface-container/95 border border-primary/40 p-4 sm:p-6 shadow-[0_24px_60px_rgba(0,0,0,0.9)] text-on-surface flex flex-col max-h-[92vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-2xl rounded-3xl bg-surface-container/95 border border-primary/40 p-4 sm:p-6 shadow-[0_24px_60px_rgba(46,26,20,0.15)] text-on-surface flex flex-col max-h-[92vh]">
             <div className="flex items-center justify-between pb-3 border-b border-outline-variant/30 mb-3">
               <div>
                 <h3 className="font-serif text-sm sm:text-base font-bold text-on-surface">
@@ -454,7 +467,7 @@ export default function StaffStampsPage() {
               </button>
             </div>
 
-            <div className="flex-1 overflow-auto rounded-2xl bg-black/60 p-2 flex items-center justify-center">
+            <div className="flex-1 overflow-auto rounded-2xl bg-surface-container-high/80 p-2 flex items-center justify-center">
               <img
                 src={selectedBill.url}
                 alt="Enlarged Bill Receipt"
@@ -476,6 +489,6 @@ export default function StaffStampsPage() {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

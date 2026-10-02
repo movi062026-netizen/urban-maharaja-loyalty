@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { authApi } from '../../services/api';
 import toast from 'react-hot-toast';
@@ -63,7 +64,7 @@ export default function StaffLoginPage() {
         </div>
 
         {/* Glassmorphic Login Card */}
-        <div className="p-7 sm:p-9 rounded-3xl bg-surface-container/85 border border-secondary/30 backdrop-blur-2xl shadow-[0_24px_50px_rgba(24,10,12,0.95)]">
+        <div className="p-7 sm:p-9 rounded-3xl bg-surface-container/85 border border-secondary/30 backdrop-blur-2xl shadow-[0_24px_50px_rgba(46,26,20,0.12)]">
           <div className="flex items-center justify-between mb-6 pb-4 border-b border-outline-variant/30">
             <div>
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-secondary/10 border border-secondary/25 text-[10px] font-mono uppercase tracking-wider text-secondary font-bold mb-1.5">

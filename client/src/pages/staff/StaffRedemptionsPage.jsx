@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { adminApi, rewardApi } from '../../services/api';
 import { ShoppingBag, ChevronLeft, ChevronRight, CheckCircle, Gift, Search } from 'lucide-react';
 import StaffRedemptionScanner from '../../components/staff/StaffRedemptionScanner';
@@ -38,7 +39,7 @@ export default function StaffRedemptionsPage() {
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn text-on-surface">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="space-y-6 animate-fadeIn text-on-surface">
       <div>
         <h1 className="font-serif text-2xl text-on-surface font-bold">Voucher Redemption Desk</h1>
         <p className="text-xs text-on-surface-variant mt-0.5 font-sans">
@@ -89,15 +90,15 @@ export default function StaffRedemptionsPage() {
                   </td>
                   <td className="px-5 py-4">
                     {r.status === 'REDEEMED' ? (
-                      <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-green-500/20 text-green-300 border border-green-500/30">
+                      <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-300">
                         Redeemed
                       </span>
                     ) : r.status === 'AVAILABLE' ? (
-                      <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-secondary/20 text-secondary border border-secondary/30">
+                      <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-300">
                         Ready to Claim
                       </span>
                     ) : (
-                      <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-500/20 text-red-300 border border-red-500/30">
+                      <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-50 text-red-700 border border-red-300">
                         Expired
                       </span>
                     )}
@@ -112,7 +113,7 @@ export default function StaffRedemptionsPage() {
                     {r.status === 'AVAILABLE' ? (
                       <button
                         onClick={() => handleRedeem(r._id)}
-                        className="px-3.5 py-1.5 bg-green-500/20 text-green-300 border border-green-500/30 rounded-xl text-xs font-bold hover:bg-green-500/30 inline-flex items-center gap-1.5 cursor-pointer shadow-sm"
+                        className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer shadow-sm transition-colors"
                       >
                         <CheckCircle className="w-3.5 h-3.5" />
                         <span>Redeem</span>
@@ -149,6 +150,6 @@ export default function StaffRedemptionsPage() {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

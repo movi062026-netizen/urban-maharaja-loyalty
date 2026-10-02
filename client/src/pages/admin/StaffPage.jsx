@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { adminApi } from '../../services/api';
 import { UserCog, Plus, ShieldCheck, Mail, Key, Check, Copy, UserX, UserCheck, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -75,7 +76,7 @@ export default function StaffPage() {
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn text-on-surface">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="space-y-6 animate-fadeIn text-on-surface">
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
@@ -154,7 +155,7 @@ export default function StaffPage() {
 
                 <div className="mt-3 pt-3 border-t border-outline-variant/20 flex items-center justify-between text-[11px] text-on-surface-variant/70">
                   <span>Status:</span>
-                  <span className={`font-semibold ${member.isActive ? 'text-green-400' : 'text-red-400'}`}>
+                  <span className={`font-semibold ${member.isActive ? 'text-green-600' : 'text-red-600'}`}>
                     {member.isActive ? '● Active' : '○ Suspended'}
                   </span>
                 </div>
@@ -171,8 +172,8 @@ export default function StaffPage() {
                   onClick={() => handleToggleStatus(member)}
                   className={`text-xs flex items-center gap-1.5 py-1 px-3 rounded-lg transition-colors cursor-pointer ${
                     member.isActive
-                      ? 'text-red-300 hover:bg-red-500/10'
-                      : 'text-green-300 hover:bg-green-500/10'
+                      ? 'text-red-600 hover:bg-red-500/10'
+                      : 'text-green-600 hover:bg-green-500/10'
                   }`}
                 >
                   {member.isActive ? (
@@ -204,7 +205,7 @@ export default function StaffPage() {
 
       {/* ── CREATE STAFF CREDENTIALS MODAL ─────────────────────────────── */}
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="w-full max-w-md bg-surface-container p-6 sm:p-8 rounded-3xl border border-outline-variant/40 shadow-2xl relative animate-scaleUp">
             <div className="flex items-center justify-between pb-4 mb-5 border-b border-outline-variant/30">
               <div className="flex items-center gap-2.5">
@@ -254,7 +255,7 @@ export default function StaffPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleCopyCredentials(`Urban Maharaja Terminal Login\nPortal: ${window.location.origin}/staff/login\nEmail: ${createdCredential.email}\nPassword: ${createdCredential.password}`)}
-                    className="flex-1 py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    className="flex-1 py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-white text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Copy className="w-4 h-4" />
                     <span>Copy All Details</span>
@@ -332,7 +333,7 @@ export default function StaffPage() {
                   <button
                     type="submit"
                     disabled={creating}
-                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-white text-xs uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     {creating ? (
                       <span className="w-4 h-4 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />
@@ -349,6 +350,6 @@ export default function StaffPage() {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

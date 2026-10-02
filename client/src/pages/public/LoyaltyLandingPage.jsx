@@ -1,4 +1,5 @@
 import { Link, useSearchParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import MaharajaCard from '../../components/loyalty/MaharajaCard';
 
 const tiers = [
@@ -6,9 +7,9 @@ const tiers = [
     tier: 'Tier 1',
     name: 'Emerald Patron',
     stamps: '3 Stamps',
-    color: 'text-emerald-400',
+    color: 'text-emerald-700',
     borderColor: 'border-emerald-500/30',
-    bg: 'bg-emerald-950/20',
+    bg: 'bg-emerald-50',
     perks: [
       'Complimentary royal welcome drink on every visit',
       'Priority table reservations on weekdays',
@@ -19,9 +20,9 @@ const tiers = [
     tier: 'Tier 2',
     name: 'Ruby Sovereign',
     stamps: '7 Stamps',
-    color: 'text-rose-400',
+    color: 'text-rose-700',
     borderColor: 'border-rose-500/40',
-    bg: 'bg-rose-950/25',
+    bg: 'bg-rose-50',
     perks: [
       'All Emerald privileges included',
       'Choice of complimentary signature dessert (Kesar Shahi Tukda)',
@@ -52,7 +53,12 @@ export default function LoyaltyLandingPage() {
   return (
     <div className="w-full bg-background min-h-screen text-on-surface">
       {/* ── Hero Banner ──────────────────────────────────────────────── */}
-      <section className="relative w-full pt-16 pb-20 overflow-hidden bg-gradient-to-b from-surface-container-lowest via-surface to-surface-container-low text-center">
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        className="relative w-full pt-16 pb-20 overflow-hidden bg-gradient-to-b from-surface-container-lowest via-surface to-surface-container-low text-center"
+      >
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-primary-container/15 rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[300px] bg-secondary-container/20 rounded-full blur-[110px] pointer-events-none" />
 
@@ -99,10 +105,16 @@ export default function LoyaltyLandingPage() {
             </p>
           )}
         </div>
-      </section>
+      </motion.section>
 
       {/* ── Virtual Card Live Preview ─────────────────────────────────── */}
-      <section className="relative w-full py-16 bg-surface-container-lowest overflow-hidden">
+      <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.8 }}
+        className="relative w-full py-16 bg-surface-container-lowest overflow-hidden"
+      >
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
           <div className="max-w-md mx-auto mb-16 flex flex-col items-center">
             <MaharajaCard
@@ -181,13 +193,13 @@ export default function LoyaltyLandingPage() {
             </p>
             <Link
               to="/login"
-              className="px-8 py-3.5 rounded-full bg-gradient-to-r from-primary-container to-secondary text-surface-container-lowest font-label-md uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all no-underline"
+              className="px-8 py-3.5 rounded-full bg-gradient-to-r from-primary-container to-secondary text-white font-label-md uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all no-underline"
             >
               Get Your Digital Card Now
             </Link>
           </div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 }

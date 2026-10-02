@@ -12,13 +12,13 @@ export default function App() {
           toastOptions={{
             duration: 4000,
             style: {
-              background: '#210e11',
-              color: '#ffffff',
-              border: '1px solid rgba(222, 107, 144, 0.4)',
+              background: '#f5ebde',
+              color: '#2e1a14',
+              border: '1px solid rgba(160, 58, 94, 0.25)',
               borderRadius: '14px',
               fontSize: '13px',
               fontFamily: 'Montserrat, system-ui, sans-serif',
-              boxShadow: '0 12px 32px rgba(0, 0, 0, 0.75)',
+              boxShadow: '0 12px 32px rgba(46, 26, 20, 0.12)',
             },
             success: {
               iconTheme: { primary: '#de6b90', secondary: '#ffffff' },

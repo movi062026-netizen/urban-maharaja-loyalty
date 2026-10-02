@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { 
   ExternalLink, 
   ShoppingBag, 
@@ -531,12 +532,12 @@ export default function MenuPage() {
   }, [activeCategory, searchQuery]);
 
   return (
-    <div className="w-full bg-[#120407] min-h-screen text-[#fbf0f2]">
+    <div className="w-full bg-background min-h-screen text-on-surface">
       {/* ── TOP ANNOUNCEMENT BANNER FOR LIVE MENU APP ── */}
-      <div className="w-full bg-gradient-to-r from-[#6e1226] via-[#911833] to-[#6e1226] border-b border-primary/40 py-2.5 px-4 text-center">
+      <div className="w-full bg-gradient-to-r from-primary-container/80 via-primary to-primary-container/80 border-b border-primary/30 py-2.5 px-4 text-center">
         <div className="max-w-[1240px] mx-auto flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/30 text-amber-300 font-bold uppercase tracking-wider text-[10px] border border-amber-300/40">
-            <Sparkles className="w-3 h-3 text-amber-300" /> Official Digital Menu
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/30 text-white font-bold uppercase tracking-wider text-[10px] border border-white/40">
+            <Sparkles className="w-3 h-3 text-white" /> Official Digital Menu
           </span>
           <span className="text-white/95 font-medium">
             Explore our complete pure vegetarian dining menu &amp; chef specials on our interactive website!
@@ -554,24 +555,24 @@ export default function MenuPage() {
       </div>
 
       {/* ── HERO HEADER ── */}
-      <section className="relative w-full pt-14 pb-16 overflow-hidden bg-gradient-to-b from-[#1b060b] via-[#120407] to-[#170509] text-center border-b border-outline-variant/20">
+      <section className="relative w-full pt-14 pb-16 overflow-hidden bg-gradient-to-b from-surface-container-high via-surface-container to-surface text-center border-b border-outline-variant/20">
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-primary-container/15 rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[300px] bg-secondary-container/15 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="relative max-w-[1200px] mx-auto px-5 sm:px-8 flex flex-col items-center">
           {/* Pure Veg Emblem */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#240b12] border border-[#de6b90]/40 shadow-lg mb-5">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-container/15 border border-primary/30 shadow-lg mb-5">
             <span className="w-4 h-4 rounded-[4px] border-2 border-emerald-500 flex items-center justify-center p-0.5 bg-emerald-950/60">
               <span className="w-2 h-2 rounded-full bg-emerald-400" />
             </span>
-            <span className="text-[11px] uppercase tracking-[0.25em] text-[#f5c542] font-bold">
+            <span className="text-[11px] uppercase tracking-[0.25em] text-secondary font-bold">
               100% Pure Veg Fine Dine
             </span>
           </div>
 
           <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-on-surface max-w-4xl tracking-tight leading-tight font-bold mb-4">
             Urban Maharaja <br className="hidden sm:inline" />
-            <span className="bg-gradient-to-r from-[#de6b90] via-[#f5c542] to-[#de6b90] bg-clip-text text-transparent italic font-normal">
+            <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent italic font-normal">
               Imperial Dining Menu
             </span>
           </h1>
@@ -627,7 +628,7 @@ export default function MenuPage() {
                   onClick={() => setActiveCategory(cat)}
                   className={`px-4 py-2 rounded-xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer border flex items-center gap-1.5 ${
                     isActive
-                      ? 'bg-gradient-to-r from-primary-container to-secondary text-surface-container-lowest font-bold border-transparent shadow-lg scale-105'
+                      ? 'bg-gradient-to-r from-primary-container to-secondary text-white font-bold border-transparent shadow-lg scale-105'
                       : 'bg-surface-container/60 text-on-surface-variant border-outline-variant/30 hover:text-primary hover:border-primary/40'
                   }`}
                 >
@@ -644,9 +645,9 @@ export default function MenuPage() {
 
       {/* ── LIVE INTERACTIVE EMBED CARD ── */}
       <div className="max-w-[1240px] mx-auto px-5 sm:px-8 -mt-6 relative z-10">
-        <div className="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-[#2a0b13] via-[#1d060c] to-[#2a0b13] border border-amber-400/30 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-surface-container-high/80 via-surface-container/90 to-surface-container-high/80 border border-secondary/30 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-300 shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-700 shrink-0">
               <UtensilsCrossed className="w-6 h-6" />
             </div>
             <div>
@@ -654,7 +655,7 @@ export default function MenuPage() {
                 <h3 className="font-serif text-base sm:text-lg font-bold text-on-surface">
                   Official Interactive Digital Menu
                 </h3>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-green-500/20 text-green-300 border border-green-500/30">
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-600 border border-green-500/30">
                   Live
                 </span>
               </div>
@@ -694,7 +695,7 @@ export default function MenuPage() {
             href={MENU_LIVE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-amber-300 hover:text-amber-200 font-semibold flex items-center gap-1.5"
+            className="text-xs text-amber-700 hover:text-amber-700 font-semibold flex items-center gap-1.5"
           >
             <span>View all in live menu</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -705,7 +706,7 @@ export default function MenuPage() {
           {signatureDishes.map((dish) => (
             <div
               key={dish.id}
-              className="group rounded-3xl overflow-hidden bg-gradient-to-b from-[#240b12] to-[#160509] border border-primary/30 hover:border-amber-400/50 shadow-xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between"
+              className="group rounded-3xl overflow-hidden bg-gradient-to-b from-surface-container-lowest to-surface-container-low border border-outline-variant/40 hover:border-primary/50 shadow-xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between"
             >
               <div>
                 <div className="relative h-52 overflow-hidden">
@@ -715,11 +716,11 @@ export default function MenuPage() {
                     className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#160509] via-transparent to-black/25" />
-                  <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-black/75 backdrop-blur-md text-amber-300 font-bold uppercase text-[10px] tracking-wider border border-amber-400/30">
+                  <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-black/10" />
+                  <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-white/85 backdrop-blur-md text-amber-700 font-bold uppercase text-[10px] tracking-wider border border-amber-400/30">
                     {dish.badge}
                   </span>
-                  <span className="absolute bottom-2.5 right-3 font-serif text-xl font-bold text-amber-300 drop-shadow">
+                  <span className="absolute bottom-2.5 right-3 font-serif text-xl font-bold text-amber-700 drop-shadow">
                     ₹{dish.price}
                   </span>
                 </div>
@@ -745,7 +746,7 @@ export default function MenuPage() {
               </div>
 
               <div className="px-5 pb-5 pt-2 border-t border-outline-variant/20 flex items-center justify-between">
-                <span className="text-[10px] text-amber-300/80 font-bold uppercase tracking-wider">
+                <span className="text-[10px] text-amber-700/80 font-bold uppercase tracking-wider">
                   Pure Veg Specialty
                 </span>
                 <a
@@ -794,7 +795,7 @@ export default function MenuPage() {
               <p className="text-xs text-on-surface-variant mt-1">Try clearing your search query or selecting another category.</p>
               <button
                 onClick={() => { setSearchQuery(''); setActiveCategory('All Items'); }}
-                className="mt-4 px-4 py-2 rounded-xl bg-primary-container text-surface-container-lowest text-xs font-bold uppercase tracking-wider cursor-pointer"
+                className="mt-4 px-4 py-2 rounded-xl bg-primary-container text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
               >
                 Reset Filter
               </button>
@@ -817,7 +818,7 @@ export default function MenuPage() {
                           loading="lazy"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-surface-container/90 via-transparent to-black/20" />
-                        <span className="absolute bottom-2.5 left-3 text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-black/70 backdrop-blur-md text-amber-300 border border-amber-400/30">
+                        <span className="absolute bottom-2.5 left-3 text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-black/40 backdrop-blur-md text-amber-700 border border-amber-400/30">
                           Authentic Plating
                         </span>
                       </div>
@@ -838,7 +839,7 @@ export default function MenuPage() {
                         )}
                       </div>
 
-                      <span className="font-serif text-lg sm:text-xl font-bold text-amber-300 shrink-0">
+                      <span className="font-serif text-lg sm:text-xl font-bold text-amber-700 shrink-0">
                         ₹{item.price}
                       </span>
                     </div>
@@ -864,7 +865,7 @@ export default function MenuPage() {
                       href={MENU_LIVE_URL}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[11px] text-amber-300/90 hover:text-amber-200 font-semibold flex items-center gap-1 hover:underline transition-all"
+                      className="text-[11px] text-amber-700/90 hover:text-amber-700 font-semibold flex items-center gap-1 hover:underline transition-all"
                       title="View on interactive menu"
                     >
                       <span>View details</span>
@@ -877,7 +878,7 @@ export default function MenuPage() {
           )}
 
           {/* ── MAHARAJA CARD REWARD CTA FOOTER ── */}
-          <div className="mt-16 p-6 sm:p-10 rounded-3xl bg-gradient-to-r from-[#240b12] via-[#1a060c] to-[#240b12] border border-primary/40 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="mt-16 p-6 sm:p-10 rounded-3xl bg-gradient-to-r from-surface-container-high via-surface-container to-surface-container-high border border-primary/30 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-1.5 text-center md:text-left">
               <span className="text-xs uppercase tracking-[0.2em] text-secondary font-bold">
                 Dine &amp; Earn Royal Rewards
@@ -893,7 +894,7 @@ export default function MenuPage() {
             <div className="flex flex-wrap items-center gap-3 shrink-0">
               <Link
                 to="/card"
-                className="px-6 py-3 rounded-2xl bg-gradient-to-r from-primary-container via-[#de6b90] to-secondary text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-lg hover:brightness-110 transition-all no-underline"
+                className="px-6 py-3 rounded-2xl bg-gradient-to-r from-primary-container via-primary to-secondary text-white text-xs uppercase tracking-wider font-bold shadow-lg hover:brightness-110 transition-all no-underline"
               >
                 Open My Maharaja Card
               </Link>

@@ -46,7 +46,7 @@ export default function GuestLayout() {
       {/* Sidebar Overlay (Mobile) */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/75 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-white/85 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
           aria-hidden="true"
         />
@@ -54,24 +54,26 @@ export default function GuestLayout() {
 
       {/* Royal Patron Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-[260px] sm:w-64 glass-sidebar text-on-surface transition-transform duration-300 flex flex-col ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-72 glass-sidebar text-on-surface transition-transform duration-300 flex flex-col ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
         role="navigation"
         aria-label="Guest Navigation"
       >
         {/* Brand Crest */}
-        <div className="p-4 sm:p-5 border-b border-outline-variant/20">
+        <div className="p-4 sm:p-5 border-b border-outline-variant/30">
           <div className="flex items-center justify-between">
-            <Link to="/guest/card" className="flex items-center gap-2.5 sm:gap-3 no-underline group">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl glass-surface border border-primary/40 flex items-center justify-center shadow-[0_4px_16px_rgba(222,107,144,0.3)] group-hover:scale-105 transition-transform">
-                <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <Link to="/guest/card" className="flex items-center gap-3 no-underline group">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#c99a4e] via-[#deb268] to-[#996d2b] p-[2px] shadow-md flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <div className="w-full h-full rounded-full bg-white flex items-center justify-center border border-[#d4a66a]/40">
+                  <Crown className="w-4 h-4 text-[#9b284e]" />
+                </div>
               </div>
               <div className="min-w-0">
-                <div className="font-serif text-xs sm:text-sm font-bold text-on-surface tracking-wider group-hover:text-primary transition-colors truncate">
+                <div className="font-serif text-sm font-bold text-on-surface tracking-wider group-hover:text-primary transition-colors truncate">
                   URBAN MAHARAJA
                 </div>
-                <div className="text-[9px] sm:text-[10px] text-secondary font-mono tracking-[0.15em] sm:tracking-[0.2em] uppercase font-semibold">
+                <div className="text-[10px] text-secondary font-mono tracking-[0.2em] uppercase font-bold">
                   Patron Portal
                 </div>
               </div>
@@ -87,26 +89,32 @@ export default function GuestLayout() {
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex-1 p-3 sm:p-3.5 space-y-1 sm:space-y-1.5 overflow-y-auto">
+        <nav className="flex-1 p-3.5 space-y-1.5 overflow-y-auto">
           {guestNavLinks.map(({ to, label, icon: Icon, badge }) => {
             const isActive = location.pathname === to;
             return (
               <Link
                 key={to}
                 to={to}
-                className={`flex items-center justify-between px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl text-[10px] sm:text-xs uppercase tracking-wider font-semibold no-underline transition-all ${
+                className={`flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-bold no-underline transition-all ${
                   isActive
-                    ? 'glass-chip-rose text-primary shadow-[0_4px_14px_rgba(222,107,144,0.2)]'
-                    : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/60'
+                    ? 'bg-gradient-to-r from-primary to-primary-container text-white shadow-[0_6px_20px_-3px_rgba(155,40,78,0.4)]'
+                    : 'text-on-surface-variant hover:text-on-surface hover:bg-white/80 border border-transparent hover:border-outline-variant/40'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >
-                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                  <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${isActive ? 'text-primary' : 'text-on-surface-variant'}`} />
+                <div className="flex items-center gap-3 min-w-0">
+                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-secondary'}`} />
                   <span className="truncate">{label}</span>
                 </div>
                 {badge && (
-                  <span className="text-[8px] sm:text-[9px] px-1.5 sm:px-2 py-0.5 rounded-full glass-chip text-secondary border border-secondary/30 font-bold lowercase tracking-normal shrink-0 ml-1">
+                  <span
+                    className={`text-[9px] px-2 py-0.5 rounded-full font-mono font-bold uppercase tracking-wider shrink-0 ml-1.5 ${
+                      isActive
+                        ? 'bg-white/25 text-white border border-white/30'
+                        : 'bg-amber-100 text-amber-900 border border-amber-300'
+                    }`}
+                  >
                     {badge}
                   </span>
                 )}
@@ -116,22 +124,22 @@ export default function GuestLayout() {
         </nav>
 
         {/* Noble Member Badge & User Footer */}
-        <div className="p-3 sm:p-4 border-t border-outline-variant/20 bg-surface-container/30">
+        <div className="p-4 border-t border-outline-variant/30 bg-surface-container-low/70">
           <div className="flex items-center justify-between">
             <div className="min-w-0 pr-2">
-              <p className="text-[11px] sm:text-xs font-semibold text-on-surface truncate">{user?.name || 'Noble Patron'}</p>
-              <p className="text-[9px] sm:text-[10px] text-secondary font-mono uppercase tracking-wider truncate flex items-center gap-1">
-                <Sparkles className="w-2.5 h-2.5 shrink-0" />
-                <span>Court Member</span>
+              <p className="text-xs font-bold text-on-surface truncate">{user?.name || 'Noble Patron'}</p>
+              <p className="text-[10px] text-secondary font-mono uppercase tracking-wider truncate flex items-center gap-1 font-semibold">
+                <Sparkles className="w-3 h-3 text-secondary shrink-0" />
+                <span>Imperial Dining Member</span>
               </p>
             </div>
             <button
               onClick={handleLogout}
-              className="p-1.5 sm:p-2 rounded-lg hover:bg-surface-container-highest transition-colors text-on-surface-variant hover:text-primary cursor-pointer"
+              className="p-2 rounded-xl hover:bg-surface-container-high transition-colors text-on-surface-variant hover:text-primary cursor-pointer border border-transparent hover:border-outline-variant/40"
               title="Leave Court (Logout)"
               aria-label="Logout"
             >
-              <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <LogOut className="w-4 h-4" />
             </button>
           </div>
         </div>

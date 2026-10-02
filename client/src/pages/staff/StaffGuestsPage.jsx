@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { adminApi } from '../../services/api';
 import { Search, ChevronLeft, ChevronRight, Eye, ShieldCheck, Stamp } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -36,7 +37,7 @@ export default function StaffGuestsPage() {
   const maskPhone = (phone) => phone ? `${phone.slice(0, 4)}****${phone.slice(-2)}` : '—';
 
   return (
-    <div className="space-y-6 animate-fadeIn text-on-surface">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="space-y-6 animate-fadeIn text-on-surface">
       <div>
         <h1 className="font-serif text-2xl text-on-surface font-bold">Patron Lookup &amp; Directory</h1>
         <p className="text-xs text-on-surface-variant mt-0.5 font-sans">
@@ -47,18 +48,18 @@ export default function StaffGuestsPage() {
       {/* Search Input Bar */}
       <form onSubmit={handleSearch} className="flex gap-2.5">
         <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by patron name, email, or mobile number..."
-            className="w-full pl-10 pr-4 py-3 bg-surface-container/90 border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-secondary transition-colors"
+            className="w-full pl-10 pr-4 py-3 bg-white border border-[#e0c8b0] rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary shadow-xs transition-colors"
           />
         </div>
         <button
           type="submit"
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-secondary via-[#f3d3aa] to-primary-container text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 cursor-pointer"
+          className="px-7 py-3 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-white text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 cursor-pointer"
         >
           Search
         </button>
@@ -146,6 +147,6 @@ export default function StaffGuestsPage() {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

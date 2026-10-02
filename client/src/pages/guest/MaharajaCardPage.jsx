@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { loyaltyApi } from '../../services/api';
 import MaharajaCard from '../../components/loyalty/MaharajaCard';
@@ -88,7 +89,7 @@ export default function MaharajaCardPage() {
         <p className="text-on-surface-variant text-sm mb-4">{error}</p>
         <button
           onClick={loadCard}
-          className="px-6 py-2.5 rounded-full bg-gradient-to-r from-primary-container to-secondary text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 cursor-pointer"
+          className="px-6 py-2.5 rounded-full bg-gradient-to-r from-primary-container to-secondary text-white text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 cursor-pointer"
         >
           Try Again
         </button>
@@ -101,7 +102,12 @@ export default function MaharajaCardPage() {
   const isCardFinished = (card?.currentStamps || 0) >= (card?.targetStamps || 5);
 
   return (
-    <div className="space-y-8 animate-slideUp text-on-surface">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="space-y-8 text-on-surface"
+    >
       {/* Welcome Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-outline-variant/20">
         <div>
@@ -155,6 +161,30 @@ export default function MaharajaCardPage() {
             isComplete={isCardFinished}
           />
 
+          {/* Quick Bridge to Dedicated Stamp & Seal Desk */}
+          <div className="p-4 rounded-2xl bg-white border border-[#e0c8b0] shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
+                <Stamp className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-on-surface">
+                  Dedicated Stamp & Seal Desk
+                </p>
+                <p className="text-[11px] text-on-surface-variant/80">
+                  Submit dining bills, track real-time concierge approvals, and inspect milestone perks.
+                </p>
+              </div>
+            </div>
+            <Link
+              to="/guest/stamps"
+              className="px-4 py-2 rounded-xl bg-primary-container text-white text-xs font-bold uppercase tracking-wider hover:brightness-110 shadow-xs no-underline flex items-center gap-1.5 shrink-0"
+            >
+              <span>Open Desk</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
           {/* Cycle Completed Milestone Celebration */}
           {isCardFinished && (
             <div className="p-6 rounded-2xl bg-gradient-to-br from-primary-container/20 via-surface-container to-secondary/20 border border-primary/40 backdrop-blur-xl shadow-xl text-center space-y-3">
@@ -170,7 +200,7 @@ export default function MaharajaCardPage() {
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                 <Link
                   to="/guest/rewards"
-                  className="px-5 py-2.5 rounded-xl bg-primary-container text-surface-container-lowest text-xs uppercase tracking-wider font-bold hover:brightness-110 shadow no-underline inline-flex items-center gap-1.5"
+                  className="px-5 py-2.5 rounded-xl bg-primary-container text-white text-xs uppercase tracking-wider font-bold hover:brightness-110 shadow no-underline inline-flex items-center gap-1.5"
                 >
                   <Gift className="w-4 h-4" />
                   <span>Claim Your Reward</span>
@@ -189,27 +219,27 @@ export default function MaharajaCardPage() {
 
           {/* Loyalty Stats Overview */}
           <div className="grid grid-cols-3 gap-3">
-            <div className="p-4 rounded-2xl bg-surface-container/70 border border-outline-variant/30 text-center">
-              <span className="text-[10px] uppercase tracking-wider text-on-surface-variant font-semibold block mb-1">
+            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant/80 block mb-1">
                 Current Seals
               </span>
-              <span className="text-xl font-serif font-bold text-primary">
+              <span className="text-xl sm:text-2xl font-serif font-black text-primary">
                 {card?.currentStamps || 0} / {card?.targetStamps || 5}
               </span>
             </div>
-            <div className="p-4 rounded-2xl bg-surface-container/70 border border-outline-variant/30 text-center">
-              <span className="text-[10px] uppercase tracking-wider text-on-surface-variant font-semibold block mb-1">
+            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant/80 block mb-1">
                 Completed Cards
               </span>
-              <span className="text-xl font-serif font-bold text-secondary">
+              <span className="text-xl sm:text-2xl font-serif font-black text-secondary">
                 {totalCompletedCycles} Passes
               </span>
             </div>
-            <div className="p-4 rounded-2xl bg-surface-container/70 border border-outline-variant/30 text-center">
-              <span className="text-[10px] uppercase tracking-wider text-on-surface-variant font-semibold block mb-1">
+            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant/80 block mb-1">
                 Total Visits
               </span>
-              <span className="text-xl font-serif font-bold text-on-surface">
+              <span className="text-xl sm:text-2xl font-serif font-black text-on-surface">
                 {totalApprovedStamps} Seals
               </span>
             </div>
@@ -219,12 +249,12 @@ export default function MaharajaCardPage() {
         {/* Right Column: Cycle Progression & Rewards (5 Cols) */}
         <div className="lg:col-span-5 space-y-6">
           {/* How Card Cycles Work */}
-          <div className="p-6 rounded-2xl bg-surface-container/85 border border-outline-variant/30 backdrop-blur-xl shadow-lg">
+          <div className="p-6 rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)]">
             <h3 className="font-serif text-base font-bold text-on-surface mb-2 flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-primary" />
               <span>Maharaja Card Cycle Progression</span>
             </h3>
-            <p className="text-xs text-on-surface-variant leading-relaxed mb-4">
+            <p className="text-xs text-on-surface-variant/80 leading-relaxed mb-4">
               Every 5 dining visits completes a full cycle and awards an exclusive fine-dining perk. Once completed, your pass rolls over into Cycle 2, Cycle 3, and beyond with higher privileges!
             </p>
 
@@ -233,22 +263,24 @@ export default function MaharajaCardPage() {
               {allCards.map((c) => (
                 <div
                   key={c._id}
-                  className={`p-3 rounded-xl border flex items-center justify-between text-xs transition-colors ${
+                  className={`p-3.5 rounded-xl border flex items-center justify-between text-xs transition-colors ${
                     c.status === 'ACTIVE'
-                      ? 'bg-primary-container/15 border-primary/40 text-on-surface'
-                      : 'bg-surface-container-high/60 border-outline-variant/25 text-on-surface-variant'
+                      ? 'bg-primary-container/10 border-primary/30 text-on-surface'
+                      : 'bg-[#fdfaf6] border-[#ede0d2] text-on-surface-variant'
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[16px] text-primary">
+                    <span className="material-symbols-outlined text-[18px] text-primary">
                       {c.status === 'ACTIVE' ? 'military_tech' : 'check_circle'}
                     </span>
-                    <span className="font-semibold">Cycle #{c.cycleNumber}</span>
+                    <span className="font-bold text-on-surface">Cycle #{c.cycleNumber}</span>
                   </div>
                   <div className="flex items-center gap-2 font-mono">
-                    <span>{c.currentStamps}/{c.targetStamps} Seals</span>
-                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
-                      c.status === 'ACTIVE' ? 'bg-primary-container/30 text-primary' : 'bg-green-500/20 text-green-300'
+                    <span className="font-semibold">{c.currentStamps}/{c.targetStamps} Seals</span>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                      c.status === 'ACTIVE'
+                        ? 'bg-primary-container text-white shadow-xs'
+                        : 'bg-emerald-50 text-emerald-700 border border-emerald-300'
                     }`}>
                       {c.status}
                     </span>
@@ -259,19 +291,19 @@ export default function MaharajaCardPage() {
           </div>
 
           {/* Available Rewards Vault */}
-          <div className="p-6 rounded-2xl bg-surface-container/85 border border-outline-variant/30 backdrop-blur-xl shadow-lg">
+          <div className="p-6 rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-serif text-base font-bold text-on-surface flex items-center gap-2">
                 <Gift className="w-4 h-4 text-secondary" />
                 <span>Unlocked Reward Vouchers</span>
               </h3>
-              <Link to="/guest/rewards" className="text-xs text-secondary hover:text-primary transition-colors no-underline font-medium">
+              <Link to="/guest/rewards" className="text-xs text-primary hover:text-primary-container transition-colors no-underline font-bold">
                 View All →
               </Link>
             </div>
 
             {availableRedemptions.length === 0 ? (
-              <div className="p-5 rounded-xl bg-surface-container-lowest/60 border border-outline-variant/20 text-center">
+              <div className="p-5 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] text-center">
                 <p className="text-xs text-on-surface-variant/70 leading-relaxed">
                   No unredeemed vouchers at this moment. Complete your 5 seals to unlock your complimentary royal treat!
                 </p>
@@ -281,13 +313,13 @@ export default function MaharajaCardPage() {
                 {availableRedemptions.map((r) => (
                   <div
                     key={r._id}
-                    className="p-3.5 rounded-xl bg-surface-container-high/80 border border-primary/30 flex items-center justify-between"
+                    className="p-3.5 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] hover:border-primary/40 flex items-center justify-between transition-colors"
                   >
                     <div>
-                      <p className="font-semibold text-on-surface text-xs">{r.rewardId?.title || 'Complimentary Perk'}</p>
-                      <p className="text-[11px] text-on-surface-variant mt-0.5">{r.rewardId?.description || 'Valid on your next dine-in'}</p>
+                      <p className="font-bold text-on-surface text-xs">{r.rewardId?.title || 'Complimentary Perk'}</p>
+                      <p className="text-[11px] text-on-surface-variant/80 mt-0.5">{r.rewardId?.description || 'Valid on your next dine-in'}</p>
                     </div>
-                    <span className="px-2.5 py-1 rounded-full bg-green-500/20 text-green-300 border border-green-500/30 text-[10px] font-bold uppercase">
+                    <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-300 text-[10px] font-bold uppercase">
                       Ready
                     </span>
                   </div>
@@ -305,6 +337,6 @@ export default function MaharajaCardPage() {
         onSubmit={handleSubmitBill}
         submitting={requestingStamp}
       />
-    </div>
+    </motion.div>
   );
 }

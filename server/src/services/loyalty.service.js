@@ -337,48 +337,18 @@ const approveStamp = async (stampId, staffId, auditCtx = {}) => {
     if (card.currentStamps >= card.targetStamps) {
       card.status = LOYALTY_STATUS.COMPLETED;
 
-      // Find eligible active rewards
-      const rewards = await Reward.find({
-        isActive: true,
-        requiredStamps: { $lte: card.targetStamps },
-      }).session(session);
+      // NOTE: We no longer auto-create redemptions for ALL rewards.
+      // Instead, the guest will choose ONE reward to claim via the
+      // claimReward endpoint. We just mark the card as completed.
+      // The eligible rewards list is shown to the guest on the frontend.
 
-      // Create reward redemptions
-      for (const reward of rewards) {
-        const existing = await RewardRedemption.findOne({
-          guestId: stamp.guestId,
-          rewardId: reward._id,
-          loyaltyCardId: card._id,
-        }).session(session);
-
-        if (!existing) {
-          const expiresAt = new Date();
-          expiresAt.setDate(expiresAt.getDate() + reward.validityDays);
-
-          await RewardRedemption.create(
-            [
-              {
-                guestId: stamp.guestId,
-                rewardId: reward._id,
-                loyaltyCardId: card._id,
-                status: REDEMPTION_STATUS.AVAILABLE,
-                expiresAt,
-              },
-            ],
-            { session }
-          );
-
-          rewardUnlocked = reward;
-
-          createAuditLog({
-            ...auditCtx,
-            action: AUDIT_ACTIONS.REWARD_UNLOCKED,
-            entityType: ENTITY_TYPES.REDEMPTION,
-            entityId: reward._id,
-            metadata: { guestId: stamp.guestId, rewardTitle: reward.title },
-          });
-        }
-      }
+      createAuditLog({
+        ...auditCtx,
+        action: AUDIT_ACTIONS.REWARD_UNLOCKED,
+        entityType: ENTITY_TYPES.LOYALTY_CARD,
+        entityId: card._id,
+        metadata: { guestId: stamp.guestId, cycleNumber: card.cycleNumber },
+      });
     }
 
     await card.save({ session });
@@ -477,6 +447,68 @@ const getGuestHistory = async (guestId) => {
   return history;
 };
 
+/**
+ * Claim ONE reward from the catalog for a completed loyalty card.
+ * Each completed card cycle allows the guest to pick exactly ONE reward.
+ */
+const claimReward = async (guestId, rewardId, loyaltyCardId, auditCtx = {}) => {
+  // 1. Verify the loyalty card exists and is completed
+  const card = await LoyaltyCard.findOne({
+    _id: loyaltyCardId,
+    guestId,
+    status: LOYALTY_STATUS.COMPLETED,
+  });
+  if (!card) {
+    throw new NotFoundError('No completed loyalty card found for this cycle');
+  }
+
+  // 2. Check if guest already claimed a reward for this card cycle
+  const existingClaim = await RewardRedemption.findOne({
+    guestId,
+    loyaltyCardId: card._id,
+  });
+  if (existingClaim) {
+    throw new ConflictError('You have already claimed a reward for this card cycle. Only one reward per cycle is allowed.');
+  }
+
+  // 3. Verify the reward exists and is active
+  const reward = await Reward.findOne({
+    _id: rewardId,
+    isActive: true,
+    requiredStamps: { $lte: card.targetStamps },
+  });
+  if (!reward) {
+    throw new NotFoundError('Reward not found or not eligible for your card');
+  }
+
+  // 4. Create the redemption
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + reward.validityDays);
+  const voucherCode = 'UM-RW-' + crypto.randomBytes(3).toString('hex').toUpperCase();
+
+  const redemption = await RewardRedemption.create({
+    guestId,
+    rewardId: reward._id,
+    loyaltyCardId: card._id,
+    code: voucherCode,
+    status: REDEMPTION_STATUS.AVAILABLE,
+    expiresAt,
+  });
+
+  // Invalidate caches
+  cache.invalidateGuestCaches(guestId).catch(() => {});
+
+  createAuditLog({
+    ...auditCtx,
+    action: AUDIT_ACTIONS.REWARD_UNLOCKED,
+    entityType: ENTITY_TYPES.REDEMPTION,
+    entityId: redemption._id,
+    metadata: { guestId, rewardTitle: reward.title, cycleNumber: card.cycleNumber },
+  });
+
+  return { redemption, reward, card };
+};
+
 module.exports = {
   getOrCreateActiveCard,
   getGuestLoyaltyCard,
@@ -486,4 +518,5 @@ module.exports = {
   rejectStamp,
   getGuestStamps,
   getGuestHistory,
+  claimReward,
 };

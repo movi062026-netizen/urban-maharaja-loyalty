@@ -62,6 +62,8 @@ export const loyaltyApi = {
   },
   approveStamp: (stampId) => api.patch(`/loyalty/stamps/${stampId}/approve`),
   rejectStamp: (stampId, reason) => api.patch(`/loyalty/stamps/${stampId}/reject`, { reason }),
+  claimReward: (data) => api.post('/loyalty/rewards/claim', data),
+  redeemReward: (idOrCode) => api.post(`/rewards/${idOrCode}/redeem`),
 };
 
 export const rewardApi = {

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import MaharajaCard from '../../components/loyalty/MaharajaCard';
 import toast from 'react-hot-toast';
 
@@ -18,7 +19,12 @@ export default function HomePage() {
   return (
     <article className="w-full max-w-full bg-background min-h-screen text-on-surface overflow-x-hidden">
       {/* ── 1. HERO GRAND ENTRY ───────────────────────────────────────── */}
-      <section className="relative w-full max-w-full pt-8 sm:pt-12 pb-16 sm:pb-20 md:py-24 overflow-hidden bg-gradient-to-b from-surface-container-lowest via-surface to-surface-container-low" aria-label="Hero">
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        className="relative w-full max-w-full pt-8 sm:pt-12 pb-16 sm:pb-20 md:py-24 overflow-hidden bg-gradient-to-b from-surface-container-lowest via-surface to-surface-container-low" aria-label="Hero"
+      >
         {/* Ambient glowing orbs & regal rosewood aura */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] max-w-full h-[550px] bg-primary-container/15 rounded-full blur-[140px]" />
@@ -45,19 +51,29 @@ export default function HomePage() {
 
         <div className="relative max-w-[1200px] mx-auto px-3 sm:px-6 lg:px-12 flex flex-col items-center text-center">
           {/* Regal Crest Artwork Emblem */}
-          <div className="relative group cursor-pointer mb-6 transition-all duration-700 hover:scale-105">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.2, type: 'spring', stiffness: 120 }}
+            className="relative group cursor-pointer mb-6 transition-all duration-700 hover:scale-105"
+          >
             <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-primary-container/40 via-secondary/30 to-primary-container/40 blur-xl opacity-80 group-hover:opacity-100 transition-opacity" />
-            <div className="relative p-2 rounded-3xl bg-surface-container-high/90 backdrop-blur-xl border border-primary/40 shadow-[0_20px_45px_-10px_rgba(24,10,12,0.95),0_0_30px_rgba(222,107,144,0.3)] flex items-center justify-center">
+            <div className="relative p-2 rounded-3xl bg-surface-container-high/90 backdrop-blur-xl border border-primary/40 shadow-[0_20px_45px_-10px_rgba(160,58,94,0.15),0_0_30px_rgba(222,107,144,0.1)] flex items-center justify-center">
               <img
                 alt="Urban Maharaja Logo"
-                className="w-28 h-28 sm:w-36 sm:h-36 object-cover rounded-2xl drop-shadow-[0_8px_16px_rgba(0,0,0,0.7)]"
+                className="w-28 h-28 sm:w-36 sm:h-36 object-cover rounded-2xl drop-shadow-[0_8px_16px_rgba(46,26,20,0.15)]"
                 src="/logo.png"
               />
             </div>
-          </div>
+          </motion.div>
 
           {/* Royal Distinction Pill */}
-          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-surface-container/80 backdrop-blur-md border border-primary/30 shadow-md mb-6">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-surface-container/80 backdrop-blur-md border border-primary/30 shadow-md mb-6"
+          >
             <span className="w-2.5 h-2.5 rounded-full bg-primary animate-ping" />
             <span className="text-xs uppercase tracking-[0.25em] text-primary font-semibold">
               Imperial Dining Sanctuary
@@ -66,22 +82,37 @@ export default function HomePage() {
             <span className="text-xs uppercase tracking-[0.2em] text-secondary font-semibold">
               Est. 1928
             </span>
-          </div>
+          </motion.div>
 
           {/* Stately Hero Headline */}
-          <h1 className="font-serif text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-on-surface max-w-4xl tracking-tight leading-[1.2] sm:leading-[1.25] mb-5 sm:mb-6 font-bold">
+          <motion.h1
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.5 }}
+            className="font-serif text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-on-surface max-w-4xl tracking-tight leading-[1.2] sm:leading-[1.25] mb-5 sm:mb-6 font-bold"
+          >
             Where Royalty Meets
             <span className="block mt-2 sm:mt-3 italic bg-gradient-to-r from-primary via-primary-container to-secondary bg-clip-text text-transparent font-normal drop-shadow-[0_2px_14px_rgba(222,107,144,0.3)]">
               Culinary Excellence
             </span>
-          </h1>
+          </motion.h1>
 
-          <p className="font-sans text-sm sm:text-base lg:text-lg text-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-8 sm:mb-10 px-2 sm:px-4">
+          <motion.p
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="font-sans text-sm sm:text-base lg:text-lg text-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-8 sm:mb-10 px-2 sm:px-4"
+          >
             Dine like a Maharaja and immerse in centuries of regal Indian heritage, slow-cooked royal repasts, 24-karat saffron delicacies, and transcendent palace hospitality in Jaipur.
-          </p>
+          </motion.p>
 
           {/* Dual Luxury Call-to-Actions */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 mb-10 sm:mb-14 w-full">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 mb-10 sm:mb-14 w-full"
+          >
             <Link
               to="/loyalty"
               className="relative group inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-full glass-btn-primary text-[10px] sm:text-xs lg:text-sm uppercase tracking-[0.14em] sm:tracking-[0.16em] shadow-[0_12px_28px_rgba(222,107,144,0.35)] hover:shadow-[0_16px_36px_rgba(255,177,198,0.5)] hover:scale-105 transition-all duration-300 no-underline w-full sm:w-auto justify-center"
@@ -100,7 +131,7 @@ export default function HomePage() {
               <span className="material-symbols-outlined text-[20px] text-primary">restaurant_menu</span>
               <span>View Royal Menu</span>
             </Link>
-          </div>
+          </motion.div>
 
           {/* Accolade Ribbon Strip with Rose-Gold Frosted Finish */}
           <div className="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4">
@@ -129,10 +160,16 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* ── 2. THE IMPERIAL PHILOSOPHY & HERITAGE HIGHLIGHT ───────────── */}
-      <section className="relative w-full max-w-full py-20 md:py-28 bg-surface-container-lowest overflow-hidden">
+      <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        className="relative w-full max-w-full py-20 md:py-28 bg-surface-container-lowest overflow-hidden"
+      >
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
           {/* Section Tag */}
           <div className="flex flex-col items-center text-center mb-16">
@@ -148,7 +185,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             {/* Left: Rich Imagery & Arch Motif Composition */}
             <div className="lg:col-span-6 relative">
-              <div className="relative z-10 rounded-3xl overflow-hidden border border-outline-variant/40 shadow-[0_24px_50px_rgba(24,10,12,0.9)] bg-surface-container-high">
+              <div className="relative z-10 rounded-3xl overflow-hidden border border-outline-variant/40 shadow-[0_24px_50px_rgba(46,26,20,0.12)] bg-surface-container-high">
                 <img
                   className="w-full h-80 sm:h-96 md:h-[440px] object-cover hover:scale-105 transition-transform duration-700"
                   alt="Opulent Indian royal banquet interior"
@@ -169,7 +206,7 @@ export default function HomePage() {
               </div>
 
               {/* Secondary floating mini-card */}
-              <div className="hidden sm:flex absolute -bottom-5 -right-5 z-20 items-center gap-4 p-5 rounded-2xl bg-surface-container-high/95 border border-primary/30 backdrop-blur-xl shadow-[0_16px_36px_rgba(0,0,0,0.7)]">
+              <div className="hidden sm:flex absolute -bottom-5 -right-5 z-20 items-center gap-4 p-5 rounded-2xl bg-surface-container-high/95 border border-primary/30 backdrop-blur-xl shadow-[0_16px_36px_rgba(46,26,20,0.1)]">
                 <div className="w-12 h-12 rounded-xl bg-primary-container/25 flex items-center justify-center text-primary">
                   <span className="material-symbols-outlined text-[26px]">hourglass_bottom</span>
                 </div>
@@ -245,10 +282,16 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* ── 3. THE MAHARAJA LOYALTY CARD TEASER ──────────────────────── */}
-      <section className="relative w-full max-w-full py-20 md:py-28 bg-gradient-to-b from-surface to-surface-container-lowest overflow-hidden">
+      <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        className="relative w-full max-w-full py-20 md:py-28 bg-gradient-to-b from-surface to-surface-container-lowest overflow-hidden"
+      >
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary-container/40 border border-secondary/30 text-secondary mb-3">
@@ -322,7 +365,7 @@ export default function HomePage() {
           </div>
 
           {/* Interactive Maharaja Metallic Card Showcase & Tier Preview */}
-          <div className="rounded-3xl p-6 sm:p-10 lg:p-12 bg-surface-container-high/70 border border-outline-variant/40 backdrop-blur-2xl shadow-[0_24px_50px_rgba(24,10,12,0.95)]">
+          <div className="rounded-3xl p-6 sm:p-10 lg:p-12 bg-surface-container-high/70 border border-outline-variant/40 backdrop-blur-2xl shadow-[0_24px_50px_rgba(46,26,20,0.08)]">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               {/* Virtual Glassmorphic Card Graphic */}
               <div className="lg:col-span-5 flex justify-center w-full">
@@ -370,7 +413,7 @@ export default function HomePage() {
                 <div className="flex flex-wrap items-center gap-4 pt-2">
                   <Link
                     to="/loyalty"
-                    className="px-7 py-3 rounded-full bg-gradient-to-r from-primary-container to-secondary text-surface-container-lowest text-xs uppercase tracking-[0.16em] font-bold hover:brightness-110 transition-all shadow-md no-underline"
+                    className="px-7 py-3 rounded-full bg-gradient-to-r from-primary-container to-secondary text-white text-xs uppercase tracking-[0.16em] font-bold hover:brightness-110 transition-all shadow-md no-underline"
                   >
                     Claim Digital Card
                   </Link>
@@ -385,10 +428,16 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* ── 4. CHEF'S TASTING FLIGHT & SIGNATURE CREATIONS ────────────── */}
-      <section className="relative w-full max-w-full py-20 md:py-28 bg-surface-container-low overflow-hidden">
+      <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        className="relative w-full max-w-full py-20 md:py-28 bg-surface-container-low overflow-hidden"
+      >
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
             <div>
@@ -615,10 +664,16 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* ── 5. CRITICS' ENCOMIUM & PALACE RESERVATION CONCIERGE ────────── */}
-      <section className="relative w-full max-w-full py-20 md:py-28 bg-surface overflow-hidden">
+      <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        className="relative w-full max-w-full py-20 md:py-28 bg-surface overflow-hidden"
+      >
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
           {/* Gastronome Endorsement Card */}
           <div className="mb-16 p-8 sm:p-12 lg:p-14 rounded-3xl bg-surface-container-low/80 border border-primary/25 backdrop-blur-2xl shadow-xl text-center relative overflow-hidden">
@@ -691,7 +746,7 @@ export default function HomePage() {
 
                 <button
                   type="submit"
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-primary-container to-secondary hover:brightness-110 text-surface-container-lowest text-xs uppercase tracking-[0.16em] font-bold shadow-md transition-all cursor-pointer"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-primary-container to-secondary hover:brightness-110 text-white text-xs uppercase tracking-[0.16em] font-bold shadow-md transition-all cursor-pointer"
                 >
                   Confirm Seat
                 </button>
@@ -699,7 +754,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
     </article>
   );
 }

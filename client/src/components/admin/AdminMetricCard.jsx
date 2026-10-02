@@ -1,13 +1,25 @@
 export default function AdminMetricCard({ title, value, icon: Icon, change, trend, subtitle, color = 'primary' }) {
   const colorStyles = {
-    primary: 'bg-primary-container/20 border-primary/40 text-primary shadow-[0_0_12px_rgba(222,107,144,0.25)]',
-    secondary: 'bg-secondary/20 border-secondary/40 text-secondary shadow-[0_0_12px_rgba(228,193,148,0.25)]',
-    green: 'bg-green-500/20 border-green-500/40 text-green-400 shadow-[0_0_12px_rgba(74,222,128,0.25)]',
-    amber: 'bg-amber-500/20 border-amber-500/40 text-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.25)]',
+    primary: 'bg-primary-container/25 border-primary/30 text-primary',
+    secondary: 'bg-secondary/15 border-secondary/30 text-secondary',
+    green: 'bg-emerald-50 border-emerald-500/30 text-emerald-600',
+    amber: 'bg-amber-50 border-amber-500/30 text-amber-600',
+  };
+
+  const glowStyles = {
+    primary: 'shadow-[0_0_18px_rgba(160,58,94,0.12)]',
+    secondary: 'shadow-[0_0_18px_rgba(228,193,148,0.15)]',
+    green: 'shadow-[0_0_18px_rgba(16,185,129,0.12)]',
+    amber: 'shadow-[0_0_18px_rgba(217,119,6,0.12)]',
   };
 
   return (
-    <div className="glass-panel-elevated rounded-[24px] p-5 sm:p-6 flex items-center justify-between transition-all duration-300 hover:scale-[1.02] hover:border-primary/40 text-on-surface relative overflow-hidden group">
+    <div className="glass-panel-elevated rounded-[24px] p-5 sm:p-6 flex items-center justify-between transition-all duration-500 hover:scale-[1.03] hover:border-primary/40 text-on-surface relative overflow-hidden group">
+      {/* Subtle ambient glow on hover */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary-container/10 rounded-full blur-3xl" />
+      </div>
+
       <div className="relative z-10">
         <span className="text-[10px] sm:text-xs uppercase font-mono tracking-wider text-on-surface-variant font-semibold block mb-1">
           {title}
@@ -17,7 +29,7 @@ export default function AdminMetricCard({ title, value, icon: Icon, change, tren
             {value}
           </span>
           {change && (
-            <span className={`text-xs font-semibold ${trend === 'up' ? 'text-green-400' : 'text-primary'}`}>
+            <span className={`text-xs font-semibold ${trend === 'up' ? 'text-emerald-600' : 'text-primary'}`}>
               {change}
             </span>
           )}
@@ -29,9 +41,9 @@ export default function AdminMetricCard({ title, value, icon: Icon, change, tren
 
       {Icon && (
         <div
-          className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center border shrink-0 transition-transform group-hover:scale-110 ${
+          className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center border shrink-0 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 ${
             colorStyles[color] || colorStyles.primary
-          }`}
+          } ${glowStyles[color] || glowStyles.primary}`}
         >
           <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
         </div>

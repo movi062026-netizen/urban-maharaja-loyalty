@@ -12,11 +12,11 @@ export default function StaffLiveQueue({ pendingRequests = [], onApprove, onReje
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0" aria-hidden="true" />
-            <h2 className="font-serif text-sm sm:text-base font-bold text-amber-200">
+            <h2 className="font-serif text-sm sm:text-base font-bold text-amber-700">
               Awaiting Floor Seal Verification ({pendingRequests.length})
             </h2>
           </div>
-          <span className="text-[9px] sm:text-[11px] text-amber-300/80 font-mono uppercase tracking-wider font-semibold">
+          <span className="text-[9px] sm:text-[11px] text-amber-700/80 font-mono uppercase tracking-wider font-semibold">
             Live Patron Dining Requests (Cloudinary WebP Bills)
           </span>
         </div>
@@ -63,7 +63,7 @@ export default function StaffLiveQueue({ pendingRequests = [], onApprove, onReje
                     <button
                       type="button"
                       onClick={() => setSelectedBill({ url: p.billUrl, guestName, billNumber: p.billNumber, billAmount: p.billAmount })}
-                      className="relative group shrink-0 w-14 h-14 rounded-xl border border-primary/40 overflow-hidden bg-black/40 hover:scale-105 transition-all cursor-pointer"
+                      className="relative group shrink-0 w-14 h-14 rounded-xl border border-primary/40 overflow-hidden bg-surface-container hover:scale-105 transition-all cursor-pointer"
                       title="Inspect Cloudinary WebP Receipt"
                     >
                       <img
@@ -84,13 +84,13 @@ export default function StaffLiveQueue({ pendingRequests = [], onApprove, onReje
 
                 {/* Anti-Fraud Warning Pill */}
                 {isHighRisk && (
-                  <div className="p-2 rounded-xl bg-amber-500/15 border border-amber-500/30 text-[10px] text-amber-300 space-y-1">
+                  <div className="p-2 rounded-xl bg-amber-500/15 border border-amber-500/30 text-[10px] text-amber-700 space-y-1">
                     <div className="flex items-center gap-1 font-bold">
-                      <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+                      <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-600" />
                       <span>Fraud Risk Score: {p.fraudRiskScore || 30}/100</span>
                     </div>
                     {p.fraudWarnings && p.fraudWarnings.map((warn, i) => (
-                      <p key={i} className="text-[9px] leading-tight text-amber-200/80">
+                      <p key={i} className="text-[9px] leading-tight text-amber-700/80">
                         • {warn}
                       </p>
                     ))}
@@ -109,7 +109,7 @@ export default function StaffLiveQueue({ pendingRequests = [], onApprove, onReje
                       <button
                         type="button"
                         onClick={() => onReject(p._id)}
-                        className="px-2.5 py-1 rounded-lg border border-red-500/30 text-red-300 hover:bg-red-500/20 text-[10px] font-semibold transition-colors cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg border border-red-500/30 text-red-600 hover:bg-red-100 text-[10px] font-semibold transition-colors cursor-pointer"
                       >
                         Reject
                       </button>
@@ -117,7 +117,7 @@ export default function StaffLiveQueue({ pendingRequests = [], onApprove, onReje
                     <button
                       type="button"
                       onClick={() => onApprove && onApprove(p._id)}
-                      className="px-3 py-1 rounded-lg bg-green-500/20 text-green-300 hover:bg-green-500/30 border border-green-500/30 text-[10px] sm:text-xs font-bold transition-all cursor-pointer flex items-center gap-1 shadow-sm"
+                      className="px-3 py-1 rounded-lg bg-green-100 text-green-600 hover:bg-green-500/30 border border-green-500/30 text-[10px] sm:text-xs font-bold transition-all cursor-pointer flex items-center gap-1 shadow-sm"
                       aria-label={`Approve stamp for ${guestName}`}
                     >
                       <CheckCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -133,8 +133,8 @@ export default function StaffLiveQueue({ pendingRequests = [], onApprove, onReje
 
       {/* Bill Image Inspection Lightbox Modal */}
       {selectedBill && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-fadeIn">
-          <div className="relative w-full max-w-2xl rounded-3xl bg-surface-container/95 border border-primary/40 p-4 sm:p-6 shadow-[0_24px_60px_rgba(0,0,0,0.9)] text-on-surface flex flex-col max-h-[92vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-2xl rounded-3xl bg-surface-container/95 border border-primary/40 p-4 sm:p-6 shadow-[0_24px_60px_rgba(46,26,20,0.15)] text-on-surface flex flex-col max-h-[92vh]">
             <div className="flex items-center justify-between pb-3 border-b border-outline-variant/30 mb-3">
               <div>
                 <h3 className="font-serif text-sm sm:text-base font-bold text-on-surface">
@@ -154,7 +154,7 @@ export default function StaffLiveQueue({ pendingRequests = [], onApprove, onReje
               </button>
             </div>
 
-            <div className="flex-1 overflow-auto rounded-2xl bg-black/60 p-2 flex items-center justify-center">
+            <div className="flex-1 overflow-auto rounded-2xl bg-surface-container-high/80 p-2 flex items-center justify-center">
               <img
                 src={selectedBill.url}
                 alt="Enlarged Bill Receipt"

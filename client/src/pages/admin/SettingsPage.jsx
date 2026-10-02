@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { settingsApi } from '../../services/api';
 import { Settings, Save, Building2, Globe, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -33,7 +34,7 @@ export default function SettingsPage() {
   if (loading) return <div className="h-96 rounded-2xl bg-surface-container/60 border border-outline-variant/30 animate-pulse" />;
 
   return (
-    <div className="space-y-6 animate-fadeIn text-on-surface">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="space-y-6 animate-fadeIn text-on-surface">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-serif text-2xl text-on-surface font-bold">Restaurant &amp; Program Settings</h1>
@@ -44,7 +45,7 @@ export default function SettingsPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+          className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-white text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 flex items-center gap-2 cursor-pointer disabled:opacity-50"
         >
           {saving ? <span className="w-4 h-4 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" /> : <Save className="w-4 h-4" />}
           <span>Save Changes</span>
@@ -168,6 +169,6 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

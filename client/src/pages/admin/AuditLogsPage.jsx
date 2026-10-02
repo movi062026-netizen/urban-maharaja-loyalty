@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { adminApi } from '../../services/api';
 import { ScrollText, ChevronLeft, ChevronRight, ShieldAlert } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -22,16 +23,16 @@ export default function AuditLogsPage() {
 
   const actionBadge = (action) => {
     if (action.includes('APPROVED') || action.includes('CREATED') || action.includes('LOGIN')) {
-      return 'text-green-300 bg-green-500/10 border-green-500/20';
+      return 'text-green-600 bg-green-500/10 border-green-500/20';
     }
     if (action.includes('REJECTED') || action.includes('EXPIRED') || action.includes('DEACTIVATED')) {
-      return 'text-red-300 bg-red-500/10 border-red-500/20';
+      return 'text-red-600 bg-red-500/10 border-red-500/20';
     }
     return 'text-primary bg-primary/10 border-primary/20';
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn text-on-surface">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="space-y-6 animate-fadeIn text-on-surface">
       <div>
         <h1 className="font-serif text-2xl text-on-surface font-bold">Security &amp; Audit Trail</h1>
         <p className="text-xs text-on-surface-variant mt-0.5 font-sans">
@@ -108,6 +109,6 @@ export default function AuditLogsPage() {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

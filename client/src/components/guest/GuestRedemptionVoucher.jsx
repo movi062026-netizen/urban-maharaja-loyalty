@@ -1,120 +1,169 @@
 import { useState } from 'react';
-import { Gift, Copy, Check, QrCode, Clock, Sparkles } from 'lucide-react';
+import { Gift, Copy, Check, QrCode, Clock, Award } from 'lucide-react';
 import { copyToClipboard, formatDate } from '../../utils';
 import toast from 'react-hot-toast';
+
+const rewardIcons = {
+  COMPLIMENTARY_ITEM: Gift,
+  DISCOUNT: Award,
+};
 
 export default function GuestRedemptionVoucher({ redemption }) {
   const [copied, setCopied] = useState(false);
   const [showQr, setShowQr] = useState(false);
 
   const isAvailable = redemption.status === 'AVAILABLE';
+  const isRedeemed = redemption.status === 'REDEEMED';
+  const rewardType = redemption.reward?.rewardType || 'COMPLIMENTARY_ITEM';
+  const Icon = rewardIcons[rewardType] || Gift;
+
+  // Guaranteed readable voucher code: use redemption.code, or fallback to UM-RW + last 6 chars of ID
+  const voucherCode =
+    redemption.code ||
+    (redemption._id ? `UM-RW-${String(redemption._id).slice(-6).toUpperCase()}` : 'UM-RW-PALACE');
 
   const handleCopy = async () => {
-    if (!redemption.code) return;
-    const ok = await copyToClipboard(redemption.code);
+    if (!voucherCode) return;
+    const ok = await copyToClipboard(voucherCode);
     if (ok) {
       setCopied(true);
-      toast.success('Voucher code copied to clipboard!');
+      toast.success(`Passcode ${voucherCode} copied!`);
       setTimeout(() => setCopied(false), 2000);
     }
   };
 
   return (
     <div
-      className={`rounded-[24px] p-5.5 transition-all duration-300 relative overflow-hidden text-on-surface ${
+      className={`rounded-[24px] relative overflow-hidden transition-all duration-300 group ${
         isAvailable
-          ? 'glass-panel-elevated hover:border-secondary/50 hover:shadow-[0_16px_36px_-10px_rgba(228,193,148,0.25)]'
-          : 'bg-surface-container-lowest/60 border border-white/5 opacity-70'
+          ? 'bg-white border-2 border-[#e4d3c2] shadow-[0_14px_40px_-10px_rgba(46,26,16,0.1)] hover:shadow-[0_20px_48px_-10px_rgba(155,40,78,0.18)] hover:border-primary/40 hover:-translate-y-1'
+          : 'bg-[#fdfaf6] border border-[#d8c7b6] opacity-75'
       }`}
     >
-      {/* Subtle ambient light */}
-      {isAvailable && (
-        <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full blur-2xl pointer-events-none" />
-      )}
+      {/* Top Royal Accent Line */}
+      <div
+        className="h-1.5 w-full"
+        style={{
+          background: isAvailable
+            ? 'linear-gradient(90deg, #ba3461 0%, #e882a3 35%, #cca056 70%, #ba3461 100%)'
+            : '#c8b6a5',
+        }}
+      />
 
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div
-            className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${
-              isAvailable
-                ? 'bg-gradient-to-br from-secondary/20 to-primary-container/20 border border-secondary/40 text-secondary shadow-[0_0_12px_rgba(228,193,148,0.3)]'
-                : 'bg-surface-container text-outline'
-            }`}
-          >
-            <Gift className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="font-serif text-sm sm:text-base font-bold text-on-surface">
-              {redemption.reward?.title || 'Royal Privilege Voucher'}
-            </h4>
-            <span
-              className={`inline-block text-[9px] uppercase font-mono tracking-wider px-2.5 py-0.5 rounded-full mt-1 ${
+      <div className="relative z-10 p-5 sm:p-6">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <div className="flex items-center gap-3.5">
+            <div
+              className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-md ${
                 isAvailable
-                  ? 'bg-secondary/20 text-secondary border border-secondary/30 font-semibold'
-                  : 'bg-surface-container text-outline'
+                  ? 'bg-gradient-to-br from-primary-container to-secondary text-white border border-white/40 shadow-[0_8px_20px_-4px_rgba(155,40,78,0.35)]'
+                  : 'bg-stone-100 text-stone-500 border border-stone-200'
               }`}
             >
-              {redemption.status}
+              <Icon className="w-5 h-5 text-white" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[9px] uppercase font-bold tracking-[0.18em] text-secondary block font-sans">
+                Dining Certificate
+              </span>
+              <h4 className="font-serif text-base sm:text-lg font-bold text-on-surface leading-tight">
+                {redemption.reward?.title || 'Royal Privilege'}
+              </h4>
+              {redemption.reward?.description && (
+                <p className="text-[11px] text-on-surface-variant/80 mt-0.5 line-clamp-1">
+                  {redemption.reward.description}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <span
+            className={`inline-flex items-center gap-1.5 text-[9px] uppercase font-mono tracking-wider px-3 py-1 rounded-full font-bold border shrink-0 ${
+              isAvailable
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+                : isRedeemed
+                ? 'bg-primary-container/10 text-primary border-primary/20'
+                : 'bg-stone-100 text-stone-600 border-stone-300'
+            }`}
+          >
+            {isAvailable && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
+            {isAvailable ? 'Ready to Redeem' : redemption.status}
+          </span>
+        </div>
+
+        {/* Voucher Code Box */}
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] flex items-center justify-between shadow-xs">
+          <div>
+            <span className="text-[9px] uppercase tracking-[0.18em] text-on-surface-variant/70 block font-mono font-bold mb-0.5">
+              Passcode for Concierge
             </span>
+            <span className="font-mono text-base sm:text-lg font-black text-primary tracking-[0.16em]">
+              {voucherCode}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            {isAvailable && (
+              <>
+                <button
+                  type="button"
+                  onClick={handleCopy}
+                  className="px-3 py-2 rounded-xl bg-white hover:bg-primary-container/10 text-on-surface hover:text-primary transition-all cursor-pointer border border-[#e4d3c2] hover:border-primary/40 text-xs font-semibold flex items-center gap-1.5 shadow-xs"
+                  title="Copy code"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      <span className="text-emerald-700 font-bold">Copied</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5 text-primary" />
+                      <span>Copy</span>
+                    </>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowQr(!showQr)}
+                  className="p-2 rounded-xl bg-white hover:bg-primary-container/10 text-primary transition-all cursor-pointer border border-[#e4d3c2] hover:border-primary/40 shadow-xs"
+                  title="Toggle QR Code"
+                >
+                  <QrCode className="w-4 h-4" />
+                </button>
+              </>
+            )}
           </div>
         </div>
 
-        {isAvailable && (
-          <button
-            type="button"
-            onClick={() => setShowQr(!showQr)}
-            className="p-2.5 rounded-xl bg-surface-container hover:bg-surface-container-highest text-secondary border border-secondary/30 transition-all cursor-pointer shadow-sm shrink-0"
-            title="Show Table QR"
-          >
-            <QrCode className="w-4 h-4" />
-          </button>
+        {/* QR Code Presentation */}
+        {showQr && isAvailable && (
+          <div className="mt-4 p-5 rounded-2xl bg-white text-center border-2 border-primary/20 shadow-md animate-fadeIn">
+            <div className="p-2 inline-block bg-white rounded-xl border border-stone-200 shadow-xs">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(voucherCode)}`}
+                alt="QR Code"
+                className="w-36 h-36 rounded-lg"
+              />
+            </div>
+            <p className="text-[11px] text-on-surface font-semibold mt-2.5">
+              Present this QR to your concierge or floor captain
+            </p>
+            <p className="text-[10px] text-on-surface-variant font-mono mt-0.5">
+              Valid for table dining bill credit
+            </p>
+          </div>
         )}
-      </div>
 
-      {/* Voucher Code Box */}
-      <div className="my-3.5 p-3 sm:p-3.5 rounded-xl bg-surface-container-lowest/90 border border-white/10 flex items-center justify-between">
-        <div>
-          <span className="text-[9px] uppercase tracking-wider text-outline block font-mono">
-            Voucher Passcode
-          </span>
-          <span className="font-mono text-sm sm:text-base font-bold text-secondary tracking-widest">
-            {redemption.code}
-          </span>
+        {/* Footer dates */}
+        <div className="flex items-center justify-between text-[11px] text-on-surface-variant/70 pt-3.5 mt-3.5 border-t border-[#eee0d2] font-mono">
+          <span>Issued: {formatDate(redemption.createdAt)}</span>
+          {redemption.expiresAt && (
+            <span className={`flex items-center gap-1 ${isAvailable ? 'text-secondary font-bold' : ''}`}>
+              <Clock className="w-3.5 h-3.5 text-secondary" /> Exp: {formatDate(redemption.expiresAt)}
+            </span>
+          )}
         </div>
-        {isAvailable && (
-          <button
-            type="button"
-            onClick={handleCopy}
-            className="p-2 rounded-lg hover:bg-surface-container text-secondary transition-colors cursor-pointer"
-            title="Copy code"
-          >
-            {copied ? <Check className="w-4 h-4 text-primary" /> : <Copy className="w-4 h-4" />}
-          </button>
-        )}
-      </div>
-
-      {showQr && isAvailable && (
-        <div className="my-3 p-4 rounded-2xl bg-surface-container-lowest text-center border border-white/10 animate-fadeIn shadow-inner">
-          <img
-            src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(
-              redemption.code
-            )}`}
-            alt="Redemption QR"
-            className="mx-auto rounded-xl shadow-lg mb-2 border border-secondary/30 p-2 bg-white"
-          />
-          <p className="text-[11px] text-on-surface-variant font-mono">
-            Present to floor concierge for direct table redemption
-          </p>
-        </div>
-      )}
-
-      <div className="flex items-center justify-between text-[11px] text-on-surface-variant/70 pt-2.5 border-t border-white/10 font-mono">
-        <span>Issued: {formatDate(redemption.createdAt)}</span>
-        {redemption.expiresAt && (
-          <span className="flex items-center gap-1 text-secondary">
-            <Clock className="w-3.5 h-3.5" /> Exp: {formatDate(redemption.expiresAt)}
-          </span>
-        )}
       </div>
     </div>
   );

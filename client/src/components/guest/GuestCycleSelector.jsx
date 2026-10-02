@@ -32,7 +32,7 @@ export default function GuestCycleSelector({ allCards = [], activeCardId, onSele
               <div className="flex items-center justify-between mb-1">
                 <span className="font-semibold text-xs">Cycle #{c.cycleNumber}</span>
                 {c.status === 'COMPLETED' ? (
-                  <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-green-600" />
                 ) : (
                   <Sparkles className="w-3.5 h-3.5 text-primary" />
                 )}
@@ -41,7 +41,7 @@ export default function GuestCycleSelector({ allCards = [], activeCardId, onSele
                 {c.currentStamps}/{c.targetStamps} Seals
               </p>
               <span className={`text-[9px] font-bold uppercase tracking-wider block mt-1 ${
-                c.status === 'COMPLETED' ? 'text-green-300' : 'text-primary'
+                c.status === 'COMPLETED' ? 'text-green-600' : 'text-primary'
               }`}>
                 {c.status}
               </span>

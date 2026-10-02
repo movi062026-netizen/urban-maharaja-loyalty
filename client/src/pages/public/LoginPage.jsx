@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { authApi } from '../../services/api';
 import toast from 'react-hot-toast';
@@ -322,7 +323,7 @@ export default function LoginPage() {
           <Link to="/" className="no-underline inline-block group">
             <div className="relative w-16 h-16 rounded-2xl bg-surface-container-high/90 border border-primary/40 flex items-center justify-center mx-auto mb-3 shadow-[0_12px_32px_rgba(222,107,144,0.35)] group-hover:scale-105 transition-all">
               <span className="material-symbols-outlined text-primary text-[36px]">military_tech</span>
-              <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-secondary text-surface-container-lowest flex items-center justify-center text-[10px] font-bold shadow-md">
+              <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-secondary text-white flex items-center justify-center text-[10px] font-bold shadow-md">
                 ★
               </div>
             </div>
@@ -624,7 +625,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={handleDevAutoFill}
-                    className="px-3 py-1.5 rounded-lg bg-primary-container text-surface-container-lowest text-xs font-bold uppercase tracking-wider hover:brightness-110 cursor-pointer shadow"
+                    className="px-3 py-1.5 rounded-lg bg-primary-container text-white text-xs font-bold uppercase tracking-wider hover:brightness-110 cursor-pointer shadow"
                   >
                     1-Click Auto-Fill
                   </button>

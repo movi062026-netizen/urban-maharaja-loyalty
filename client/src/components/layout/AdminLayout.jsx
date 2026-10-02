@@ -45,7 +45,7 @@ export default function AdminLayout() {
       {/* Sidebar Overlay (mobile) */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
           aria-hidden="true"
         />
@@ -53,25 +53,27 @@ export default function AdminLayout() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-[260px] sm:w-64 glass-sidebar text-on-surface transition-transform duration-300 flex flex-col ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-72 glass-sidebar text-on-surface transition-transform duration-300 flex flex-col ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
         role="navigation"
         aria-label="Admin Navigation"
       >
         {/* Brand */}
-        <div className="p-4 sm:p-5 border-b border-outline-variant/20">
+        <div className="p-4 sm:p-5 border-b border-outline-variant/30">
           <div className="flex items-center justify-between">
-            <Link to="/admin/dashboard" className="flex items-center gap-2.5 sm:gap-3 no-underline group">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl glass-surface border border-primary/40 flex items-center justify-center shadow-[0_4px_16px_rgba(222,107,144,0.25)] group-hover:scale-105 transition-transform">
-                <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <Link to="/admin/dashboard" className="flex items-center gap-3 no-underline group">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#c99a4e] via-[#deb268] to-[#996d2b] p-[2px] shadow-md flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <div className="w-full h-full rounded-full bg-white flex items-center justify-center border border-[#d4a66a]/40">
+                  <Crown className="w-4 h-4 text-[#9b284e]" />
+                </div>
               </div>
               <div className="min-w-0">
-                <div className="font-serif text-xs sm:text-sm font-bold text-on-surface tracking-wider group-hover:text-primary transition-colors truncate">
+                <div className="font-serif text-sm font-bold text-on-surface tracking-wider group-hover:text-primary transition-colors truncate">
                   URBAN MAHARAJA
                 </div>
-                <div className="text-[9px] sm:text-[10px] text-secondary font-mono tracking-[0.15em] sm:tracking-[0.2em] uppercase font-semibold">
-                  Terminal 2026
+                <div className="text-[10px] text-secondary font-mono tracking-[0.2em] uppercase font-bold">
+                  Imperial Admin
                 </div>
               </div>
             </Link>
@@ -86,7 +88,7 @@ export default function AdminLayout() {
         </div>
 
         {/* Nav Links */}
-        <nav className="flex-1 p-3 sm:p-3.5 space-y-1 sm:space-y-1.5 overflow-y-auto">
+        <nav className="flex-1 p-3.5 space-y-1.5 overflow-y-auto">
           {sidebarLinks
             .filter((item) => !item.adminOnly || user?.role === 'ADMIN')
             .map(({ to, label, icon: Icon }) => {
@@ -95,14 +97,14 @@ export default function AdminLayout() {
               <Link
                 key={to}
                 to={to}
-                className={`flex items-center gap-2.5 sm:gap-3 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl text-[10px] sm:text-xs uppercase tracking-wider font-semibold no-underline transition-all ${
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-bold no-underline transition-all ${
                   isActive
-                    ? 'glass-chip-rose text-primary shadow-[0_4px_14px_rgba(222,107,144,0.2)]'
-                    : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/60'
+                    ? 'bg-gradient-to-r from-primary to-primary-container text-white shadow-[0_6px_20px_-3px_rgba(155,40,78,0.4)]'
+                    : 'text-on-surface-variant hover:text-on-surface hover:bg-white/80 border border-transparent hover:border-outline-variant/40'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >
-                <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${isActive ? 'text-primary' : 'text-on-surface-variant'}`} />
+                <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-secondary'}`} />
                 <span className="truncate">{label}</span>
               </Link>
             );
@@ -110,19 +112,19 @@ export default function AdminLayout() {
         </nav>
 
         {/* User Card */}
-        <div className="p-3 sm:p-4 border-t border-outline-variant/20 bg-surface-container/30">
+        <div className="p-4 border-t border-outline-variant/30 bg-surface-container-low/70">
           <div className="flex items-center justify-between">
             <div className="min-w-0 pr-2">
-              <p className="text-[11px] sm:text-xs font-semibold text-on-surface truncate">{user?.name || 'Administrator'}</p>
-              <p className="text-[9px] sm:text-[10px] text-secondary font-mono uppercase tracking-wider truncate">{user?.role || 'Staff'}</p>
+              <p className="text-xs font-bold text-on-surface truncate">{user?.name || 'Administrator'}</p>
+              <p className="text-[10px] text-primary font-mono uppercase tracking-wider truncate font-semibold">{user?.role || 'Imperial Master'}</p>
             </div>
             <button
               onClick={handleLogout}
-              className="p-1.5 sm:p-2 rounded-lg hover:bg-surface-container-highest transition-colors text-on-surface-variant hover:text-primary cursor-pointer"
+              className="p-2 rounded-xl hover:bg-surface-container-high transition-colors text-on-surface-variant hover:text-primary cursor-pointer border border-transparent hover:border-outline-variant/40"
               title="Sign Out"
               aria-label="Logout"
             >
-              <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <LogOut className="w-4 h-4" />
             </button>
           </div>
         </div>

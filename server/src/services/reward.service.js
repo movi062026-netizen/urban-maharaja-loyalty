@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Reward = require('../models/Reward');
 const RewardRedemption = require('../models/RewardRedemption');
 const { REDEMPTION_STATUS, AUDIT_ACTIONS, ENTITY_TYPES } = require('../constants');
@@ -24,7 +25,31 @@ const getActiveRewards = async () => {
  * Get all rewards (admin)
  */
 const getAllRewards = async () => {
-  return Reward.find().sort({ createdAt: -1 });
+  const rewards = await Reward.find().sort({ createdAt: -1 }).lean();
+
+  // Aggregate claim counts per reward
+  const claimCounts = await RewardRedemption.aggregate([
+    { $group: {
+      _id: '$rewardId',
+      totalClaimed: { $sum: 1 },
+      totalRedeemed: { $sum: { $cond: [{ $eq: ['$status', REDEMPTION_STATUS.REDEEMED] }, 1, 0] } },
+      totalAvailable: { $sum: { $cond: [{ $eq: ['$status', REDEMPTION_STATUS.AVAILABLE] }, 1, 0] } },
+    }},
+  ]);
+
+  const countsMap = {};
+  for (const c of claimCounts) {
+    countsMap[c._id.toString()] = {
+      totalClaimed: c.totalClaimed,
+      totalRedeemed: c.totalRedeemed,
+      totalAvailable: c.totalAvailable,
+    };
+  }
+
+  return rewards.map(r => ({
+    ...r,
+    claimStats: countsMap[r._id.toString()] || { totalClaimed: 0, totalRedeemed: 0, totalAvailable: 0 },
+  }));
 };
 
 /**
@@ -84,11 +109,43 @@ const updateReward = async (rewardId, data, auditCtx = {}) => {
  * Redeem a reward (staff/admin action) — invalidates guest cache
  */
 const redeemReward = async (redemptionId, staffId, auditCtx = {}) => {
-  const redemption = await RewardRedemption.findById(redemptionId)
-    .populate('rewardId', 'title description')
-    .populate('guestId', 'name phone');
+  let redemption;
+  const cleanId = String(redemptionId || '').trim();
 
-  if (!redemption) throw new NotFoundError('Redemption not found');
+  // 1. Try finding by MongoDB ObjectId
+  if (mongoose.Types.ObjectId.isValid(cleanId)) {
+    redemption = await RewardRedemption.findById(cleanId)
+      .populate('rewardId', 'title description')
+      .populate('guestId', 'name phone');
+  }
+
+  // 2. Try finding by Voucher Code (e.g. UM-RW-9D3A8F)
+  if (!redemption) {
+    const cleanCode = cleanId.toUpperCase();
+    redemption = await RewardRedemption.findOne({
+      $or: [
+        { code: cleanCode },
+        { code: cleanCode.replace(/^UM-RW-/, '') },
+      ],
+    })
+      .populate('rewardId', 'title description')
+      .populate('guestId', 'name phone');
+  }
+
+  // 3. Fallback: match by the last 6 characters of ObjectId or code
+  if (!redemption && cleanId.length >= 6) {
+    const last6 = cleanId.slice(-6).toUpperCase();
+    const allAvailable = await RewardRedemption.find({ status: REDEMPTION_STATUS.AVAILABLE })
+      .populate('rewardId', 'title description')
+      .populate('guestId', 'name phone');
+    redemption = allAvailable.find(
+      (r) =>
+        r._id.toString().slice(-6).toUpperCase() === last6 ||
+        (r.code && r.code.toUpperCase().endsWith(last6))
+    );
+  }
+
+  if (!redemption) throw new NotFoundError('Voucher redemption record not found');
 
   if (redemption.status === REDEMPTION_STATUS.REDEEMED) {
     throw new ConflictError('Reward has already been redeemed');

@@ -56,7 +56,7 @@ const updateRewardRules = [
 ];
 
 const redeemRules = [
-  param('id').isMongoId().withMessage('Invalid redemption ID'),
+  param('id').trim().notEmpty().withMessage('Redemption ID or voucher code is required'),
 ];
 
 const paginationRules = [

@@ -16,7 +16,7 @@ export default function StaffPatronLookup({ searchQuery, onSearchChange, onSearc
       <button
         type="submit"
         disabled={searching}
-        className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-secondary to-[#c29b38] text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
+        className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-secondary to-[#c29b38] text-white text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
       >
         {searching ? (
           <span className="w-4 h-4 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />

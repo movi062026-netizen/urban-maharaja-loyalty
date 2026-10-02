@@ -4,7 +4,7 @@ export default function RewardRedeemModal({ isOpen, onClose, onConfirm, reward, 
   if (!isOpen || !reward) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-fadeIn">
       <div className="w-full max-w-md bg-surface-container rounded-3xl border border-secondary/40 shadow-2xl overflow-hidden animate-slideUp">
         <div className="p-6 border-b border-outline-variant/30 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -54,7 +54,7 @@ export default function RewardRedeemModal({ isOpen, onClose, onConfirm, reward, 
               type="button"
               onClick={() => onConfirm(reward._id)}
               disabled={loading}
-              className="flex-1 py-3 rounded-xl bg-gradient-to-r from-secondary to-[#c29b38] text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="flex-1 py-3 rounded-xl bg-gradient-to-r from-secondary to-[#c29b38] text-white text-xs uppercase tracking-wider font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {loading ? (
                 <span className="w-4 h-4 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />

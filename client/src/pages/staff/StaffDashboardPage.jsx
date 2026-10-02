@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { adminApi, loyaltyApi } from '../../services/api';
 import { Stamp, ShoppingBag, Users, ChevronRight, Sparkles, ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -60,7 +61,13 @@ export default function StaffDashboardPage() {
   const { todayVisits = 0, activeGuests = 0, totalRedemptions = 0 } = stats;
 
   return (
-    <section className="space-y-5 sm:space-y-7 text-on-surface" aria-label="Staff Dashboard">
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
+      className="space-y-5 sm:space-y-7 text-on-surface"
+      aria-label="Staff Dashboard"
+    >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-2 border-b border-outline-variant/20">
         <header>
@@ -83,50 +90,50 @@ export default function StaffDashboardPage() {
       {/* Live Floor Queue */}
       <StaffLiveQueue pendingRequests={pendingStamps} onApprove={handleApprove} />
 
-      {/* Operational Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 stagger-children">
-        <div className="glass-panel-elevated p-4 sm:p-5 flex items-center justify-between">
+      {/* Operational Stats Cards — Palace Porcelain Metric Suite */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-5">
+        <div className="p-5 sm:p-6 rounded-3xl bg-white border border-[#e8d8c8] shadow-[0_12px_32px_-8px_rgba(46,26,16,0.06)] hover:shadow-[0_16px_40px_-8px_rgba(46,26,16,0.12)] hover:-translate-y-1 transition-all flex items-center justify-between">
           <div className="min-w-0">
-            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-on-surface-variant font-semibold block mb-1">
+            <span className="text-[11px] sm:text-xs uppercase tracking-wider text-secondary font-bold block mb-1">
               Today's Dining Visits
             </span>
-            <span className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-secondary">
+            <span className="font-serif text-2xl sm:text-3xl font-black text-[#1d0f09]">
               {todayVisits || pendingStamps.length}
             </span>
-            <p className="text-[10px] sm:text-[11px] text-on-surface-variant/70 mt-1">Validated seals today</p>
+            <p className="text-[11px] text-on-surface-variant font-medium mt-1">Validated seals today</p>
           </div>
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-secondary/20 border border-secondary/30 flex items-center justify-center text-secondary shrink-0">
-            <Stamp className="w-5 h-5 sm:w-6 sm:h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#c99a4e]/20 to-[#996d2b]/10 border border-[#d4a66a]/40 flex items-center justify-center text-secondary shrink-0 shadow-sm">
+            <Stamp className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="glass-panel-elevated p-4 sm:p-5 flex items-center justify-between">
+        <div className="p-5 sm:p-6 rounded-3xl bg-white border border-[#e8d8c8] shadow-[0_12px_32px_-8px_rgba(46,26,16,0.06)] hover:shadow-[0_16px_40px_-8px_rgba(46,26,16,0.12)] hover:-translate-y-1 transition-all flex items-center justify-between">
           <div className="min-w-0">
-            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-on-surface-variant font-semibold block mb-1">
+            <span className="text-[11px] sm:text-xs uppercase tracking-wider text-primary font-bold block mb-1">
               Active Court Patrons
             </span>
-            <span className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-primary">
+            <span className="font-serif text-2xl sm:text-3xl font-black text-[#9b284e]">
               {activeGuests || recentGuests.length}
             </span>
-            <p className="text-[10px] sm:text-[11px] text-on-surface-variant/70 mt-1">Enrolled members</p>
+            <p className="text-[11px] text-on-surface-variant font-medium mt-1">Enrolled royal members</p>
           </div>
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-primary-container/20 border border-primary/30 flex items-center justify-center text-primary shrink-0">
-            <Users className="w-5 h-5 sm:w-6 sm:h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center text-primary shrink-0 shadow-sm">
+            <Users className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="glass-panel-elevated p-4 sm:p-5 flex items-center justify-between">
+        <div className="p-5 sm:p-6 rounded-3xl bg-white border border-[#e8d8c8] shadow-[0_12px_32px_-8px_rgba(46,26,16,0.06)] hover:shadow-[0_16px_40px_-8px_rgba(46,26,16,0.12)] hover:-translate-y-1 transition-all flex items-center justify-between">
           <div className="min-w-0">
-            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-on-surface-variant font-semibold block mb-1">
+            <span className="text-[11px] sm:text-xs uppercase tracking-wider text-green-700 font-bold block mb-1">
               Perks Claimed
             </span>
-            <span className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-green-400">
+            <span className="font-serif text-2xl sm:text-3xl font-black text-green-700">
               {totalRedemptions || 0}
             </span>
-            <p className="text-[10px] sm:text-[11px] text-on-surface-variant/70 mt-1">Completed redemptions</p>
+            <p className="text-[11px] text-on-surface-variant font-medium mt-1">Completed dining honors</p>
           </div>
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-green-500/20 border border-green-500/30 flex items-center justify-center text-green-400 shrink-0">
-            <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-green-50 border border-green-500/30 flex items-center justify-center text-green-600 shrink-0 shadow-sm">
+            <ShoppingBag className="w-6 h-6" />
           </div>
         </div>
       </div>
@@ -162,7 +169,7 @@ export default function StaffDashboardPage() {
                 className="p-3 sm:p-3.5 rounded-xl glass-table-row hover:bg-surface-container-highest border border-outline-variant/20 flex items-center justify-between no-underline text-on-surface transition-all group"
               >
                 <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-green-500/20 flex items-center justify-center text-green-400 shrink-0">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-600 shrink-0">
                     <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </div>
                   <div className="min-w-0">
@@ -170,7 +177,7 @@ export default function StaffDashboardPage() {
                     <p className="text-[9px] sm:text-[11px] text-on-surface-variant truncate">Check and claim unlocked reward</p>
                   </div>
                 </div>
-                <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-on-surface-variant group-hover:text-green-400 transition-colors shrink-0" />
+                <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-on-surface-variant group-hover:text-green-600 transition-colors shrink-0" />
               </Link>
 
               <Link
@@ -241,6 +248,6 @@ export default function StaffDashboardPage() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

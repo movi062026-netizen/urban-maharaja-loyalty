@@ -184,7 +184,7 @@ const getStampsList = async (page = 1, limit = 20, filters = {}) => {
   const total = await Stamp.countDocuments(query);
   const stamps = await Stamp.find(query)
     .populate('guestId', 'name phone email')
-    .populate('approvedBy', 'name')
+    .populate('approvedBy', 'name role email')
     .sort({ createdAt: -1 })
     .skip((page - 1) * limit)
     .limit(limit);

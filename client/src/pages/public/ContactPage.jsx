@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 
 export default function ContactPage() {
@@ -27,7 +28,12 @@ export default function ContactPage() {
   return (
     <div className="w-full max-w-full bg-background min-h-screen text-on-surface overflow-x-hidden">
       {/* ── Hero Banner ──────────────────────────────────────────────── */}
-      <section className="relative w-full max-w-full pt-16 pb-20 overflow-hidden bg-gradient-to-b from-surface-container-lowest via-surface to-surface-container-low text-center">
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        className="relative w-full max-w-full pt-16 pb-20 overflow-hidden bg-gradient-to-b from-surface-container-lowest via-surface to-surface-container-low text-center"
+      >
         <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] max-w-full h-[450px] bg-primary-container/15 rounded-full blur-[140px]" />
           <div className="absolute bottom-0 right-1/4 w-[400px] max-w-full h-[300px] bg-secondary-container/20 rounded-full blur-[110px]" />
@@ -52,10 +58,16 @@ export default function ContactPage() {
             Located in Jagatpura, Jaipur. Due to our commitment to slow charcoal braising and personalized master-chef service, seating is strictly limited nightly.
           </p>
         </div>
-      </section>
+      </motion.section>
 
       {/* ── Main Booking & Concierge Grid ────────────────────────────── */}
-      <section className="relative w-full max-w-full py-16 bg-surface-container-lowest overflow-hidden">
+      <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.8 }}
+        className="relative w-full max-w-full py-16 bg-surface-container-lowest overflow-hidden"
+      >
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
             {/* Left: Interactive Table Reservation Form */}
@@ -196,7 +208,7 @@ export default function ContactPage() {
 
                     <button
                       type="submit"
-                      className="w-full py-4 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-surface-container-lowest text-xs uppercase tracking-[0.16em] font-bold shadow-xl hover:brightness-110 transition-all cursor-pointer"
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-white text-xs uppercase tracking-[0.16em] font-bold shadow-xl hover:brightness-110 transition-all cursor-pointer"
                     >
                       Confirm Imperial Reservation
                     </button>
@@ -321,7 +333,7 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 }

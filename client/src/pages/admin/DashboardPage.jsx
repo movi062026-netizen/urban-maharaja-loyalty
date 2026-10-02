@@ -1,9 +1,23 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { adminApi } from '../../services/api';
 import { Users, Stamp, Gift, ShoppingBag, Star, CreditCard, BarChart3, TrendingUp } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from 'recharts';
 import AdminMetricCard from '../../components/admin/AdminMetricCard';
 import toast from 'react-hot-toast';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20, scale: 0.97 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: 'easeOut' } },
+};
 
 export default function DashboardPage() {
   const [stats, setStats] = useState(null);
@@ -55,29 +69,39 @@ export default function DashboardPage() {
   }
 
   return (
-    <section className="space-y-5 sm:space-y-6 text-on-surface" aria-label="Admin Dashboard">
-      <header>
+    <motion.section
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="space-y-5 sm:space-y-6 text-on-surface"
+      aria-label="Admin Dashboard"
+    >
+      <motion.header variants={itemVariants}>
         <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-on-surface font-bold">Imperial Intelligence Dashboard</h1>
         <p className="text-[10px] sm:text-xs text-on-surface-variant mt-1">Real-time metrics, patron loyalty cadence, and transaction ledger</p>
-      </header>
+      </motion.header>
 
       {/* Stats Grid */}
-      <div className="stats-grid stagger-children">
+      <motion.div className="stats-grid" variants={containerVariants}>
         {statCards.map(({ label, value, icon, color }) => (
-          <AdminMetricCard
-            key={label}
-            title={label}
-            value={value || 0}
-            icon={icon}
-            color={color}
-          />
+          <motion.div key={label} variants={itemVariants}>
+            <AdminMetricCard
+              title={label}
+              value={value || 0}
+              icon={icon}
+              color={color}
+            />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      <motion.div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6" variants={containerVariants}>
         {/* Guest Growth */}
-        <div className="glass-panel-elevated p-4 sm:p-6">
+        <motion.div
+          variants={itemVariants}
+          className="glass-panel-elevated p-4 sm:p-6 hover:shadow-[0_28px_60px_-15px_rgba(160,58,94,0.12)]"
+        >
           <h3 className="font-serif text-sm sm:text-base text-on-surface mb-3 sm:mb-4 flex items-center gap-2 font-bold">
             <BarChart3 className="w-4 h-4 text-primary" /> Patron Growth (30 days)
           </h3>
@@ -85,11 +109,11 @@ export default function DashboardPage() {
             {analytics?.guestGrowth?.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={analytics.guestGrowth}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                  <XAxis dataKey="date" tick={{ fontSize: 9, fill: '#ffb1c6' }} />
-                  <YAxis tick={{ fontSize: 9, fill: '#ffb1c6' }} width={30} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(46,26,20,0.08)" />
+                  <XAxis dataKey="date" tick={{ fontSize: 9, fill: '#a03a5e' }} />
+                  <YAxis tick={{ fontSize: 9, fill: '#a03a5e' }} width={30} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#1e0f11', borderColor: 'rgba(255,177,198,0.3)', borderRadius: '12px', color: '#ffb1c6', fontSize: '11px' }}
+                    contentStyle={{ backgroundColor: '#f5ebde', borderColor: 'rgba(160,58,94,0.3)', borderRadius: '12px', color: '#a03a5e', fontSize: '11px', boxShadow: '0 8px 24px rgba(46,26,20,0.1)' }}
                   />
                   <Bar dataKey="count" fill="#de6b90" radius={[4, 4, 0, 0]} />
                 </BarChart>
@@ -98,10 +122,13 @@ export default function DashboardPage() {
               <div className="h-full flex items-center justify-center text-xs text-on-surface-variant/50">No growth data in window</div>
             )}
           </div>
-        </div>
+        </motion.div>
 
         {/* Stamps Over Time */}
-        <div className="glass-panel-elevated p-4 sm:p-6">
+        <motion.div
+          variants={itemVariants}
+          className="glass-panel-elevated p-4 sm:p-6 hover:shadow-[0_28px_60px_-15px_rgba(228,193,148,0.15)]"
+        >
           <h3 className="font-serif text-sm sm:text-base text-on-surface mb-3 sm:mb-4 flex items-center gap-2 font-bold">
             <TrendingUp className="w-4 h-4 text-secondary" /> Stamps Endorsed Over Time
           </h3>
@@ -109,39 +136,45 @@ export default function DashboardPage() {
             {analytics?.stampsOverTime?.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={analytics.stampsOverTime}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                  <XAxis dataKey="date" tick={{ fontSize: 9, fill: '#e4c194' }} />
-                  <YAxis tick={{ fontSize: 9, fill: '#e4c194' }} width={30} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(46,26,20,0.08)" />
+                  <XAxis dataKey="date" tick={{ fontSize: 9, fill: '#7a5c2e' }} />
+                  <YAxis tick={{ fontSize: 9, fill: '#7a5c2e' }} width={30} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#1e0f11', borderColor: 'rgba(228,193,148,0.3)', borderRadius: '12px', color: '#e4c194', fontSize: '11px' }}
+                    contentStyle={{ backgroundColor: '#f5ebde', borderColor: 'rgba(122,92,46,0.3)', borderRadius: '12px', color: '#7a5c2e', fontSize: '11px', boxShadow: '0 8px 24px rgba(46,26,20,0.1)' }}
                   />
-                  <Line type="monotone" dataKey="count" stroke="#e4c194" strokeWidth={2.5} dot={{ fill: '#e4c194', r: 3 }} />
+                  <Line type="monotone" dataKey="count" stroke="#a03a5e" strokeWidth={2.5} dot={{ fill: '#a03a5e', r: 3 }} />
                 </LineChart>
               </ResponsiveContainer>
             ) : (
               <div className="h-full flex items-center justify-center text-xs text-on-surface-variant/50">No stamps recorded in window</div>
             )}
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Recent Activity */}
-      <div className="glass-panel-elevated p-4 sm:p-6">
+      <motion.div variants={itemVariants} className="glass-panel-elevated p-4 sm:p-6">
         <h3 className="font-serif text-sm sm:text-base text-on-surface mb-3 sm:mb-4 font-bold">Recent Court Activity</h3>
         <div className="space-y-2 sm:space-y-2.5 max-h-64 sm:max-h-80 overflow-y-auto">
-          {activity.length > 0 ? activity.map((log) => (
-            <div key={log._id} className="flex flex-col sm:flex-row sm:items-center justify-between py-2 sm:py-2.5 px-3 sm:px-4 glass-table-row rounded-xl text-[10px] sm:text-xs gap-1">
+          {activity.length > 0 ? activity.map((log, idx) => (
+            <motion.div
+              key={log._id}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: idx * 0.04, duration: 0.3 }}
+              className="flex flex-col sm:flex-row sm:items-center justify-between py-2 sm:py-2.5 px-3 sm:px-4 glass-table-row rounded-xl text-[10px] sm:text-xs gap-1"
+            >
               <div className="min-w-0">
                 <span className="font-semibold text-primary">{log.action}</span>
                 <span className="text-on-surface-variant/70 ml-2">by {log.actorId?.name || 'Concierge'}</span>
               </div>
               <span className="text-[9px] sm:text-[11px] text-on-surface-variant/50 font-mono shrink-0">{new Date(log.createdAt).toLocaleString('en-IN')}</span>
-            </div>
+            </motion.div>
           )) : (
             <p className="text-xs text-on-surface-variant/50 text-center py-4">No recent activity logged</p>
           )}
         </div>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }

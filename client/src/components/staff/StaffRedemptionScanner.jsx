@@ -31,32 +31,32 @@ export default function StaffRedemptionScanner({ onRedemptionComplete }) {
   };
 
   return (
-    <div className="rounded-3xl p-6 bg-surface-container-high/80 border border-outline-variant/40 shadow-xl backdrop-blur-xl">
+    <div className="rounded-3xl p-6 bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)]">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-xl bg-secondary/20 border border-secondary/30 flex items-center justify-center text-secondary">
-          <ScanLine className="w-5 h-5" />
+        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary-container to-secondary flex items-center justify-center text-white shadow-md">
+          <ScanLine className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h3 className="font-serif text-base font-bold text-on-surface">Floor Voucher Redemption</h3>
-          <p className="text-xs text-on-surface-variant font-mono">Verify and honor patron reward privileges</p>
+          <h3 className="font-serif text-base font-bold text-on-surface">Floor Voucher Redemption Desk</h3>
+          <p className="text-xs text-on-surface-variant font-mono">Verify and honor patron reward privileges instantly</p>
         </div>
       </div>
 
-      <form onSubmit={handleRedeem} className="flex gap-2">
+      <form onSubmit={handleRedeem} className="flex gap-2.5">
         <input
           type="text"
           value={code}
           onChange={(e) => setCode(e.target.value.toUpperCase())}
           placeholder="ENTER CODE (e.g. UM-RW-XXXXXX)"
-          className="flex-1 px-4 py-3 rounded-xl bg-surface-container-lowest border border-outline-variant/40 text-on-surface font-mono text-sm tracking-wider uppercase focus:outline-none focus:border-secondary transition-all"
+          className="flex-1 px-4 py-3 rounded-xl bg-[#fdfaf6] border border-[#e0c8b0] text-on-surface font-mono text-sm tracking-wider uppercase focus:outline-none focus:border-primary focus:bg-white transition-all shadow-xs"
         />
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-secondary to-[#c29b38] text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-lg hover:brightness-110 transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
+          className="px-7 py-3 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-white text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
         >
           {loading ? (
-            <span className="w-4 h-4 border-2 border-surface-container-lowest border-t-transparent rounded-full animate-spin" />
+            <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
           ) : (
             <>
               <CheckCircle2 className="w-4 h-4" />

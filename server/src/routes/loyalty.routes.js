@@ -25,6 +25,7 @@ router.post(
   loyaltyController.requestMyStamp
 );
 router.get('/history/me', authenticate, authorize(ROLES.GUEST), loyaltyController.getMyHistory);
+router.post('/rewards/claim', authenticate, authorize(ROLES.GUEST), operationLimiter, loyaltyController.claimReward);
 
 // Staff endpoints
 router.get(

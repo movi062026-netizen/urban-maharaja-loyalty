@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { adminApi, loyaltyApi } from '../../services/api';
-import { Stamp as StampIcon, Search, CheckCircle, XCircle, Clock, ChevronLeft, ChevronRight, User, ShieldCheck, Sparkles, Users, AlertTriangle, Eye, X, Image as ImageIcon } from 'lucide-react';
+import { Stamp as StampIcon, Search, CheckCircle, XCircle, Clock, ChevronLeft, ChevronRight, User, ShieldCheck, Sparkles, Users, AlertTriangle, Eye, X, Image as ImageIcon, FileText } from 'lucide-react';
+import StaffStampModal from '../../components/staff/StaffStampModal';
 import toast from 'react-hot-toast';
 
 export default function StampsPage() {
@@ -21,6 +23,7 @@ export default function StampsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [guestResult, setGuestResult] = useState(null);
   const [searching, setSearching] = useState(false);
+  const [stampModalOpen, setStampModalOpen] = useState(false);
 
   useEffect(() => {
     loadStamps();
@@ -97,8 +100,30 @@ export default function StampsPage() {
 
   const handleRequestStamp = async (guestId) => {
     try {
-      await loyaltyApi.requestStamp(guestId);
-      toast.success('Royal seal granted and recorded!');
+      const res = await loyaltyApi.requestStamp(guestId);
+      const stampId = res.data?.data?.stamp?._id;
+      if (stampId) {
+        await loyaltyApi.approveStamp(stampId);
+      }
+      toast.success('Royal seal granted and approved!');
+      setGuestResult(null);
+      setSearchQuery('');
+      loadStamps();
+      loadPendingRequests();
+    } catch (err) {
+      toast.error(err.response?.data?.error?.message || 'Failed to grant seal');
+    }
+  };
+
+  const handleModalConfirm = async (payload) => {
+    try {
+      const res = await loyaltyApi.requestStamp(payload);
+      const stampId = res.data?.data?.stamp?._id;
+      if (stampId) {
+        await loyaltyApi.approveStamp(stampId);
+      }
+      toast.success('Royal seal verified and recorded with bill details!');
+      setStampModalOpen(false);
       setGuestResult(null);
       setSearchQuery('');
       loadStamps();
@@ -138,27 +163,27 @@ export default function StampsPage() {
   const statusBadge = (status) => {
     if (status === 'APPROVED') {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-green-500/20 text-green-300 border border-green-500/30">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-green-100 text-green-600 border border-green-500/30">
           <CheckCircle className="w-3.5 h-3.5" /> Approved
         </span>
       );
     }
     if (status === 'REJECTED') {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-500/20 text-red-300 border border-red-500/30">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-100 text-red-600 border border-red-500/30">
           <XCircle className="w-3.5 h-3.5" /> Rejected
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-700 border border-amber-500/30 animate-pulse">
         <Clock className="w-3.5 h-3.5" /> Pending
       </span>
     );
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn text-on-surface">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="space-y-6 animate-fadeIn text-on-surface">
       <div>
         <h1 className="font-serif text-2xl text-on-surface font-bold">Stamp &amp; Seal Station</h1>
         <p className="text-xs text-on-surface-variant mt-0.5 font-sans">
@@ -172,11 +197,11 @@ export default function StampsPage() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
-              <h2 className="font-serif text-base font-bold text-amber-200">
+              <h2 className="font-serif text-base font-bold text-amber-700">
                 Awaiting Seal Verification ({pendingRequests.length})
               </h2>
             </div>
-            <span className="text-[11px] text-amber-300/80 font-mono uppercase tracking-wider">Table Requests</span>
+            <span className="text-[11px] text-amber-700/80 font-mono uppercase tracking-wider">Table Requests</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -219,7 +244,7 @@ export default function StampsPage() {
                       <button
                         type="button"
                         onClick={() => setSelectedBill({ url: p.billUrl, guestName, billNumber: p.billNumber, billAmount: p.billAmount })}
-                        className="relative group shrink-0 w-12 h-12 rounded-xl border border-primary/40 overflow-hidden bg-black/40 hover:scale-105 transition-all cursor-pointer"
+                        className="relative group shrink-0 w-12 h-12 rounded-xl border border-primary/40 overflow-hidden bg-surface-container hover:scale-105 transition-all cursor-pointer"
                         title="Inspect WebP Receipt"
                       >
                         <img
@@ -235,13 +260,13 @@ export default function StampsPage() {
                   </div>
 
                   {isHighRisk && (
-                    <div className="p-2 rounded-xl bg-amber-500/15 border border-amber-500/30 text-[10px] text-amber-300 space-y-0.5">
+                    <div className="p-2 rounded-xl bg-amber-500/15 border border-amber-500/30 text-[10px] text-amber-700 space-y-0.5">
                       <div className="flex items-center gap-1 font-bold">
-                        <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+                        <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-600" />
                         <span>Fraud Risk: {p.fraudRiskScore || 30}/100</span>
                       </div>
                       {p.fraudWarnings && p.fraudWarnings.map((warn, i) => (
-                        <p key={i} className="text-[9px] leading-tight text-amber-200/80">
+                        <p key={i} className="text-[9px] leading-tight text-amber-700/80">
                           • {warn}
                         </p>
                       ))}
@@ -255,7 +280,7 @@ export default function StampsPage() {
                     <button
                       type="button"
                       onClick={() => handleApprove(p._id)}
-                      className="px-3 py-1 rounded-lg bg-green-500/20 text-green-300 hover:bg-green-500/30 border border-green-500/30 text-xs font-bold transition-all cursor-pointer shrink-0"
+                      className="px-3 py-1 rounded-lg bg-green-100 text-green-600 hover:bg-green-500/30 border border-green-500/30 text-xs font-bold transition-all cursor-pointer shrink-0"
                     >
                       Approve Seal
                     </button>
@@ -318,7 +343,7 @@ export default function StampsPage() {
           <button
             type="submit"
             disabled={searching}
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-surface-container-lowest text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 cursor-pointer disabled:opacity-50"
+            className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary-container via-[#e882a3] to-secondary text-white text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 cursor-pointer disabled:opacity-50"
           >
             {searching ? 'Locating...' : 'Locate Patron'}
           </button>
@@ -351,14 +376,24 @@ export default function StampsPage() {
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => handleRequestStamp(guestResult.guest._id)}
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-secondary via-[#f3d3aa] to-primary-container text-surface-container-lowest text-xs uppercase tracking-widest font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <StampIcon className="w-5 h-5" />
-                  <span>Grant Official Royal Seal for Today's Visit</span>
-                </button>
+                <div className="flex flex-col sm:flex-row gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => handleRequestStamp(guestResult.guest._id)}
+                    className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-secondary via-[#f3d3aa] to-primary-container text-white text-xs uppercase tracking-widest font-bold shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <StampIcon className="w-4 h-4" />
+                    <span>Instant 1-Click Seal</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setStampModalOpen(true)}
+                    className="px-5 py-3.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-primary/40 text-primary text-xs uppercase tracking-wider font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow"
+                  >
+                    <FileText className="w-4 h-4" />
+                    <span>Attach Dining Bill...</span>
+                  </button>
+                </div>
               </div>
             ) : (
               <p className="text-xs text-on-surface-variant/70 text-center py-2">No guest patron matched this query.</p>
@@ -367,19 +402,25 @@ export default function StampsPage() {
         )}
       </div>
 
-      {/* Filter Tabs */}
-      <div className="flex gap-2">
-        {['', 'PENDING', 'APPROVED', 'REJECTED'].map((status) => (
+      {/* Filter Tabs — Includes Staff-Authorized filter for Admin verification */}
+      <div className="flex flex-wrap gap-2">
+        {[
+          { key: '', label: 'All Verified Seals' },
+          { key: 'PENDING', label: `Pending Requests (${pendingRequests.length})` },
+          { key: 'STAFF_APPROVED', label: 'Staff-Authorized Seals' },
+          { key: 'APPROVED', label: 'All Approved' },
+          { key: 'REJECTED', label: 'Rejected' },
+        ].map(({ key, label }) => (
           <button
-            key={status}
-            onClick={() => { setStatusFilter(status); setPagination(p => ({ ...p, page: 1 })); }}
+            key={key}
+            onClick={() => { setStatusFilter(key); setPagination(p => ({ ...p, page: 1 })); }}
             className={`px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
-              statusFilter === status
-                ? 'bg-primary-container text-surface-container-lowest shadow'
+              statusFilter === key
+                ? 'bg-primary-container text-white shadow font-bold'
                 : 'bg-surface-container/70 text-on-surface-variant hover:bg-surface-container hover:text-on-surface border border-outline-variant/30'
             }`}
           >
-            {status || 'All Verified Stamps'}
+            {label}
           </button>
         ))}
       </div>
@@ -391,11 +432,11 @@ export default function StampsPage() {
             <thead>
               <tr className="border-b border-outline-variant/30 bg-surface-container-lowest/60 text-xs uppercase tracking-wider text-secondary">
                 <th className="text-left px-5 py-3.5 font-semibold">Guest Patron</th>
-                <th className="text-left px-5 py-3.5 font-semibold">Dining Bill</th>
-                <th className="text-left px-5 py-3.5 font-semibold">Verification Seal</th>
+                <th className="text-left px-5 py-3.5 font-semibold">Customer Dining Bill</th>
+                <th className="text-left px-5 py-3.5 font-semibold">Seal Status</th>
                 <th className="text-left px-5 py-3.5 font-semibold hidden md:table-cell">Authorized Officer</th>
                 <th className="text-left px-5 py-3.5 font-semibold hidden md:table-cell">Visit Timestamp</th>
-                <th className="text-center px-5 py-3.5 font-semibold">Desk Action</th>
+                <th className="text-center px-5 py-3.5 font-semibold">Admin Verification</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/20">
@@ -406,15 +447,17 @@ export default function StampsPage() {
                     <span>Loading seal logs...</span>
                   </td>
                 </tr>
-              ) : stamps.length === 0 ? (
+              ) : (statusFilter === 'STAFF_APPROVED' ? stamps.filter(s => s.status === 'APPROVED' && s.approvedBy?.role === 'STAFF') : stamps).length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-5 py-12 text-center text-on-surface-variant/50">
-                    No seal requests found.
+                    No seal requests found for this filter.
                   </td>
                 </tr>
-              ) : stamps.map((s) => {
+              ) : (statusFilter === 'STAFF_APPROVED' ? stamps.filter(s => s.status === 'APPROVED' && s.approvedBy?.role === 'STAFF') : stamps).map((s) => {
                 const guestName = s.guestId?.name || (s.guestId?.email ? s.guestId.email.split('@')[0] : 'Noble Patron');
                 const guestContact = s.guestId?.email || s.guestId?.phone || '';
+                const isStaffApproved = s.status === 'APPROVED' && s.approvedBy?.role === 'STAFF';
+
                 return (
                   <tr key={s._id} className="hover:bg-surface-container-high/40 transition-colors">
                     <td className="px-5 py-4 font-semibold text-on-surface">
@@ -438,25 +481,47 @@ export default function StampsPage() {
                           <button
                             type="button"
                             onClick={() => setSelectedBill({ url: s.billUrl, guestName, billNumber: s.billNumber, billAmount: s.billAmount })}
-                            className="w-10 h-10 rounded-lg border border-primary/40 overflow-hidden bg-black/40 hover:scale-105 transition-all cursor-pointer shrink-0"
-                            title="Inspect WebP Bill"
+                            className="w-11 h-11 rounded-xl border border-primary/40 overflow-hidden bg-surface-container hover:scale-105 transition-all cursor-pointer shrink-0 shadow-sm relative group"
+                            title="Inspect Customer Dining Bill"
                           >
                             <img src={s.billUrl} alt="Bill" className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white">
+                              <Eye className="w-3.5 h-3.5" />
+                            </div>
                           </button>
                           <div className="text-[11px] font-mono leading-tight">
-                            {s.billNumber && <p className="text-secondary font-semibold">#{s.billNumber}</p>}
-                            {s.billAmount !== undefined && <p className="text-on-surface">₹{s.billAmount}</p>}
+                            {s.billNumber && <p className="text-secondary font-bold">#{s.billNumber}</p>}
+                            {s.billAmount !== undefined && <p className="text-on-surface font-semibold">₹{s.billAmount}</p>}
                           </div>
                         </div>
+                      ) : s.billNumber || s.billAmount !== undefined ? (
+                        <div className="text-[11px] font-mono leading-tight">
+                          {s.billNumber && <p className="text-secondary font-bold">#{s.billNumber}</p>}
+                          {s.billAmount !== undefined && <p className="text-on-surface font-semibold">₹{s.billAmount}</p>}
+                          <span className="text-[9px] text-on-surface-variant/60 uppercase">Manual Entry</span>
+                        </div>
                       ) : (
-                        <span className="text-xs text-on-surface-variant/40 font-mono">—</span>
+                        <span className="text-xs text-on-surface-variant/40 font-mono">Direct Desk Seal</span>
                       )}
                     </td>
                     <td className="px-5 py-4">
                       {statusBadge(s.status)}
                     </td>
                     <td className="px-5 py-4 text-on-surface-variant text-xs hidden md:table-cell">
-                      {s.approvedBy?.name || 'Concierge'}
+                      {s.approvedBy ? (
+                        <div>
+                          <p className="font-semibold text-on-surface text-xs leading-tight">{s.approvedBy.name}</p>
+                          <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] uppercase font-mono font-bold mt-0.5 ${
+                            s.approvedBy.role === 'STAFF'
+                              ? 'bg-amber-100 text-amber-800 border border-amber-300/60'
+                              : 'bg-primary/10 text-primary border border-primary/20'
+                          }`}>
+                            {s.approvedBy.role || 'Staff Concierge'}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-on-surface-variant/40 font-mono">Concierge Desk</span>
+                      )}
                     </td>
                     <td className="px-5 py-4 text-on-surface-variant text-xs font-mono hidden md:table-cell">
                       {new Date(s.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
@@ -466,19 +531,24 @@ export default function StampsPage() {
                         <div className="flex gap-2 justify-center">
                           <button
                             onClick={() => handleApprove(s._id)}
-                            className="px-3 py-1.5 rounded-lg bg-green-500/20 text-green-300 border border-green-500/30 text-xs font-bold hover:bg-green-500/30 cursor-pointer"
+                            className="px-3 py-1.5 rounded-lg bg-green-100 text-green-600 border border-green-500/30 text-xs font-bold hover:bg-green-500/30 cursor-pointer shadow-sm"
                           >
                             Approve
                           </button>
                           <button
                             onClick={() => handleReject(s._id)}
-                            className="px-3 py-1.5 rounded-lg bg-red-500/20 text-red-300 border border-red-500/30 text-xs font-bold hover:bg-red-500/30 cursor-pointer"
+                            className="px-3 py-1.5 rounded-lg bg-red-100 text-red-600 border border-red-500/30 text-xs font-bold hover:bg-red-500/30 cursor-pointer"
                           >
                             Reject
                           </button>
                         </div>
+                      ) : isStaffApproved ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                          <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
+                          <span>Staff Authorized</span>
+                        </span>
                       ) : (
-                        <span className="text-xs text-on-surface-variant/50 font-mono">—</span>
+                        <span className="text-xs text-on-surface-variant/50 font-mono">Verified</span>
                       )}
                     </td>
                   </tr>
@@ -511,10 +581,18 @@ export default function StampsPage() {
         )}
       </div>
 
+      {/* Staff Stamp Modal for Admin Desk */}
+      <StaffStampModal
+        isOpen={stampModalOpen}
+        guest={guestResult?.guest}
+        onClose={() => setStampModalOpen(false)}
+        onConfirm={handleModalConfirm}
+      />
+
       {/* Bill Lightbox Modal */}
       {selectedBill && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-fadeIn">
-          <div className="relative w-full max-w-2xl rounded-3xl bg-surface-container/95 border border-primary/40 p-4 sm:p-6 shadow-[0_24px_60px_rgba(0,0,0,0.9)] text-on-surface flex flex-col max-h-[92vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-2xl rounded-3xl bg-surface-container/95 border border-primary/40 p-4 sm:p-6 shadow-[0_24px_60px_rgba(46,26,20,0.15)] text-on-surface flex flex-col max-h-[92vh]">
             <div className="flex items-center justify-between pb-3 border-b border-outline-variant/30 mb-3">
               <div>
                 <h3 className="font-serif text-sm sm:text-base font-bold text-on-surface">
@@ -534,7 +612,7 @@ export default function StampsPage() {
               </button>
             </div>
 
-            <div className="flex-1 overflow-auto rounded-2xl bg-black/60 p-2 flex items-center justify-center">
+            <div className="flex-1 overflow-auto rounded-2xl bg-surface-container-high/80 p-2 flex items-center justify-center">
               <img
                 src={selectedBill.url}
                 alt="Enlarged Bill Receipt"
@@ -556,6 +634,6 @@ export default function StampsPage() {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

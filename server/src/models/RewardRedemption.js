@@ -30,6 +30,14 @@ const rewardRedemptionSchema = new mongoose.Schema(
       default: REDEMPTION_STATUS.AVAILABLE,
       index: true,
     },
+    code: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
+      uppercase: true,
+      trim: true,
+    },
     redeemedAt: {
       type: Date,
     },
@@ -43,6 +51,18 @@ const rewardRedemptionSchema = new mongoose.Schema(
     toJSON: {
       transform: (_doc, ret) => {
         delete ret.__v;
+        if (!ret.code && ret._id) {
+          ret.code = 'UM-RW-' + ret._id.toString().slice(-6).toUpperCase();
+        }
+        return ret;
+      },
+    },
+    toObject: {
+      transform: (_doc, ret) => {
+        delete ret.__v;
+        if (!ret.code && ret._id) {
+          ret.code = 'UM-RW-' + ret._id.toString().slice(-6).toUpperCase();
+        }
         return ret;
       },
     },
