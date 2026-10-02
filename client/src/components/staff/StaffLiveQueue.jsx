@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Clock, CheckCircle, AlertTriangle, Eye, X, FileText, Image as ImageIcon } from 'lucide-react';
 
 export default function StaffLiveQueue({ pendingRequests = [], onApprove, onReject }) {
@@ -76,7 +76,7 @@ export default function StaffLiveQueue({ pendingRequests = [], onApprove, onReje
                       </div>
                     </button>
                   ) : (
-                    <div className="w-14 h-14 rounded-xl bg-surface-container-high/60 border border-outline-variant/30 flex items-center justify-center text-on-surface-variant/40 shrink-0">
+                    <div className="w-14 h-14 rounded-xl bg-surface-container-high/60 border border-outline-variant/30 flex items-center justify-center text-on-surface-variant shrink-0">
                       <FileText className="w-5 h-5" />
                     </div>
                   )}

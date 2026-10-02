@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { adminApi } from '../../services/api';
 import { Search, ChevronLeft, ChevronRight, Eye, ShieldCheck, Stamp } from 'lucide-react';
@@ -80,14 +80,14 @@ export default function StaffGuestsPage() {
             <tbody className="divide-y divide-outline-variant/20">
               {loading ? (
                 <tr>
-                  <td colSpan={4} className="px-5 py-12 text-center text-on-surface-variant/50">
+                  <td colSpan={4} className="px-5 py-12 text-center text-on-surface-variant">
                     <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                     <span>Loading patron roster...</span>
                   </td>
                 </tr>
               ) : guests.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-5 py-12 text-center text-on-surface-variant/50">
+                  <td colSpan={4} className="px-5 py-12 text-center text-on-surface-variant">
                     No patrons found matching your search.
                   </td>
                 </tr>
@@ -103,9 +103,9 @@ export default function StaffGuestsPage() {
                   </td>
                   <td className="px-5 py-4 text-on-surface-variant text-xs font-mono">
                     <div>{g.email || '—'}</div>
-                    <div className="text-[11px] text-on-surface-variant/60">{g.phone ? maskPhone(g.phone) : ''}</div>
+                    <div className="text-[11px] text-on-surface-variant">{g.phone ? maskPhone(g.phone) : ''}</div>
                   </td>
-                  <td className="px-5 py-4 text-on-surface-variant/70 text-xs hidden md:table-cell">
+                  <td className="px-5 py-4 text-on-surface-variant text-xs hidden md:table-cell">
                     {g.lastLoginAt ? new Date(g.lastLoginAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Recent'}
                   </td>
                   <td className="px-5 py-4 text-center">

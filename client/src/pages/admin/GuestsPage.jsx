@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { adminApi } from '../../services/api';
 import { Users, Search, ChevronLeft, ChevronRight, Eye, Phone, Mail, Calendar, ShieldCheck, X } from 'lucide-react';
@@ -92,14 +92,14 @@ export default function GuestsPage() {
             <tbody className="divide-y divide-outline-variant/20">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-5 py-12 text-center text-on-surface-variant/50">
+                  <td colSpan={5} className="px-5 py-12 text-center text-on-surface-variant">
                     <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                     <span>Loading patron roster...</span>
                   </td>
                 </tr>
               ) : guests.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-5 py-12 text-center text-on-surface-variant/50">
+                  <td colSpan={5} className="px-5 py-12 text-center text-on-surface-variant">
                     No noble patrons found matching your search.
                   </td>
                 </tr>
@@ -115,12 +115,12 @@ export default function GuestsPage() {
                   </td>
                   <td className="px-5 py-4 text-on-surface-variant text-xs font-mono">
                     <div>{g.email || '—'}</div>
-                    <div className="text-[11px] text-on-surface-variant/60">{g.phone ? maskPhone(g.phone) : ''}</div>
+                    <div className="text-[11px] text-on-surface-variant">{g.phone ? maskPhone(g.phone) : ''}</div>
                   </td>
-                  <td className="px-5 py-4 text-on-surface-variant/70 text-xs hidden md:table-cell">
+                  <td className="px-5 py-4 text-on-surface-variant text-xs hidden md:table-cell">
                     {g.lastLoginAt ? new Date(g.lastLoginAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
                   </td>
-                  <td className="px-5 py-4 text-on-surface-variant/70 text-xs hidden md:table-cell">
+                  <td className="px-5 py-4 text-on-surface-variant text-xs hidden md:table-cell">
                     {new Date(g.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </td>
                   <td className="px-5 py-4 text-center">
@@ -193,21 +193,21 @@ export default function GuestsPage() {
 
             <div className="grid grid-cols-2 gap-3 mb-6 p-4 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] text-xs">
               <div>
-                <span className="text-on-surface-variant/70 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Email</span>
+                <span className="text-on-surface-variant block text-[10px] uppercase font-bold tracking-wider mb-0.5">Email</span>
                 <span className="text-on-surface font-mono font-semibold">{detail.guest?.email || '—'}</span>
               </div>
               <div>
-                <span className="text-on-surface-variant/70 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Mobile</span>
+                <span className="text-on-surface-variant block text-[10px] uppercase font-bold tracking-wider mb-0.5">Mobile</span>
                 <span className="text-on-surface font-mono font-semibold">{detail.guest?.phone || '—'}</span>
               </div>
               <div>
-                <span className="text-on-surface-variant/70 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Member Since</span>
+                <span className="text-on-surface-variant block text-[10px] uppercase font-bold tracking-wider mb-0.5">Member Since</span>
                 <span className="text-on-surface font-mono font-semibold">
                   {new Date(detail.guest?.createdAt).toLocaleDateString('en-IN')}
                 </span>
               </div>
               <div>
-                <span className="text-on-surface-variant/70 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Status</span>
+                <span className="text-on-surface-variant block text-[10px] uppercase font-bold tracking-wider mb-0.5">Status</span>
                 <span className="text-emerald-700 font-bold uppercase tracking-wider text-[11px] inline-flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
                   Active Court Member
@@ -246,7 +246,7 @@ export default function GuestsPage() {
               </h3>
               <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
                 {detail.stamps?.length === 0 ? (
-                  <p className="text-xs text-on-surface-variant/50 italic py-2">No seal history on record.</p>
+                  <p className="text-xs text-on-surface-variant italic py-2">No seal history on record.</p>
                 ) : (
                   detail.stamps?.slice(0, 10).map((s) => (
                     <div key={s._id} className="bg-[#fdfaf6] rounded-xl p-2.5 border border-[#eee0d2] flex items-center justify-between text-xs font-mono">

@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'react-router-dom';
+﻿import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import MaharajaCard from '../../components/loyalty/MaharajaCard';
 import ProgramTermsCard from '../../components/common/ProgramTermsCard';
@@ -101,7 +101,7 @@ export default function LoyaltyLandingPage() {
           </div>
 
           {source && (
-            <p className="text-secondary/70 font-label-sm uppercase tracking-widest mt-4">
+            <p className="text-secondary font-label-sm uppercase tracking-widest mt-4">
               Privilege Referral Active: {source}
             </p>
           )}

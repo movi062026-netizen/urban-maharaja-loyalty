@@ -21,21 +21,21 @@ export default function AdminMetricCard({ title, value, icon: Icon, change, tren
       </div>
 
       <div className="relative z-10">
-        <span className="text-[10px] sm:text-xs uppercase font-mono tracking-wider text-on-surface-variant font-semibold block mb-1">
+        <span className="text-[10px] sm:text-xs uppercase font-mono tracking-wider text-[#744d1c] font-black block mb-1">
           {title}
         </span>
         <div className="flex items-baseline gap-2">
-          <span className="font-serif text-2xl sm:text-3xl font-bold text-on-surface tracking-tight">
+          <span className="font-serif text-2xl sm:text-3xl font-black text-[#1d0f09] tracking-tight">
             {value}
           </span>
           {change && (
-            <span className={`text-xs font-semibold ${trend === 'up' ? 'text-emerald-600' : 'text-primary'}`}>
+            <span className={`text-xs font-bold ${trend === 'up' ? 'text-emerald-700' : 'text-primary'}`}>
               {change}
             </span>
           )}
         </div>
         {subtitle && (
-          <p className="text-[11px] text-on-surface-variant/70 mt-1 font-mono">{subtitle}</p>
+          <p className="text-[11px] text-[#3b241a] mt-1 font-mono font-medium">{subtitle}</p>
         )}
       </div>
 

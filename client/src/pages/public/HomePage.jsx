@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import MaharajaCard from '../../components/loyalty/MaharajaCard';
@@ -497,7 +497,7 @@ export default function HomePage() {
               </div>
 
               <div className="px-5 pb-5 pt-3 border-t border-outline-variant/30 flex items-center justify-between">
-                <span className="text-[11px] text-on-surface-variant/80 font-sans">
+                <span className="text-[11px] text-on-surface-variant font-sans">
                   Char-Grilled In Tandoor
                 </span>
                 <Link
@@ -548,7 +548,7 @@ export default function HomePage() {
               </div>
 
               <div className="px-5 pb-5 pt-3 border-t border-outline-variant/30 flex items-center justify-between">
-                <span className="text-[11px] text-on-surface-variant/80 font-sans">
+                <span className="text-[11px] text-on-surface-variant font-sans">
                   Wood-Fired Toasting
                 </span>
                 <Link
@@ -599,7 +599,7 @@ export default function HomePage() {
               </div>
 
               <div className="px-5 pb-5 pt-3 border-t border-outline-variant/30 flex items-center justify-between">
-                <span className="text-[11px] text-on-surface-variant/80 font-sans">
+                <span className="text-[11px] text-on-surface-variant font-sans">
                   Sambar &amp; Chutney Flight
                 </span>
                 <Link
@@ -650,7 +650,7 @@ export default function HomePage() {
               </div>
 
               <div className="px-5 pb-5 pt-3 border-t border-outline-variant/30 flex items-center justify-between">
-                <span className="text-[11px] text-on-surface-variant/80 font-sans">
+                <span className="text-[11px] text-on-surface-variant font-sans">
                   Gourmet Salad &amp; Dip
                 </span>
                 <Link

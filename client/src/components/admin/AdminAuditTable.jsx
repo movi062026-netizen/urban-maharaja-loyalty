@@ -1,4 +1,4 @@
-import { formatDateTime } from '../../utils';
+﻿import { formatDateTime } from '../../utils';
 import { ShieldCheck, AlertCircle, Info, Lock } from 'lucide-react';
 
 export default function AdminAuditTable({ logs = [], loading = false }) {
@@ -24,7 +24,7 @@ export default function AdminAuditTable({ logs = [], loading = false }) {
   if (logs.length === 0) {
     return (
       <div className="p-8 text-center text-on-surface-variant text-xs bg-surface-container/40 rounded-2xl border border-outline-variant/30">
-        <ShieldCheck className="w-8 h-8 text-secondary/50 mx-auto mb-2" />
+        <ShieldCheck className="w-8 h-8 text-secondary mx-auto mb-2" />
         <p>No audit events recorded for this timeframe</p>
       </div>
     );
@@ -50,7 +50,7 @@ export default function AdminAuditTable({ logs = [], loading = false }) {
               </td>
               <td className="py-3 px-4 text-on-surface font-semibold whitespace-nowrap">
                 {log.performedBy?.name || log.actorName || 'System'}
-                <span className="text-[10px] text-on-surface-variant/70 block font-normal">
+                <span className="text-[10px] text-on-surface-variant block font-normal">
                   {log.performedBy?.role || log.actorRole}
                 </span>
               </td>

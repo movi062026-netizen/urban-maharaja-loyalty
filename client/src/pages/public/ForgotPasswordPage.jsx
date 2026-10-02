@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { authApi } from '../../services/api';
@@ -335,7 +335,7 @@ export default function ForgotPasswordPage() {
 
               {/* Resend Seal Action */}
               <div className="flex items-center justify-between text-xs pt-1">
-                <span className="text-on-surface-variant/80">
+                <span className="text-on-surface-variant">
                   Didn't receive the seal?
                 </span>
                 {canResend ? (
@@ -348,7 +348,7 @@ export default function ForgotPasswordPage() {
                     Resend Seal
                   </button>
                 ) : (
-                  <span className="text-on-surface-variant/60 font-mono text-[11px]">
+                  <span className="text-on-surface-variant font-mono text-[11px]">
                     Resend in {resendTimer}s
                   </span>
                 )}
@@ -454,7 +454,7 @@ export default function ForgotPasswordPage() {
         </div>
 
         {/* Portal Switching Footers */}
-        <div className="mt-6 text-center text-xs text-on-surface-variant/80 space-y-2">
+        <div className="mt-6 text-center text-xs text-on-surface-variant space-y-2">
           <p>
             Staff terminal credentials recovery?{' '}
             <Link to="/staff/login" className="text-secondary hover:underline font-semibold">

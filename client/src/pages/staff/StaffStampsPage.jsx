@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 import { adminApi, loyaltyApi } from '../../services/api';
@@ -274,7 +274,7 @@ export default function StaffStampsPage() {
                 </div>
               </div>
             ) : (
-              <p className="text-xs text-on-surface-variant/70 text-center py-2">No guest patron matched this query.</p>
+              <p className="text-xs text-on-surface-variant text-center py-2">No guest patron matched this query.</p>
             )}
           </div>
         )}
@@ -314,14 +314,14 @@ export default function StaffStampsPage() {
             <tbody className="divide-y divide-outline-variant/20">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-5 py-12 text-center text-on-surface-variant/50">
+                  <td colSpan={5} className="px-5 py-12 text-center text-on-surface-variant">
                     <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                     <span>Loading seal logs...</span>
                   </td>
                 </tr>
               ) : stamps.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-5 py-12 text-center text-on-surface-variant/50">
+                  <td colSpan={5} className="px-5 py-12 text-center text-on-surface-variant">
                     No seal requests found.
                   </td>
                 </tr>
@@ -338,7 +338,7 @@ export default function StaffStampsPage() {
                         <div>
                           <p className="font-semibold text-on-surface leading-tight">{guestName}</p>
                           {guestContact && (
-                            <p className="text-[11px] text-on-surface-variant/70 font-mono font-normal mt-0.5">
+                            <p className="text-[11px] text-on-surface-variant font-mono font-normal mt-0.5">
                               {guestContact}
                             </p>
                           )}
@@ -362,7 +362,7 @@ export default function StaffStampsPage() {
                           </div>
                         </div>
                       ) : (
-                        <span className="text-xs text-on-surface-variant/40 font-mono">—</span>
+                        <span className="text-xs text-on-surface-variant font-mono">—</span>
                       )}
                     </td>
                     <td className="px-5 py-4">
@@ -403,7 +403,7 @@ export default function StaffStampsPage() {
                           </button>
                         </div>
                       ) : (
-                        <span className="text-xs text-on-surface-variant/50 font-mono">—</span>
+                        <span className="text-xs text-on-surface-variant font-mono">—</span>
                       )}
                     </td>
                   </tr>

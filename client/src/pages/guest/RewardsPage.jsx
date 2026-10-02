@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { rewardApi, loyaltyApi } from '../../services/api';
 import { Gift, Sparkles, CheckCircle2, Award, Clock } from 'lucide-react';
 import GuestRedemptionVoucher from '../../components/guest/GuestRedemptionVoucher';
@@ -94,7 +94,7 @@ export default function RewardsPage() {
             </span>
           </div>
           <h1 className="font-serif text-2xl sm:text-3xl text-on-surface font-bold">Royal Dining Rewards Vault</h1>
-          <p className="text-xs text-on-surface-variant/80 mt-1">
+          <p className="text-xs text-on-surface-variant mt-1">
             Special chef repasts, vintage beverages, and imperial delicacies unlocked via your Maharaja Card seals
           </p>
         </div>
@@ -130,7 +130,7 @@ export default function RewardsPage() {
                 <h3 className="font-serif text-xl sm:text-2xl font-bold text-on-surface">
                   Choose Your Royal Dining Privilege
                 </h3>
-                <p className="text-xs sm:text-sm text-on-surface-variant/80 max-w-xl mt-1 leading-relaxed">
+                <p className="text-xs sm:text-sm text-on-surface-variant max-w-xl mt-1 leading-relaxed">
                   You have successfully collected all 5 royal seals! Select <strong>ONE complimentary reward</strong> from the catalog below to issue your dining voucher.
                 </p>
               </div>

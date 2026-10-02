@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+﻿import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -739,7 +739,7 @@ export default function MenuPage() {
                     {dish.name}
                   </h3>
 
-                  <p className="text-xs text-on-surface-variant/80 leading-relaxed font-sans line-clamp-3">
+                  <p className="text-xs text-on-surface-variant leading-relaxed font-sans line-clamp-3">
                     {dish.description}
                   </p>
                 </div>
@@ -790,7 +790,7 @@ export default function MenuPage() {
 
           {filteredItems.length === 0 ? (
             <div className="p-12 text-center rounded-3xl bg-surface-container/40 border border-outline-variant/30 my-8">
-              <UtensilsCrossed className="w-10 h-10 text-on-surface-variant/40 mx-auto mb-3" />
+              <UtensilsCrossed className="w-10 h-10 text-on-surface-variant mx-auto mb-3" />
               <h3 className="font-serif text-lg text-on-surface">No delicacies match your search</h3>
               <p className="text-xs text-on-surface-variant mt-1">Try clearing your search query or selecting another category.</p>
               <button
@@ -850,7 +850,7 @@ export default function MenuPage() {
                     </h3>
 
                     {/* Description */}
-                    <p className="text-xs text-on-surface-variant/80 leading-relaxed font-sans mb-5">
+                    <p className="text-xs text-on-surface-variant leading-relaxed font-sans mb-5">
                       {item.description}
                     </p>
                   </div>

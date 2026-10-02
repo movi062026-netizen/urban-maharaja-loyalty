@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { loyaltyApi } from '../../services/api';
 import { History, Crown, CheckCircle, XCircle, Clock } from 'lucide-react';
@@ -55,7 +55,7 @@ export default function HistoryPage() {
             </span>
           </div>
           <h1 className="font-serif text-2xl sm:text-3xl text-on-surface font-bold">Royal Visit Ledger</h1>
-          <p className="text-xs text-on-surface-variant/80 mt-1">
+          <p className="text-xs text-on-surface-variant mt-1">
             Chronological archive of all dining visits, official seals endorsed, and privileges claimed
           </p>
         </div>
@@ -67,7 +67,7 @@ export default function HistoryPage() {
             <History className="w-7 h-7" />
           </div>
           <h3 className="font-serif text-lg text-on-surface font-bold">No Visit History Yet</h3>
-          <p className="text-xs sm:text-sm text-on-surface-variant/80 mt-1 max-w-sm mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-on-surface-variant mt-1 max-w-sm mx-auto leading-relaxed">
             Your imperial dining visits, stamps, and vouchers will be inscribed here automatically as you dine.
           </p>
         </div>

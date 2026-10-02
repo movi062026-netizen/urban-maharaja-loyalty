@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { loyaltyApi } from '../../services/api';
@@ -171,7 +171,7 @@ export default function MaharajaCardPage() {
                 <p className="text-xs font-bold text-on-surface">
                   Dedicated Stamp & Seal Desk
                 </p>
-                <p className="text-[11px] text-on-surface-variant/80">
+                <p className="text-[11px] text-on-surface-variant">
                   Submit dining bills, track real-time concierge approvals, and inspect milestone perks.
                 </p>
               </div>

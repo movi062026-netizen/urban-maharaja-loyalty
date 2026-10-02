@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { adminApi } from '../../services/api';
 import { UserCog, Plus, ShieldCheck, Mail, Key, Check, Copy, UserX, UserCheck, RefreshCw } from 'lucide-react';
@@ -153,7 +153,7 @@ export default function StaffPage() {
                   <span className="truncate">{member.email}</span>
                 </p>
 
-                <div className="mt-3 pt-3 border-t border-outline-variant/20 flex items-center justify-between text-[11px] text-on-surface-variant/70">
+                <div className="mt-3 pt-3 border-t border-outline-variant/20 flex items-center justify-between text-[11px] text-on-surface-variant">
                   <span>Status:</span>
                   <span className={`font-semibold ${member.isActive ? 'text-green-600' : 'text-red-600'}`}>
                     {member.isActive ? '● Active' : '○ Suspended'}
@@ -161,7 +161,7 @@ export default function StaffPage() {
                 </div>
 
                 {member.lastLoginAt && (
-                  <p className="text-[10px] text-on-surface-variant/50 mt-1">
+                  <p className="text-[10px] text-on-surface-variant mt-1">
                     Last active: {new Date(member.lastLoginAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                   </p>
                 )}

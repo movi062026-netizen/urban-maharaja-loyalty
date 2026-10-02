@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { adminApi, loyaltyApi } from '../../services/api';
 import { Stamp, ShoppingBag, Users, ChevronRight, Sparkles, ArrowUpRight } from 'lucide-react';
@@ -215,7 +215,7 @@ export default function StaffDashboardPage() {
 
               <div className="space-y-2">
                 {recentGuests.length === 0 ? (
-                  <p className="text-xs text-on-surface-variant/60 py-6 text-center">No patrons enrolled yet.</p>
+                  <p className="text-xs text-on-surface-variant py-6 text-center">No patrons enrolled yet.</p>
                 ) : (
                   recentGuests.map((g) => (
                     <div

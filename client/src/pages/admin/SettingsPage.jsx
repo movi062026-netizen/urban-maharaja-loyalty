@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { settingsApi } from '../../services/api';
 import { Settings, Save, Building2, Globe, Sparkles } from 'lucide-react';
@@ -152,7 +152,7 @@ export default function SettingsPage() {
               className="w-full px-4 py-2.5 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface text-sm focus:outline-none focus:border-primary transition-colors font-mono"
               min={1}
             />
-            <span className="text-[11px] text-on-surface-variant/70 mt-1 block">Standard cycle is 5 seals for complimentary perk</span>
+            <span className="text-[11px] text-on-surface-variant mt-1 block">Standard cycle is 5 seals for complimentary perk</span>
           </div>
           <div className="flex items-center justify-between p-4 rounded-xl bg-surface-container-high/60 border border-outline-variant/30">
             <div>

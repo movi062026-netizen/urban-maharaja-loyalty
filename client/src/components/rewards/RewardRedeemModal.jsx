@@ -1,4 +1,4 @@
-import { X, Gift, Sparkles, CheckCircle2 } from 'lucide-react';
+﻿import { X, Gift, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export default function RewardRedeemModal({ isOpen, onClose, onConfirm, reward, loading = false }) {
   if (!isOpen || !reward) return null;
@@ -38,7 +38,7 @@ export default function RewardRedeemModal({ isOpen, onClose, onConfirm, reward, 
             </div>
           </div>
 
-          <p className="text-xs text-on-surface-variant/80 text-center">
+          <p className="text-xs text-on-surface-variant text-center">
             Once claimed, an official royal voucher passcode will be generated for your table concierge to honor upon your visit.
           </p>
 

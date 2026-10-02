@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { adminApi, rewardApi } from '../../services/api';
 import { ShoppingBag, ChevronLeft, ChevronRight, CheckCircle, Gift } from 'lucide-react';
@@ -77,14 +77,14 @@ export default function RedemptionsPage() {
             <tbody className="divide-y divide-outline-variant/20">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-on-surface-variant/50">
+                  <td colSpan={6} className="px-5 py-12 text-center text-on-surface-variant">
                     <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                     <span>Loading redemptions...</span>
                   </td>
                 </tr>
               ) : redemptions.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-on-surface-variant/50">
+                  <td colSpan={6} className="px-5 py-12 text-center text-on-surface-variant">
                     No redemption vouchers recorded.
                   </td>
                 </tr>
@@ -112,7 +112,7 @@ export default function RedemptionsPage() {
                         <span>Redeem Voucher</span>
                       </button>
                     ) : (
-                      <span className="text-xs text-on-surface-variant/40 font-mono">—</span>
+                      <span className="text-xs text-on-surface-variant font-mono">—</span>
                     )}
                   </td>
                 </tr>

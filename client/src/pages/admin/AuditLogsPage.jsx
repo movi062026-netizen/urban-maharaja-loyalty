@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { adminApi } from '../../services/api';
 import { ScrollText, ChevronLeft, ChevronRight, ShieldAlert } from 'lucide-react';
@@ -55,14 +55,14 @@ export default function AuditLogsPage() {
             <tbody className="divide-y divide-outline-variant/20">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-5 py-12 text-center text-on-surface-variant/50">
+                  <td colSpan={5} className="px-5 py-12 text-center text-on-surface-variant">
                     <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                     <span>Loading security ledger...</span>
                   </td>
                 </tr>
               ) : logs.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-5 py-12 text-center text-on-surface-variant/50">
+                  <td colSpan={5} className="px-5 py-12 text-center text-on-surface-variant">
                     No audit records logged.
                   </td>
                 </tr>

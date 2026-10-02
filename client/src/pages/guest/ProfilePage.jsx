@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { authApi } from '../../services/api';
@@ -108,7 +108,7 @@ export default function ProfilePage() {
 
           <div>
             <label htmlFor="phone" className="block text-xs uppercase tracking-wider text-[#3b241a] font-black mb-1.5">
-              Mobile Contact <span className="text-[10px] text-on-surface-variant/60 font-normal lowercase">(used for SMS seal alerts)</span>
+              Mobile Contact <span className="text-[10px] text-on-surface-variant font-normal lowercase">(used for SMS seal alerts)</span>
             </label>
             <div className="relative">
               <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />

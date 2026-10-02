@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { X, Stamp, ShieldCheck, Upload, FileText, Image as ImageIcon, IndianRupee } from 'lucide-react';
 
 export default function StaffStampModal({ guest, isOpen, onClose, onConfirm, loading = false }) {
@@ -100,7 +100,7 @@ export default function StaffStampModal({ guest, isOpen, onClose, onConfirm, loa
                 Bill / Receipt Amount (₹)
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-sm font-semibold">₹</span>
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm font-semibold">₹</span>
                 <input
                   type="number"
                   min="0"

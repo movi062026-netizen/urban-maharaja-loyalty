@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
@@ -479,7 +479,7 @@ export default function LoginPage() {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/60 hover:text-on-surface transition-colors cursor-pointer"
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
                         tabIndex={-1}
                       >
                         <span className="material-symbols-outlined text-[20px]">
@@ -508,7 +508,7 @@ export default function LoginPage() {
 
               {/* Quick Demo Fill Helper */}
               <div className="pt-4 border-t border-outline-variant/30">
-                <p className="text-[11px] uppercase tracking-wider text-on-surface-variant/70 text-center font-semibold mb-2">
+                <p className="text-[11px] uppercase tracking-wider text-on-surface-variant text-center font-semibold mb-2">
                   One-Click Demo Patrons
                 </p>
                 <div className="grid grid-cols-2 gap-2">
@@ -686,13 +686,13 @@ export default function LoginPage() {
 
         {/* Portals Navigation / Staff Links */}
         <div className="mt-8 text-center space-y-3">
-          <p className="text-[11px] uppercase tracking-widest text-on-surface-variant/70 font-mono">
+          <p className="text-[11px] uppercase tracking-widest text-on-surface-variant font-mono">
             Royal Staff &amp; Administrative Entrances
           </p>
           <div className="flex items-center justify-center gap-4 text-xs">
             <Link
               to="/staff/login"
-              className="text-secondary hover:text-secondary/80 font-semibold transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container/60 hover:bg-surface-container border border-outline-variant/30"
+              className="text-secondary hover:text-secondary font-semibold transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container/60 hover:bg-surface-container border border-outline-variant/30"
             >
               <span className="material-symbols-outlined text-[16px]">room_service</span>
               <span>Staff Terminal</span>

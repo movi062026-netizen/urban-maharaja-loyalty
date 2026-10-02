@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { adminApi, loyaltyApi } from '../../services/api';
 import { Stamp as StampIcon, Search, CheckCircle, XCircle, Clock, ChevronLeft, ChevronRight, User, ShieldCheck, Sparkles, Users, AlertTriangle, Eye, X, Image as ImageIcon, FileText } from 'lucide-react';
@@ -396,7 +396,7 @@ export default function StampsPage() {
                 </div>
               </div>
             ) : (
-              <p className="text-xs text-on-surface-variant/70 text-center py-2">No guest patron matched this query.</p>
+              <p className="text-xs text-on-surface-variant text-center py-2">No guest patron matched this query.</p>
             )}
           </div>
         )}
@@ -442,14 +442,14 @@ export default function StampsPage() {
             <tbody className="divide-y divide-outline-variant/20">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-on-surface-variant/50">
+                  <td colSpan={6} className="px-5 py-12 text-center text-on-surface-variant">
                     <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                     <span>Loading seal logs...</span>
                   </td>
                 </tr>
               ) : (statusFilter === 'STAFF_APPROVED' ? stamps.filter(s => s.status === 'APPROVED' && s.approvedBy?.role === 'STAFF') : stamps).length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-on-surface-variant/50">
+                  <td colSpan={6} className="px-5 py-12 text-center text-on-surface-variant">
                     No seal requests found for this filter.
                   </td>
                 </tr>
@@ -468,7 +468,7 @@ export default function StampsPage() {
                         <div>
                           <p className="font-semibold text-on-surface leading-tight">{guestName}</p>
                           {guestContact && (
-                            <p className="text-[11px] text-on-surface-variant/70 font-mono font-normal mt-0.5">
+                            <p className="text-[11px] text-on-surface-variant font-mono font-normal mt-0.5">
                               {guestContact}
                             </p>
                           )}
@@ -498,10 +498,10 @@ export default function StampsPage() {
                         <div className="text-[11px] font-mono leading-tight">
                           {s.billNumber && <p className="text-secondary font-bold">#{s.billNumber}</p>}
                           {s.billAmount !== undefined && <p className="text-on-surface font-semibold">₹{s.billAmount}</p>}
-                          <span className="text-[9px] text-on-surface-variant/60 uppercase">Manual Entry</span>
+                          <span className="text-[9px] text-on-surface-variant uppercase">Manual Entry</span>
                         </div>
                       ) : (
-                        <span className="text-xs text-on-surface-variant/40 font-mono">Direct Desk Seal</span>
+                        <span className="text-xs text-on-surface-variant font-mono">Direct Desk Seal</span>
                       )}
                     </td>
                     <td className="px-5 py-4">
@@ -520,7 +520,7 @@ export default function StampsPage() {
                           </span>
                         </div>
                       ) : (
-                        <span className="text-xs text-on-surface-variant/40 font-mono">Concierge Desk</span>
+                        <span className="text-xs text-on-surface-variant font-mono">Concierge Desk</span>
                       )}
                     </td>
                     <td className="px-5 py-4 text-on-surface-variant text-xs font-mono hidden md:table-cell">
@@ -548,7 +548,7 @@ export default function StampsPage() {
                           <span>Staff Authorized</span>
                         </span>
                       ) : (
-                        <span className="text-xs text-on-surface-variant/50 font-mono">Verified</span>
+                        <span className="text-xs text-on-surface-variant font-mono">Verified</span>
                       )}
                     </td>
                   </tr>

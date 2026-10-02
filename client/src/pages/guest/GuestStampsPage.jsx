@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { loyaltyApi } from '../../services/api';
@@ -209,7 +209,7 @@ export default function GuestStampsPage() {
             <span>Stamp & Seal Tracker</span>
             <Stamp className="w-6 h-6 text-primary" />
           </h1>
-          <p className="text-xs text-on-surface-variant/80 mt-1">
+          <p className="text-xs text-on-surface-variant mt-1">
             Upload dining bills, monitor official concierge approvals, and track your milestone journey toward the 5th stamp complimentary feast.
           </p>
         </div>
@@ -247,7 +247,7 @@ export default function GuestStampsPage() {
                 <span className="px-2.5 py-1 rounded-full bg-primary/10 border border-primary/25 text-[11px] font-bold text-primary tracking-wide">
                   Cycle #{activeCycle} Active
                 </span>
-                <span className="text-xs font-mono text-on-surface-variant/80">
+                <span className="text-xs font-mono text-on-surface-variant">
                   {currentStamps} of {targetStamps} Seals Collected
                 </span>
               </div>
@@ -325,7 +325,7 @@ export default function GuestStampsPage() {
                         <span className="text-[9px] font-bold text-primary font-mono mt-0.5">NEXT</span>
                       </div>
                     ) : (
-                      <span className="text-xs font-serif font-black text-on-surface-variant/40">
+                      <span className="text-xs font-serif font-black text-on-surface-variant">
                         #{m.step}
                       </span>
                     )}
@@ -337,7 +337,7 @@ export default function GuestStampsPage() {
                   <h4 className="font-serif text-xs font-bold text-on-surface mt-0.5">
                     {m.title}
                   </h4>
-                  <p className="text-[10px] text-on-surface-variant/75 mt-1 leading-relaxed">
+                  <p className="text-[10px] text-on-surface-variant mt-1 leading-relaxed">
                     {m.perk}
                   </p>
 
@@ -352,7 +352,7 @@ export default function GuestStampsPage() {
                         In Progress
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded-full bg-white/60 text-on-surface-variant/50 border border-outline-variant/30 text-[9px] font-mono">
+                      <span className="px-2 py-0.5 rounded-full bg-white/60 text-on-surface-variant border border-outline-variant/30 text-[9px] font-mono">
                         Locked
                       </span>
                     )}
@@ -373,7 +373,7 @@ export default function GuestStampsPage() {
                   <h4 className="font-serif text-sm font-bold text-on-surface">
                     Royal Complimentary Feast Unlocked!
                   </h4>
-                  <p className="text-xs text-on-surface-variant/80">
+                  <p className="text-xs text-on-surface-variant">
                     Visit your rewards vault to redeem your voucher with the floor concierge.
                   </p>
                 </div>
@@ -439,7 +439,7 @@ export default function GuestStampsPage() {
                   <Upload className="w-4 h-4 text-primary" />
                   <span>Submit Dining Bill for Stamp</span>
                 </h3>
-                <p className="text-xs text-on-surface-variant/80 mt-0.5">
+                <p className="text-xs text-on-surface-variant mt-0.5">
                   Dined at Urban Maharaja? Upload your restaurant receipt to receive your official seal.
                 </p>
               </div>
@@ -467,7 +467,7 @@ export default function GuestStampsPage() {
                       <p className="text-xs font-bold text-on-surface truncate">
                         {receiptFile?.name}
                       </p>
-                      <p className="text-[10px] text-on-surface-variant/70 font-mono mt-0.5">
+                      <p className="text-[10px] text-on-surface-variant font-mono mt-0.5">
                         {(receiptFile?.size / (1024 * 1024)).toFixed(2)} MB
                       </p>
                       <button
@@ -488,7 +488,7 @@ export default function GuestStampsPage() {
                     <p className="text-xs font-bold text-on-surface">
                       Click to browse or take a photo of your receipt
                     </p>
-                    <p className="text-[11px] text-on-surface-variant/70 mt-1">
+                    <p className="text-[11px] text-on-surface-variant mt-1">
                       Ensure bill number, date, and final amount are clearly legible
                     </p>
                     <input
@@ -602,11 +602,11 @@ export default function GuestStampsPage() {
 
             {currentStamps === 0 ? (
               <div className="p-6 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] text-center space-y-2">
-                <Stamp className="w-8 h-8 text-on-surface-variant/40 mx-auto" />
-                <p className="text-xs text-on-surface-variant/80 font-bold">
+                <Stamp className="w-8 h-8 text-on-surface-variant mx-auto" />
+                <p className="text-xs text-on-surface-variant font-bold">
                   No verified seals in this cycle yet
                 </p>
-                <p className="text-[11px] text-on-surface-variant/60 leading-relaxed">
+                <p className="text-[11px] text-on-surface-variant leading-relaxed">
                   Upload your bill receipt or ask the floor captain to scan your QR pass at your table!
                 </p>
               </div>
@@ -625,7 +625,7 @@ export default function GuestStampsPage() {
                         <p className="font-bold text-on-surface">
                           Official Royal Seal #{i + 1}
                         </p>
-                        <p className="text-[11px] text-on-surface-variant/80">
+                        <p className="text-[11px] text-on-surface-variant">
                           Endorsed by Palace Concierge
                         </p>
                       </div>
@@ -646,7 +646,7 @@ export default function GuestStampsPage() {
               <span>Palace Stamping Protocol</span>
             </h3>
 
-            <div className="space-y-3 text-xs leading-relaxed text-on-surface-variant/80">
+            <div className="space-y-3 text-xs leading-relaxed text-on-surface-variant">
               <div className="p-3 rounded-xl bg-[#fdfaf6] border border-[#ede0d2]">
                 <strong className="text-on-surface block mb-0.5">1 Seal Per Dine-In Visit</strong>
                 <span>Each dining experience with a qualifying restaurant bill entitles your table to one official Maharaja seal.</span>

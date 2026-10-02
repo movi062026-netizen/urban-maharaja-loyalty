@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { adminApi } from '../../services/api';
 import { Users, Stamp, Gift, ShoppingBag, Star, CreditCard, BarChart3, TrendingUp } from 'lucide-react';
@@ -119,7 +119,7 @@ export default function DashboardPage() {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-xs text-on-surface-variant/50">No growth data in window</div>
+              <div className="h-full flex items-center justify-center text-xs text-on-surface-variant">No growth data in window</div>
             )}
           </div>
         </motion.div>
@@ -146,7 +146,7 @@ export default function DashboardPage() {
                 </LineChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-xs text-on-surface-variant/50">No stamps recorded in window</div>
+              <div className="h-full flex items-center justify-center text-xs text-on-surface-variant">No stamps recorded in window</div>
             )}
           </div>
         </motion.div>
@@ -166,12 +166,12 @@ export default function DashboardPage() {
             >
               <div className="min-w-0">
                 <span className="font-semibold text-primary">{log.action}</span>
-                <span className="text-on-surface-variant/70 ml-2">by {log.actorId?.name || 'Concierge'}</span>
+                <span className="text-on-surface-variant ml-2">by {log.actorId?.name || 'Concierge'}</span>
               </div>
-              <span className="text-[9px] sm:text-[11px] text-on-surface-variant/50 font-mono shrink-0">{new Date(log.createdAt).toLocaleString('en-IN')}</span>
+              <span className="text-[9px] sm:text-[11px] text-on-surface-variant font-mono shrink-0">{new Date(log.createdAt).toLocaleString('en-IN')}</span>
             </motion.div>
           )) : (
-            <p className="text-xs text-on-surface-variant/50 text-center py-4">No recent activity logged</p>
+            <p className="text-xs text-on-surface-variant text-center py-4">No recent activity logged</p>
           )}
         </div>
       </motion.div>

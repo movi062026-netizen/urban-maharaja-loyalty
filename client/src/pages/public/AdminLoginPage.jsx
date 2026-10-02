@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
@@ -188,7 +188,7 @@ export default function AdminLoginPage() {
           </div>
 
           {/* Links Back */}
-          <div className="mt-4 pt-3 border-t border-outline-variant/20 flex items-center justify-between text-xs text-on-surface-variant/70">
+          <div className="mt-4 pt-3 border-t border-outline-variant/20 flex items-center justify-between text-xs text-on-surface-variant">
             <Link to="/login" className="hover:text-primary transition-colors no-underline">
               ← Guest Patron Login
             </Link>

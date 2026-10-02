@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+﻿import { useState, useRef } from 'react';
 import { Upload, X, CheckCircle2, AlertCircle, FileText, Camera, ShieldCheck, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -129,7 +129,7 @@ export default function RequestStampModal({ isOpen, onClose, onSubmit, submittin
                 <p className="text-xs font-bold text-on-surface">
                   Click to capture or browse dining bill receipt
                 </p>
-                <p className="text-[11px] text-on-surface-variant/70 mt-1 font-mono">
+                <p className="text-[11px] text-on-surface-variant mt-1 font-mono">
                   Supports JPG, PNG, WEBP (Max 10MB)
                 </p>
                 <span className="inline-flex items-center gap-1 mt-3 px-2.5 py-0.5 rounded-full bg-secondary/10 border border-secondary/20 text-[10px] text-secondary font-mono font-semibold">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 
@@ -261,7 +261,7 @@ export default function ContactPage() {
                       <p className="text-on-surface font-bold mb-0.5">Service Hours</p>
                       <p>Lunch: 12:00 PM – 03:30 PM</p>
                       <p>Dinner: 07:00 PM – 11:30 PM</p>
-                      <p className="text-[11px] text-on-surface-variant/70 mt-0.5">Open All 7 Days</p>
+                      <p className="text-[11px] text-on-surface-variant mt-0.5">Open All 7 Days</p>
                     </div>
                   </div>
                 </div>

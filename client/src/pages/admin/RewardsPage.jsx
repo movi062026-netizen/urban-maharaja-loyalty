@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { rewardApi, adminApi } from '../../services/api';
 import { Gift, Plus, Edit2, ToggleLeft, ToggleRight, X, Sparkles } from 'lucide-react';
@@ -230,7 +230,7 @@ export default function RewardsPage() {
                       <h3 className="font-serif font-bold text-on-surface text-base sm:text-lg leading-tight truncate">
                         {r.title}
                       </h3>
-                      <p className="text-[11px] text-on-surface-variant/80 mt-0.5 line-clamp-1">
+                      <p className="text-[11px] text-on-surface-variant mt-0.5 line-clamp-1">
                         {r.description || 'Complimentary palace dining privilege'}
                       </p>
                     </div>

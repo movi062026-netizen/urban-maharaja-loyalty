@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
@@ -37,7 +37,7 @@ export default function Footer() {
               </div>
             </Link>
 
-            <p className="text-xs sm:text-sm text-on-surface-variant/80 leading-relaxed max-w-xs">
+            <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed max-w-xs">
               An ultra-luxurious dining sanctuary breathing the majestic grandeur of Rajasthan and imperial Mughal courts into modern culinary artistry.
             </p>
 
@@ -107,21 +107,21 @@ export default function Footer() {
                 <span className="material-symbols-outlined text-primary text-[16px] sm:text-[18px] mt-0.5 shrink-0" aria-hidden="true">schedule</span>
                 <div className="min-w-0">
                   <p className="text-on-surface font-medium mb-0.5">Royal Dining Hours</p>
-                  <p className="text-on-surface-variant/80">Mon – Sun: 12:00 PM – 11:00 PM</p>
+                  <p className="text-on-surface-variant">Mon – Sun: 12:00 PM – 11:00 PM</p>
                 </div>
               </div>
               <address className="flex items-start gap-2.5 not-italic">
                 <span className="material-symbols-outlined text-primary text-[16px] sm:text-[18px] mt-0.5 shrink-0" aria-hidden="true">location_on</span>
                 <div className="min-w-0">
                   <p className="text-on-surface font-medium mb-0.5">Imperial Pavilion</p>
-                  <p className="text-on-surface-variant/80 break-safe">Plot No. AC-209, Central Spine, Mahal Road, Jagatpura, Jaipur, Rajasthan 302017</p>
+                  <p className="text-on-surface-variant break-safe">Plot No. AC-209, Central Spine, Mahal Road, Jagatpura, Jaipur, Rajasthan 302017</p>
                 </div>
               </address>
               <div className="flex items-start gap-2.5">
                 <span className="material-symbols-outlined text-primary text-[16px] sm:text-[18px] mt-0.5 shrink-0" aria-hidden="true">call</span>
                 <div className="min-w-0">
                   <p className="text-on-surface font-medium mb-0.5">VIP Concierge</p>
-                  <a href="tel:+918001234567" className="text-on-surface-variant/80 no-underline hover:text-primary transition-colors">+91 (800) MAHARAJA</a>
+                  <a href="tel:+918001234567" className="text-on-surface-variant no-underline hover:text-primary transition-colors">+91 (800) MAHARAJA</a>
                 </div>
               </div>
             </div>
@@ -132,7 +132,7 @@ export default function Footer() {
             <h4 className="text-sm sm:text-base text-primary uppercase tracking-widest font-bold">
               Maharaja Gazette
             </h4>
-            <p className="text-xs sm:text-sm text-on-surface-variant/80">
+            <p className="text-xs sm:text-sm text-on-surface-variant">
               Receive confidential invitations to seasonal royal tastings and rare vintage releases.
             </p>
             <form onSubmit={handleSubscribe} className="flex flex-col gap-2.5">
@@ -157,7 +157,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 sm:mt-12 pt-5 sm:pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-[10px] sm:text-xs text-on-surface-variant/70 border-t border-outline-variant/20">
+        <div className="mt-8 sm:mt-12 pt-5 sm:pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-[10px] sm:text-xs text-on-surface-variant border-t border-outline-variant/20">
           <p className="text-center sm:text-left">© {new Date().getFullYear()} Urban Maharaja — A Fine Dine. All Imperial Rights Reserved.</p>
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-[9px] sm:text-[10px] uppercase tracking-[0.18em] sm:tracking-[0.22em] font-bold">
             <Link to="/about" className="hover:text-primary transition-colors no-underline">

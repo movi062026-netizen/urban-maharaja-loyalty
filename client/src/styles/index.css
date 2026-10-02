@@ -30,7 +30,7 @@
   --color-inverse-primary: #ffb1c6;
 
   /* Secondary (Burnished Imperial Gold — Rich, radiant, high-end) */
-  --color-secondary: #744d1c;
+  --color-secondary: #5e3810;
   --color-secondary-container: #cca056;
   --color-secondary-fixed: #ffdfb6;
   --color-secondary-fixed-dim: #d4a962;
@@ -50,11 +50,11 @@
   --color-on-tertiary-fixed-variant: #69243c;
 
   /* Content & Outlines — Deep crisp espresso for maximum readability */
-  --color-on-surface: #1d0f09;
-  --color-on-surface-variant: #483328;
-  --color-on-background: #1d0f09;
-  --color-outline: #7c6252;
-  --color-outline-variant: #d6c3b0;
+  --color-on-surface: #100703;
+  --color-on-surface-variant: #2d1a10;
+  --color-on-background: #100703;
+  --color-outline: #684e3e;
+  --color-outline-variant: #ceb8a2;
 
   /* Error */
   --color-error: #ba1a1a;

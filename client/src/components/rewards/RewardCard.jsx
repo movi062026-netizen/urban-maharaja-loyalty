@@ -1,4 +1,4 @@
-import { Gift, Sparkles, Clock, Crown, ArrowRight, Check, Utensils, Wine, Award, Percent } from 'lucide-react';
+﻿import { Gift, Sparkles, Clock, Crown, ArrowRight, Check, Utensils, Wine, Award, Percent } from 'lucide-react';
 
 const typeIcons = {
   COMPLIMENTARY_ITEM: Utensils,
@@ -101,7 +101,7 @@ export default function RewardCard({ reward, onRedeem, isRedeemable = false, isC
               <span>Claimed</span>
             </span>
           ) : (
-            <span className="text-[10px] font-mono text-on-surface-variant/60 uppercase tracking-wider font-semibold">
+            <span className="text-[10px] font-mono text-on-surface-variant uppercase tracking-wider font-semibold">
               Collect {reward.requiredStamps || 5} Seals to Unlock
             </span>
           )}
