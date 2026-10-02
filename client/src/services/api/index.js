@@ -102,3 +102,9 @@ export const reviewApi = {
 export const surpriseApi = {
   play: () => api.post('/surprise'),
 };
+
+export const bookingApi = {
+  createBooking: (data) => api.post('/bookings', data),
+  getBookings: (params) => api.get('/bookings', { params }),
+  updateBookingStatus: (id, status) => api.patch(`/bookings/${id}/status`, { status }),
+};

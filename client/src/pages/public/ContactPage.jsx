@@ -1,28 +1,40 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { bookingApi } from '../../services/api';
 
 export default function ContactPage() {
+  const todayStr = new Date().toISOString().split('T')[0];
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
-    date: '2026-09-25',
+    date: todayStr,
     time: '19:30',
     guests: '2 Royalty',
     seating: 'Main Pavilion',
     notes: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.phone) {
       toast.error('Please provide your name and phone number for the reservation');
       return;
     }
-    setIsSubmitted(true);
-    toast.success(`Royal reservation confirmed for ${formData.name}! Our concierge will contact you.`);
+    try {
+      setIsSubmitting(true);
+      await bookingApi.createBooking(formData);
+      setIsSubmitted(true);
+      toast.success(`Royal reservation confirmed for ${formData.name}! Our concierge team and floor staff have received your request.`);
+    } catch (err) {
+      const msg = err.response?.data?.error?.message || err.response?.data?.message || 'Failed to submit reservation. Please call us directly.';
+      toast.error(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -208,9 +220,17 @@ export default function ContactPage() {
 
                     <button
                       type="submit"
-                      className="w-full py-4 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-white text-xs uppercase tracking-[0.16em] font-bold shadow-xl hover:brightness-110 transition-all cursor-pointer"
+                      disabled={isSubmitting}
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-white text-xs uppercase tracking-[0.16em] font-bold shadow-xl hover:brightness-110 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                      Confirm Imperial Reservation
+                      {isSubmitting ? (
+                        <>
+                          <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <span>Securing Dining Room...</span>
+                        </>
+                      ) : (
+                        <span>Confirm Imperial Reservation</span>
+                      )}
                     </button>
                   </form>
                 )}

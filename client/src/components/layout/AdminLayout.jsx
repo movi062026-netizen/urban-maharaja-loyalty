@@ -4,10 +4,12 @@ import { useAuth } from '../../context/AuthContext';
 import {
   Crown, LayoutDashboard, Users, Stamp, Gift, ShoppingBag,
   Settings, BarChart3, ScrollText, UserCog, Menu, X, LogOut,
+  CalendarDays
 } from 'lucide-react';
 
 const sidebarLinks = [
   { to: '/admin/dashboard', label: 'Executive Dashboard', icon: LayoutDashboard },
+  { to: '/admin/bookings', label: 'Dining Bookings', icon: CalendarDays },
   { to: '/admin/staff', label: 'Staff Credentials', icon: UserCog },
   { to: '/admin/rewards', label: 'Rewards Manager', icon: Gift },
   { to: '/admin/analytics', label: 'Palace Analytics', icon: BarChart3 },

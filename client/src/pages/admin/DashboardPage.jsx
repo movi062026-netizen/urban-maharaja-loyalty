@@ -1,9 +1,10 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { adminApi } from '../../services/api';
 import { Users, Stamp, Gift, ShoppingBag, Star, CreditCard, BarChart3, TrendingUp } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from 'recharts';
 import AdminMetricCard from '../../components/admin/AdminMetricCard';
+import BookingsList from '../../components/common/BookingsList';
 import toast from 'react-hot-toast';
 
 const containerVariants = {
@@ -150,6 +151,11 @@ export default function DashboardPage() {
             )}
           </div>
         </motion.div>
+      </motion.div>
+
+      {/* Live Table Bookings */}
+      <motion.div variants={itemVariants} className="p-4 sm:p-6 rounded-3xl bg-white border border-[#ede0d2] shadow-xs">
+        <BookingsList title="Executive Table Reservations &amp; Orders" isCompact={true} />
       </motion.div>
 
       {/* Recent Activity */}

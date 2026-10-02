@@ -3,11 +3,12 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   Crown, LayoutDashboard, Stamp, ShoppingBag, Users,
-  Menu, X, LogOut, UserCheck
+  Menu, X, LogOut, UserCheck, CalendarDays
 } from 'lucide-react';
 
 const staffLinks = [
   { to: '/staff/dashboard', label: 'Floor Overview', icon: LayoutDashboard },
+  { to: '/staff/bookings', label: 'Dining Bookings', icon: CalendarDays, badge: 'Reservations' },
   { to: '/staff/stamps', label: 'Stamp & Seal Desk', icon: Stamp, badge: 'Live Desk' },
   { to: '/staff/redemptions', label: 'Voucher Redemptions', icon: ShoppingBag },
   { to: '/staff/guests', label: 'Patron Directory', icon: Users },

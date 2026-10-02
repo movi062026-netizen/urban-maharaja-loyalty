@@ -30,12 +30,14 @@ import ReviewPage from '../pages/guest/ReviewPage';
 
 // Staff Pages
 import StaffDashboardPage from '../pages/staff/StaffDashboardPage';
+import StaffBookingsPage from '../pages/staff/StaffBookingsPage';
 import StaffStampsPage from '../pages/staff/StaffStampsPage';
 import StaffRedemptionsPage from '../pages/staff/StaffRedemptionsPage';
 import StaffGuestsPage from '../pages/staff/StaffGuestsPage';
 
 // Admin Pages
 import AdminDashboardPage from '../pages/admin/DashboardPage';
+import AdminBookingsPage from '../pages/admin/BookingsPage';
 import AdminStaffPage from '../pages/admin/StaffPage';
 import AdminAnalyticsPage from '../pages/admin/AnalyticsPage';
 import AdminRewardsPage from '../pages/admin/RewardsPage';
@@ -106,6 +108,7 @@ export default function AppRoutes() {
       >
         <Route path="/staff" element={<Navigate to="/staff/dashboard" replace />} />
         <Route path="/staff/dashboard" element={<StaffDashboardPage />} />
+        <Route path="/staff/bookings" element={<StaffBookingsPage />} />
         <Route path="/staff/stamps" element={<StaffStampsPage />} />
         <Route path="/staff/stemp" element={<Navigate to="/staff/stamps" replace />} />
         <Route path="/staff/redemptions" element={<StaffRedemptionsPage />} />
@@ -122,6 +125,7 @@ export default function AppRoutes() {
       >
         <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+        <Route path="/admin/bookings" element={<AdminBookingsPage />} />
         <Route path="/admin/staff" element={<AdminStaffPage />} />
         <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
         <Route path="/admin/rewards" element={<AdminRewardsPage />} />

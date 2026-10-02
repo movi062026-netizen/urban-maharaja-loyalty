@@ -1,9 +1,10 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { adminApi, loyaltyApi } from '../../services/api';
 import { Stamp, ShoppingBag, Users, ChevronRight, Sparkles, ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import StaffLiveQueue from '../../components/staff/StaffLiveQueue';
+import BookingsList from '../../components/common/BookingsList';
 import toast from 'react-hot-toast';
 
 export default function StaffDashboardPage() {
@@ -89,6 +90,11 @@ export default function StaffDashboardPage() {
 
       {/* Live Floor Queue */}
       <StaffLiveQueue pendingRequests={pendingStamps} onApprove={handleApprove} />
+
+      {/* Live Table Bookings from Guest Portal */}
+      <div className="p-4 sm:p-6 rounded-3xl bg-white border border-[#ede0d2] shadow-xs">
+        <BookingsList title="Live Table Reservations &amp; Orders" isCompact={true} />
+      </div>
 
       {/* Operational Stats Cards — Palace Porcelain Metric Suite */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-5">
