@@ -56,7 +56,14 @@ export default function ProgramTermsCard({
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className="overflow-hidden"
           >
-            <div className="mt-3.5 pt-3.5 border-t border-[#ede0d2] space-y-2 text-xs sm:text-sm text-[#1d0f09] leading-relaxed font-sans">
+            <div className="mt-3.5 pt-3.5 border-t border-[#ede0d2] space-y-3 text-xs sm:text-sm text-[#1d0f09] leading-relaxed font-sans">
+              <div className="p-3 rounded-xl bg-[#f5ede3] border border-[#e5d2c0] text-[#1d0f09]">
+                <p className="font-bold text-xs uppercase tracking-wider text-primary mb-0.5">Your Visits. Your Rewards.</p>
+                <p className="text-xs text-[#2d1a10]">
+                  Every time you visit Urban Maharaja, you have the opportunity to collect rewards. Join our rewards program, keep track of your visits, and enjoy something extra the next time you dine with us.
+                </p>
+              </div>
+
               <ul className="space-y-2">
                 {REWARDS_TERMS_AND_CONDITIONS.map((term, index) => (
                   <li key={index} className="flex items-start gap-2.5">

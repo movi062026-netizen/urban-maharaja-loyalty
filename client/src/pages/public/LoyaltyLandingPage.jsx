@@ -1,48 +1,48 @@
-﻿import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import MaharajaCard from '../../components/loyalty/MaharajaCard';
 import ProgramTermsCard from '../../components/common/ProgramTermsCard';
 
 const tiers = [
   {
-    tier: 'Tier 1',
+    tier: 'Level 1',
     name: 'Emerald Patron',
     stamps: '3 Stamps',
     color: 'text-emerald-700',
-    borderColor: 'border-emerald-500/30',
+    borderColor: 'border-emerald-500/40',
     bg: 'bg-emerald-50',
     perks: [
-      'Complimentary royal welcome drink on every visit',
-      'Priority table reservations on weekdays',
-      'Seasonal chef amuse-bouche pairing',
+      'Welcome beverage on your visits',
+      'Priority reservations for dining',
+      'Special seasonal chef treat',
     ],
   },
   {
-    tier: 'Tier 2',
+    tier: 'Level 2',
     name: 'Ruby Sovereign',
     stamps: '7 Stamps',
     color: 'text-rose-700',
     borderColor: 'border-rose-500/40',
     bg: 'bg-rose-50',
     perks: [
-      'All Emerald privileges included',
-      'Choice of complimentary signature dessert (Kesar Shahi Tukda)',
-      'Reserved Jharokha alcove seating guarantee',
-      'Private birthday vintage champagne pairing',
+      'All Level 1 benefits included',
+      'Complimentary signature dessert of your choice',
+      'Preferred comfortable seating',
+      'Birthday dining treat from our team',
     ],
   },
   {
-    tier: 'Supreme',
-    name: 'Kohinoor Royal',
+    tier: 'Level 3',
+    name: 'Kohinoor Member',
     stamps: '12+ Stamps',
     color: 'text-primary',
     borderColor: 'border-primary/60',
     bg: 'bg-primary-container/20',
     perks: [
-      'All Ruby sovereign privileges included',
-      'Bespoke 5-course feast crafted in your name by Executive Chef',
-      'VIP private dining room booking without minimum spend',
-      'Invitation to the annual closed-door Royal Dastarkhān banquet',
+      'All Level 2 benefits included',
+      'Special celebratory dining experience',
+      'Priority table booking on busy evenings',
+      'Exclusive tasting invitations for new menu specials',
     ],
   },
 ];
@@ -53,7 +53,7 @@ export default function LoyaltyLandingPage() {
 
   return (
     <div className="w-full bg-background min-h-screen text-on-surface">
-      {/* ── Hero Banner ──────────────────────────────────────────────── */}
+      {/* ── Hero Banner: Introduction ─────────────────────────────────── */}
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -64,45 +64,50 @@ export default function LoyaltyLandingPage() {
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[300px] bg-secondary-container/20 rounded-full blur-[110px] pointer-events-none" />
 
         <div className="relative max-w-[1200px] mx-auto px-6 lg:px-12 flex flex-col items-center">
-          <div className="inline-flex items-center gap-3 px-5 py-1.5 rounded-full bg-surface-container/80 backdrop-blur-md border border-primary/30 shadow-md mb-6">
-            <span className="material-symbols-outlined text-primary text-[18px]">military_tech</span>
-            <span className="font-label-md text-label-md uppercase tracking-[0.25em] text-primary">
-              The Digital Maharaja Card
+          <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-surface-container/90 backdrop-blur-md border border-primary/30 shadow-md mb-6">
+            <span className="material-symbols-outlined text-primary text-[20px]">stars</span>
+            <span className="font-label-md text-label-md uppercase tracking-[0.25em] text-primary font-bold">
+              Urban Maharaja Rewards
             </span>
           </div>
 
-          <h1 className="font-display-lg text-display-lg text-on-surface max-w-4xl tracking-tight leading-tight mb-6">
-            Your Key to <br />
+          <h1 className="font-display-lg text-3xl sm:text-5xl lg:text-6xl text-on-surface max-w-4xl tracking-tight leading-tight mb-6 font-bold">
+            Your Visits. <br />
             <span className="italic bg-gradient-to-r from-primary via-primary-container to-secondary bg-clip-text text-transparent font-normal">
-              Imperial Privileges
+              Your Rewards.
             </span>
           </h1>
 
-          <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-8">
-            Ascend through royal tiers with every dining experience. Collect verified digital seals, unlock private salon tastings, and receive invitations to confidential sovereign banquets.
-          </p>
+          <div className="max-w-2xl mx-auto space-y-3 mb-8">
+            <p className="font-body-lg text-base sm:text-lg text-on-surface font-medium leading-relaxed">
+              Every time you visit Urban Maharaja, you have the opportunity to collect rewards.
+            </p>
+            <p className="font-body-md text-sm sm:text-base text-on-surface-variant leading-relaxed">
+              Join our rewards program, keep track of your visits, and enjoy something extra the next time you dine with us.
+            </p>
+          </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-5">
+          <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
-              to="/login"
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full glass-btn-primary font-label-lg uppercase tracking-[0.16em] font-bold shadow-lg hover:scale-105 transition-all no-underline"
+              to="/register"
+              className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-gradient-to-r from-primary-container to-secondary text-white font-label-md uppercase tracking-[0.14em] font-bold shadow-lg hover:scale-105 transition-all no-underline"
             >
               <span className="material-symbols-outlined text-[20px]">badge</span>
-              <span>Claim Digital Card</span>
+              <span>Join Rewards Program</span>
             </Link>
 
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-surface-container-high text-on-surface hover:text-primary font-label-lg uppercase tracking-[0.16em] border border-outline-variant/40 hover:border-primary/40 transition-all no-underline font-semibold"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-surface-container-high text-on-surface hover:text-primary font-label-md uppercase tracking-[0.14em] border border-outline-variant/60 hover:border-primary/40 transition-all no-underline font-bold"
             >
-              <span>Cardholder Sign In</span>
+              <span>Sign In to Your Card</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
             </Link>
           </div>
 
           {source && (
             <p className="text-secondary font-label-sm uppercase tracking-widest mt-4">
-              Privilege Referral Active: {source}
+              Referral Code: {source}
             </p>
           )}
         </div>
@@ -119,48 +124,48 @@ export default function LoyaltyLandingPage() {
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
           <div className="max-w-md mx-auto mb-16 flex flex-col items-center">
             <MaharajaCard
-              guestName="Imperial Passholder"
+              guestName="Member Guest"
               currentStamps={4}
               targetStamps={5}
               cycleNumber={1}
             />
-            <p className="text-center text-xs uppercase tracking-[0.2em] text-secondary font-mono mt-4">
-              Real-time digital pass stored in your mobile browser
+            <p className="text-center text-xs uppercase tracking-[0.2em] text-secondary font-mono mt-4 font-semibold">
+              Live digital card saved directly to your phone
             </p>
           </div>
 
-          {/* Tier Breakdown */}
+          {/* Member Milestones */}
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="font-label-md text-label-md uppercase tracking-[0.25em] text-secondary mb-2 block">
-              Ascending Rank
+            <span className="font-label-md text-label-md uppercase tracking-[0.25em] text-secondary font-bold mb-2 block">
+              Member Recognition
             </span>
-            <h2 className="font-headline-lg text-headline-lg text-on-surface mb-3">
-              The Three Sovereign Tiers
+            <h2 className="font-headline-lg text-2xl sm:text-3xl text-on-surface font-bold mb-3">
+              Rewards as You Visit More Often
             </h2>
-            <div className="w-16 h-0.5 bg-primary-container mx-auto mt-4" />
+            <div className="w-16 h-1 bg-primary-container mx-auto mt-3 rounded-full" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
             {tiers.map((t) => (
               <div
                 key={t.name}
-                className={`p-8 rounded-3xl bg-surface-container/70 border ${t.borderColor} backdrop-blur-xl shadow-xl flex flex-col justify-between hover:-translate-y-1.5 transition-all duration-300`}
+                className={`p-8 rounded-3xl bg-surface-container/80 border ${t.borderColor} shadow-lg flex flex-col justify-between hover:-translate-y-1 transition-all duration-300`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="font-label-sm text-label-sm uppercase tracking-widest text-outline">
+                    <span className="font-label-sm text-xs font-bold uppercase tracking-widest text-outline">
                       {t.tier}
                     </span>
-                    <span className="px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/40 font-label-sm uppercase tracking-wider text-secondary">
+                    <span className="px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/40 font-label-sm text-xs font-bold uppercase tracking-wider text-secondary">
                       {t.stamps}
                     </span>
                   </div>
 
-                  <h3 className={`font-headline-sm text-headline-sm mb-4 ${t.color}`}>
+                  <h3 className={`font-headline-sm text-xl font-bold mb-4 ${t.color}`}>
                     {t.name}
                   </h3>
 
-                  <ul className="space-y-3 font-body-sm text-body-sm text-on-surface-variant list-none p-0">
+                  <ul className="space-y-3 font-body-sm text-sm text-on-surface-variant list-none p-0">
                     {t.perks.map((p, idx) => (
                       <li key={idx} className="flex items-start gap-2.5">
                         <span className="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">
@@ -174,10 +179,10 @@ export default function LoyaltyLandingPage() {
 
                 <div className="pt-6 mt-6 border-t border-outline-variant/30">
                   <Link
-                    to="/login"
-                    className="block w-full text-center py-3 rounded-full bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary transition-all font-label-sm uppercase tracking-widest border border-primary/30 no-underline font-semibold"
+                    to="/register"
+                    className="block w-full text-center py-3 rounded-full bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary transition-all font-label-sm uppercase tracking-wider border border-primary/30 no-underline font-bold text-xs"
                   >
-                    Enroll In Tier
+                    Start Collecting Stamps
                   </Link>
                 </div>
               </div>
@@ -185,19 +190,23 @@ export default function LoyaltyLandingPage() {
           </div>
 
           {/* How Stamp Collection Works */}
-          <div className="rounded-3xl p-8 lg:p-14 bg-gradient-to-r from-surface-container-lowest via-surface-container-high to-surface-container-lowest border border-outline-variant/40 text-center">
-            <h3 className="font-headline-md text-headline-md text-on-surface mb-3">
-              How Stamp Approval Works
+          <div className="rounded-3xl p-8 lg:p-12 bg-surface-container/80 border border-outline-variant/40 text-center shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider mb-3">
+              <span className="material-symbols-outlined text-[16px]">touch_app</span>
+              <span>Simple &amp; Easy</span>
+            </div>
+            <h3 className="font-headline-md text-xl sm:text-2xl text-on-surface font-bold mb-3">
+              How Collecting Stamps Works
             </h3>
-            <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto mb-8 leading-relaxed">
-              When dining with us, simply display your phone’s digital card QR code or give your phone number to your waiter. Our staff approves your seal directly through their tablet terminal, updating your card in real time.
+            <p className="font-body-md text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mb-8 leading-relaxed">
+              When dining at Urban Maharaja, simply show your digital card or provide your registered mobile number to your server. Your visit is recorded, updating your stamp count right at your table.
             </p>
             <div className="pt-2">
               <Link
-                to="/login"
-                className="px-8 py-3.5 rounded-full bg-gradient-to-r from-primary-container to-secondary text-white font-label-md uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all no-underline inline-block"
+                to="/register"
+                className="px-8 py-3.5 rounded-full bg-gradient-to-r from-primary-container to-secondary text-white font-label-md uppercase tracking-[0.14em] font-bold shadow-lg hover:brightness-110 transition-all no-underline inline-block"
               >
-                Get Your Digital Card Now
+                Join &amp; Get Your Card
               </Link>
             </div>
           </div>

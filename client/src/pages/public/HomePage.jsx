@@ -296,11 +296,11 @@ export default function HomePage() {
           <div className="text-center max-w-2xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary-container/40 border border-secondary/30 text-secondary mb-3">
               <span className="material-symbols-outlined text-[16px]">loyalty</span>
-              <span className="text-xs uppercase tracking-[0.22em] font-semibold">Imperial Loyalty Program</span>
+              <span className="text-xs uppercase tracking-[0.22em] font-semibold">Rewards Program</span>
             </div>
-            <h2 className="font-serif text-2xl sm:text-4xl text-on-surface font-bold mb-4">Your Royal Journey</h2>
+            <h2 className="font-serif text-2xl sm:text-4xl text-on-surface font-bold mb-4">Your Visits. Your Rewards.</h2>
             <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed font-sans">
-              Collect prestigious digital seals upon every royal repast. Ascend the sovereign tiers and unlock private salon access, complimentary chef pairings, and bespoke banquets.
+              Every time you visit Urban Maharaja, you have the opportunity to collect rewards. Join our rewards program, keep track of your visits, and enjoy something extra the next time you dine with us.
             </p>
           </div>
 
@@ -381,13 +381,13 @@ export default function HomePage() {
               <div className="lg:col-span-7 flex flex-col space-y-6">
                 <div>
                   <span className="text-xs uppercase tracking-[0.2em] text-secondary font-bold block mb-1">
-                    Ascend the Imperial Hierarchy
+                    Member Milestones
                   </span>
                   <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl text-on-surface font-bold mb-2">
-                    From Emerald Guest to Kohinoor Patron
+                    Rewards That Grow With Your Visits
                   </h3>
                   <p className="text-sm text-on-surface-variant leading-relaxed">
-                    Gain complimentary vintage champagnes, customized menus crafted by Chef in your honor, and priority seating without reservation waiting windows.
+                    Enjoy complimentary treats, special dining perks, and thoughtful rewards as you dine and collect stamps with us.
                   </p>
                 </div>
 

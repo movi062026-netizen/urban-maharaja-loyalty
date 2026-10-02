@@ -56,6 +56,16 @@ export default function TermsPage() {
             </div>
           </div>
 
+          {/* Clear Customer Benefit Introduction */}
+          <div className="mb-6 p-5 sm:p-6 rounded-2xl bg-[#fdfaf6] border-2 border-[#ede0d2] space-y-2">
+            <h3 className="font-serif text-lg sm:text-xl font-bold text-primary">
+              Your Visits. Your Rewards.
+            </h3>
+            <p className="text-sm sm:text-base text-[#1d0f09] leading-relaxed font-medium">
+              Every time you visit Urban Maharaja, you have the opportunity to collect rewards. Join our rewards program, keep track of your visits, and enjoy something extra the next time you dine with us.
+            </p>
+          </div>
+
           <ul className="space-y-3.5">
             {REWARDS_TERMS_AND_CONDITIONS.map((rule, idx) => (
               <li

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { rewardApi, loyaltyApi } from '../../services/api';
 import { Gift, Sparkles, CheckCircle2, Award, Clock } from 'lucide-react';
 import GuestRedemptionVoucher from '../../components/guest/GuestRedemptionVoucher';
@@ -93,9 +93,9 @@ export default function RewardsPage() {
               Palace Privileges &amp; Honors
             </span>
           </div>
-          <h1 className="font-serif text-2xl sm:text-3xl text-on-surface font-bold">Royal Dining Rewards Vault</h1>
+          <h1 className="font-serif text-2xl sm:text-3xl text-on-surface font-bold">Your Rewards</h1>
           <p className="text-xs text-on-surface-variant mt-1">
-            Special chef repasts, vintage beverages, and imperial delicacies unlocked via your Maharaja Card seals
+            Every time you visit Urban Maharaja, you have the opportunity to collect rewards. Keep track of your visits, and enjoy something extra the next time you dine with us.
           </p>
         </div>
 
