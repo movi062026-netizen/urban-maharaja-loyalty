@@ -34,13 +34,13 @@ export default function TermsPage() {
       </motion.section>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-6 py-12 space-y-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-6 sm:space-y-8">
         {/* Core Rewards Rules Box */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="p-6 sm:p-10 rounded-3xl bg-white border-2 border-[#e0c8b0] shadow-[0_16px_45px_-10px_rgba(46,26,16,0.1)]"
+          className="p-5 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl bg-white border-2 border-[#e0c8b0] shadow-[0_16px_45px_-10px_rgba(46,26,16,0.1)]"
         >
           <div className="flex items-center gap-3.5 pb-5 mb-6 border-b border-[#eee0d2]">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/25 flex items-center justify-center text-primary shrink-0 shadow-xs">

@@ -191,11 +191,11 @@ export default function BookingsList({ title = 'Table Reservations & Orders', is
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
           {bookings.map((booking) => (
             <div
               key={booking._id}
-              className={`p-5 rounded-3xl bg-white border-2 transition-all shadow-xs flex flex-col justify-between ${
+              className={`p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl bg-white border-2 transition-all shadow-xs flex flex-col justify-between ${
                 booking.status === 'PENDING'
                   ? 'border-amber-400/80 bg-amber-50/20'
                   : 'border-[#ede0d2] hover:border-primary/40'

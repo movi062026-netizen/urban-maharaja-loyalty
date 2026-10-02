@@ -145,11 +145,11 @@ export default function LoyaltyLandingPage() {
             <div className="w-16 h-1 bg-primary-container mx-auto mt-3 rounded-full" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8 mb-16 sm:mb-20">
             {tiers.map((t) => (
               <div
                 key={t.name}
-                className={`p-8 rounded-3xl bg-surface-container/80 border ${t.borderColor} shadow-lg flex flex-col justify-between hover:-translate-y-1 transition-all duration-300`}
+                className={`p-5 sm:p-8 rounded-2xl sm:rounded-3xl bg-surface-container/80 border ${t.borderColor} shadow-lg flex flex-col justify-between hover:-translate-y-1 transition-all duration-300`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -190,7 +190,7 @@ export default function LoyaltyLandingPage() {
           </div>
 
           {/* How Stamp Collection Works */}
-          <div className="rounded-3xl p-8 lg:p-12 bg-surface-container/80 border border-outline-variant/40 text-center shadow-sm">
+          <div className="rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-12 bg-surface-container/80 border border-outline-variant/40 text-center shadow-sm">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider mb-3">
               <span className="material-symbols-outlined text-[16px]">touch_app</span>
               <span>Simple &amp; Easy</span>

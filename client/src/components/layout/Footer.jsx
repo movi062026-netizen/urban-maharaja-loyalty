@@ -126,9 +126,10 @@ export default function Footer() {
               </address>
               <div className="flex items-start gap-2.5">
                 <span className="material-symbols-outlined text-primary text-[16px] sm:text-[18px] mt-0.5 shrink-0" aria-hidden="true">call</span>
-                <div className="min-w-0">
-                  <p className="text-on-surface font-medium mb-0.5">Contact / Reservations</p>
-                  <a href="tel:+919082035880" className="text-on-surface-variant no-underline hover:text-primary transition-colors font-medium">+91 90820 35880</a>
+                <div className="min-w-0 space-y-0.5">
+                  <p className="text-on-surface font-medium mb-1">Contact / Reservations</p>
+                  <a href="tel:+919414644988" className="text-on-surface-variant no-underline hover:text-primary transition-colors font-medium block">+91 94146 44988</a>
+                  <a href="tel:+919082035880" className="text-on-surface-variant no-underline hover:text-primary transition-colors font-medium block">+91 90820 35880</a>
                 </div>
               </div>
             </div>

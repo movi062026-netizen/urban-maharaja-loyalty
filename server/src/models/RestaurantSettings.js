@@ -20,7 +20,7 @@ const restaurantSettingsSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      default: '+91 90820 35880',
+      default: '+91 94146 44988 / +91 90820 35880',
     },
     email: {
       type: String,

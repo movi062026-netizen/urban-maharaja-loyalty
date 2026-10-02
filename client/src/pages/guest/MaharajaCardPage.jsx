@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { loyaltyApi } from '../../services/api';
@@ -218,28 +218,28 @@ export default function MaharajaCardPage() {
           )}
 
           {/* Loyalty Stats Overview */}
-          <div className="grid grid-cols-3 gap-3">
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
-              <span className="text-[10px] uppercase font-black tracking-wider text-[#744d1c] block mb-1">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            <div className="p-3 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
+              <span className="text-[9px] sm:text-[10px] uppercase font-black tracking-wider text-[#744d1c] block mb-1">
                 Current Seals
               </span>
-              <span className="text-xl sm:text-2xl font-serif font-black text-primary">
+              <span className="text-lg sm:text-2xl font-serif font-black text-primary">
                 {card?.currentStamps || 0} / {card?.targetStamps || 5}
               </span>
             </div>
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
-              <span className="text-[10px] uppercase font-black tracking-wider text-[#744d1c] block mb-1">
+            <div className="p-3 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
+              <span className="text-[9px] sm:text-[10px] uppercase font-black tracking-wider text-[#744d1c] block mb-1">
                 Completed Cards
               </span>
-              <span className="text-xl sm:text-2xl font-serif font-black text-[#744d1c]">
+              <span className="text-lg sm:text-2xl font-serif font-black text-[#744d1c]">
                 {totalCompletedCycles} Passes
               </span>
             </div>
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
-              <span className="text-[10px] uppercase font-black tracking-wider text-[#744d1c] block mb-1">
+            <div className="p-3 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
+              <span className="text-[9px] sm:text-[10px] uppercase font-black tracking-wider text-[#744d1c] block mb-1">
                 Total Visits
               </span>
-              <span className="text-xl sm:text-2xl font-serif font-black text-[#1d0f09]">
+              <span className="text-lg sm:text-2xl font-serif font-black text-[#1d0f09]">
                 {totalApprovedStamps} Seals
               </span>
             </div>
@@ -249,7 +249,7 @@ export default function MaharajaCardPage() {
         {/* Right Column: Cycle Progression & Rewards (5 Cols) */}
         <div className="lg:col-span-5 space-y-6">
           {/* How Card Cycles Work */}
-          <div className="p-6 rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)]">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)]">
             <h3 className="font-serif text-base font-bold text-on-surface mb-2 flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-primary" />
               <span>Maharaja Card Cycle Progression</span>
@@ -291,7 +291,7 @@ export default function MaharajaCardPage() {
           </div>
 
           {/* Available Rewards Vault */}
-          <div className="p-6 rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)]">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-serif text-base font-bold text-on-surface flex items-center gap-2">
                 <Gift className="w-4 h-4 text-primary" />

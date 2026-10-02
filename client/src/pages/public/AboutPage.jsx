@@ -76,9 +76,9 @@ export default function AboutPage() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.8 }}
-        className="relative w-full py-16 sm:py-20 bg-surface-container-lowest overflow-hidden"
+        className="relative w-full py-14 sm:py-20 bg-surface-container-lowest overflow-hidden"
       >
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-12">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
           {/* Feature Showcase Grid */}
           <div className="text-center max-w-2xl mx-auto mb-14">
             <span className="font-label-md text-label-md uppercase tracking-[0.25em] text-secondary font-bold mb-2 block">
@@ -90,9 +90,9 @@ export default function AboutPage() {
             <div className="w-16 h-1 bg-primary-container mx-auto mt-3 rounded-full" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-16 sm:mb-20">
             {/* Card 1 */}
-            <div className="p-7 rounded-3xl bg-surface-container/80 border border-outline-variant/40 shadow-sm flex flex-col justify-between hover:border-primary/40 transition-all">
+            <div className="p-5 sm:p-7 rounded-2xl sm:rounded-3xl bg-surface-container/80 border border-outline-variant/40 shadow-sm flex flex-col justify-between hover:border-primary/40 transition-all">
               <div className="space-y-3">
                 <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
                   <span className="material-symbols-outlined text-[24px]">soup_kitchen</span>
@@ -103,12 +103,12 @@ export default function AboutPage() {
                 </p>
               </div>
               <div className="mt-5 pt-3 border-t border-outline-variant/30 text-primary font-label-sm text-xs font-bold uppercase tracking-wider">
-                Fresh & Hearty
+                Fresh &amp; Hearty
               </div>
             </div>
 
             {/* Card 2 */}
-            <div className="p-7 rounded-3xl bg-surface-container/80 border border-outline-variant/40 shadow-sm flex flex-col justify-between hover:border-primary/40 transition-all">
+            <div className="p-5 sm:p-7 rounded-2xl sm:rounded-3xl bg-surface-container/80 border border-outline-variant/40 shadow-sm flex flex-col justify-between hover:border-primary/40 transition-all">
               <div className="space-y-3">
                 <div className="w-12 h-12 rounded-2xl bg-secondary/15 border border-secondary/30 flex items-center justify-center text-secondary">
                   <span className="material-symbols-outlined text-[24px]">local_fire_department</span>
@@ -124,23 +124,23 @@ export default function AboutPage() {
             </div>
 
             {/* Card 3 */}
-            <div className="p-7 rounded-3xl bg-surface-container/80 border border-outline-variant/40 shadow-sm flex flex-col justify-between hover:border-primary/40 transition-all">
+            <div className="p-5 sm:p-7 rounded-2xl sm:rounded-3xl bg-surface-container/80 border border-outline-variant/40 shadow-sm flex flex-col justify-between hover:border-primary/40 transition-all">
               <div className="space-y-3">
                 <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
                   <span className="material-symbols-outlined text-[24px]">local_cafe</span>
                 </div>
-                <h3 className="font-headline-sm text-lg font-bold text-on-surface">Snacks & Beverages</h3>
+                <h3 className="font-headline-sm text-lg font-bold text-on-surface">Snacks &amp; Beverages</h3>
                 <p className="font-body-sm text-sm text-on-surface-variant leading-relaxed">
                   Crispy starters, delicious appetizers, handcrafted mocktails, artisanal shakes, and freshly brewed hot beverages for every gathering.
                 </p>
               </div>
               <div className="mt-5 pt-3 border-t border-outline-variant/30 text-primary font-label-sm text-xs font-bold uppercase tracking-wider">
-                Refreshing & Crisp
+                Refreshing &amp; Crisp
               </div>
             </div>
 
             {/* Card 4 */}
-            <div className="p-7 rounded-3xl bg-surface-container/80 border border-outline-variant/40 shadow-sm flex flex-col justify-between hover:border-primary/40 transition-all">
+            <div className="p-5 sm:p-7 rounded-2xl sm:rounded-3xl bg-surface-container/80 border border-outline-variant/40 shadow-sm flex flex-col justify-between hover:border-primary/40 transition-all">
               <div className="space-y-3">
                 <div className="w-12 h-12 rounded-2xl bg-secondary/15 border border-secondary/30 flex items-center justify-center text-secondary">
                   <span className="material-symbols-outlined text-[24px]">military_tech</span>
@@ -157,7 +157,7 @@ export default function AboutPage() {
           </div>
 
           {/* ── Location Card with Google Maps Link ─────────────────────── */}
-          <div className="rounded-3xl p-8 lg:p-12 bg-surface-container/90 border border-outline-variant/50 shadow-xl mb-16">
+          <div className="rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-12 bg-surface-container/90 border border-outline-variant/50 shadow-xl mb-16">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-6 space-y-5">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/25 text-primary text-xs font-bold uppercase tracking-wider">
@@ -178,10 +178,16 @@ export default function AboutPage() {
                         href={googleMapsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary hover:text-primary-container font-medium text-base underline decoration-primary/40 underline-offset-4 transition-colors"
+                        className="text-primary hover:text-primary-container font-medium text-base underline decoration-primary/40 underline-offset-4 transition-colors block"
                       >
                         AC-209, Central Spine, Gyan Vihar Marg, Jagatpura, Jaipur
                       </a>
+                      <div className="flex flex-wrap items-center gap-2 pt-1.5 text-xs sm:text-sm font-mono font-bold text-secondary">
+                        <span className="material-symbols-outlined text-[16px] text-primary">call</span>
+                        <a href="tel:+919414644988" className="hover:text-primary transition-colors no-underline">+91 94146 44988</a>
+                        <span>•</span>
+                        <a href="tel:+919082035880" className="hover:text-primary transition-colors no-underline">+91 90820 35880</a>
+                      </div>
                     </div>
                   </div>
                 </div>

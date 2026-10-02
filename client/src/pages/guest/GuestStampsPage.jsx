@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { loyaltyApi } from '../../services/api';
@@ -236,7 +236,7 @@ export default function GuestStampsPage() {
       <GuestTierBadge totalApprovedStamps={totalApprovedStamps} />
 
       {/* Grand Cycle Milestone Board */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)] relative overflow-hidden">
+      <div className="p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)] relative overflow-hidden">
         {/* Glow ambient */}
         <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-br from-primary/10 via-amber-200/20 to-transparent rounded-full blur-3xl pointer-events-none" />
 
@@ -278,7 +278,7 @@ export default function GuestStampsPage() {
           </div>
 
           {/* 5 Circular Stamp Milestones */}
-          <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 pt-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-2">
             {sealMilestones.map((m, idx) => {
               const isCollected = idx < currentStamps;
               const isNext = idx === currentStamps && !isComplete;
@@ -396,7 +396,7 @@ export default function GuestStampsPage() {
         <div className="lg:col-span-7 space-y-6">
           {/* Pending Verification Notice Card */}
           {pendingStamp ? (
-            <div className="p-6 rounded-3xl bg-gradient-to-br from-amber-50 to-[#fffbf2] border border-amber-300 shadow-sm text-on-surface relative overflow-hidden">
+            <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-amber-50 to-[#fffbf2] border border-amber-300 shadow-sm text-on-surface relative overflow-hidden">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-300 text-amber-700 flex items-center justify-center shrink-0">
                   <Clock className="w-6 h-6 animate-pulse" />
@@ -432,7 +432,7 @@ export default function GuestStampsPage() {
           ) : null}
 
           {/* Interactive In-Page Bill Upload Desk */}
-          <div className="p-6 sm:p-7 rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)]">
+          <div className="p-4 sm:p-6 lg:p-7 rounded-2xl sm:rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)]">
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#eee0d2]">
               <div>
                 <h3 className="font-serif text-lg font-bold text-on-surface flex items-center gap-2">
@@ -589,7 +589,7 @@ export default function GuestStampsPage() {
         {/* Right Column: Stamped Visits in Current Cycle & Palace Protocols (5 Cols) */}
         <div className="lg:col-span-5 space-y-6">
           {/* Active Cycle Stamped Visits */}
-          <div className="p-6 rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)]">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-serif text-base font-bold text-on-surface flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
@@ -601,7 +601,7 @@ export default function GuestStampsPage() {
             </div>
 
             {currentStamps === 0 ? (
-              <div className="p-6 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] text-center space-y-2">
+              <div className="p-4 sm:p-6 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] text-center space-y-2">
                 <Stamp className="w-8 h-8 text-on-surface-variant mx-auto" />
                 <p className="text-xs text-on-surface-variant font-bold">
                   No verified seals in this cycle yet
@@ -615,7 +615,7 @@ export default function GuestStampsPage() {
                 {Array.from({ length: currentStamps }).map((_, i) => (
                   <div
                     key={i}
-                    className="p-3.5 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] hover:border-primary/40 flex items-center justify-between transition-colors text-xs"
+                    className="p-3 sm:p-3.5 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] hover:border-primary/40 flex items-center justify-between transition-colors text-xs"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center justify-center font-bold font-mono text-xs">
@@ -640,7 +640,7 @@ export default function GuestStampsPage() {
           </div>
 
           {/* Palace Stamping Rules & FAQ */}
-          <div className="p-6 rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)] space-y-4">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)] space-y-4">
             <h3 className="font-serif text-base font-bold text-on-surface flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-primary" />
               <span>Palace Stamping Protocol</span>

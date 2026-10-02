@@ -84,7 +84,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
             {/* Left: Interactive Table Reservation Form */}
             <div className="lg:col-span-7">
-              <div className="p-6 sm:p-10 rounded-3xl bg-surface-container/70 border border-outline-variant/40 backdrop-blur-xl shadow-2xl">
+              <div className="p-5 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl bg-surface-container/70 border border-outline-variant/40 backdrop-blur-xl shadow-2xl">
                 <span className="text-xs uppercase tracking-[0.2em] text-secondary font-bold mb-2 block">
                   Sovereign Booking
                 </span>
@@ -134,7 +134,7 @@ export default function ContactPage() {
                           required
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="+91 90820 35880"
+                          placeholder="+91 94146 44988 / 9082035880"
                           className="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant/40 text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary"
                         />
                       </div>
@@ -239,7 +239,7 @@ export default function ContactPage() {
 
             {/* Right: Concierge Contacts & Location */}
             <div className="lg:col-span-5 space-y-6">
-              <div className="p-6 sm:p-8 rounded-3xl bg-surface-container/70 border border-outline-variant/40 backdrop-blur-xl shadow-xl space-y-6">
+              <div className="p-5 sm:p-7 lg:p-8 rounded-2xl sm:rounded-3xl bg-surface-container/70 border border-outline-variant/40 backdrop-blur-xl shadow-xl space-y-6">
                 <div>
                   <span className="text-xs uppercase tracking-[0.2em] text-secondary font-bold block mb-1">
                     VIP Concierge
@@ -269,8 +269,11 @@ export default function ContactPage() {
                   <div className="flex items-start gap-3.5 p-4 rounded-2xl bg-surface-container-high/60 border border-outline-variant/30">
                     <span className="material-symbols-outlined text-primary text-[22px] shrink-0">call</span>
                     <div>
-                      <p className="text-on-surface font-bold mb-0.5">Telephone &amp; WhatsApp</p>
-                      <a href="tel:+919082035880" className="text-primary font-mono text-sm hover:underline block font-bold">+91 90820 35880</a>
+                      <p className="text-on-surface font-bold mb-1">Telephone &amp; WhatsApp</p>
+                      <div className="space-y-1">
+                        <a href="tel:+919414644988" className="text-primary font-mono text-sm hover:underline block font-bold">+91 94146 44988</a>
+                        <a href="tel:+919082035880" className="text-primary font-mono text-sm hover:underline block font-bold">+91 90820 35880</a>
+                      </div>
                     </div>
                   </div>
 

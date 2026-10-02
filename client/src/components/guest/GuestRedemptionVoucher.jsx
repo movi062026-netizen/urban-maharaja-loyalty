@@ -52,7 +52,7 @@ export default function GuestRedemptionVoucher({ redemption }) {
         }}
       />
 
-      <div className="relative z-10 p-5 sm:p-6">
+      <div className="relative z-10 p-4 sm:p-6">
         {/* Header */}
         <div className="flex items-start justify-between gap-3 mb-4">
           <div className="flex items-center gap-3.5">

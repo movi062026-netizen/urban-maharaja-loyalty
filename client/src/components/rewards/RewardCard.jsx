@@ -1,4 +1,4 @@
-﻿import { Gift, Sparkles, Clock, Crown, ArrowRight, Check, Utensils, Wine, Award, Percent } from 'lucide-react';
+import { Gift, Sparkles, Clock, Crown, ArrowRight, Check, Utensils, Wine, Award, Percent } from 'lucide-react';
 
 const typeIcons = {
   COMPLIMENTARY_ITEM: Utensils,
@@ -36,7 +36,7 @@ export default function RewardCard({ reward, onRedeem, isRedeemable = false, isC
         }}
       />
 
-      <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
+      <div className="p-4 sm:p-6 flex-1 flex flex-col justify-between">
         <div>
           {/* Header Row */}
           <div className="flex items-start justify-between gap-3 mb-3.5">
