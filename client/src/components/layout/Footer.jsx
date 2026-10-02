@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
@@ -38,7 +38,7 @@ export default function Footer() {
             </Link>
 
             <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed max-w-xs">
-              An ultra-luxurious dining sanctuary breathing the majestic grandeur of Rajasthan and imperial Mughal courts into modern culinary artistry.
+              Good food, good company, and a place to enjoy it all. Comforting Indian favourites, tandoori dishes, and rewarding dining in Jagatpura, Jaipur.
             </p>
 
             <div className="flex flex-wrap items-center gap-2 pt-1">
@@ -113,8 +113,15 @@ export default function Footer() {
               <address className="flex items-start gap-2.5 not-italic">
                 <span className="material-symbols-outlined text-primary text-[16px] sm:text-[18px] mt-0.5 shrink-0" aria-hidden="true">location_on</span>
                 <div className="min-w-0">
-                  <p className="text-on-surface font-medium mb-0.5">Imperial Pavilion</p>
-                  <p className="text-on-surface-variant break-safe">Plot No. AC-209, Central Spine, Mahal Road, Jagatpura, Jaipur, Rajasthan 302017</p>
+                  <p className="text-on-surface font-medium mb-0.5">Location</p>
+                  <a
+                    href="https://share.google/2nmScZz1II7jKmnKO"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-on-surface-variant break-safe hover:text-primary transition-colors no-underline block"
+                  >
+                    AC-209, Central Spine, Gyan Vihar Marg, Jagatpura, Jaipur ↗
+                  </a>
                 </div>
               </address>
               <div className="flex items-start gap-2.5">

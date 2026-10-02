@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import MaharajaCard from '../../components/loyalty/MaharajaCard';
@@ -76,11 +76,11 @@ export default function HomePage() {
           >
             <span className="w-2.5 h-2.5 rounded-full bg-primary animate-ping" />
             <span className="text-xs uppercase tracking-[0.25em] text-primary font-semibold">
-              Imperial Dining Sanctuary
+              Good Food & Good Company
             </span>
             <span className="text-outline-variant">•</span>
             <span className="text-xs uppercase tracking-[0.2em] text-secondary font-semibold">
-              Est. 1928
+              Jagatpura, Jaipur
             </span>
           </motion.div>
 
@@ -93,7 +93,7 @@ export default function HomePage() {
           >
             Where Royalty Meets
             <span className="block mt-2 sm:mt-3 italic bg-gradient-to-r from-primary via-primary-container to-secondary bg-clip-text text-transparent font-normal drop-shadow-[0_2px_14px_rgba(222,107,144,0.3)]">
-              Culinary Excellence
+              Comforting Flavours
             </span>
           </motion.h1>
 
@@ -103,7 +103,7 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.7 }}
             className="font-sans text-sm sm:text-base lg:text-lg text-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-8 sm:mb-10 px-2 sm:px-4"
           >
-            Dine like a Maharaja and immerse in centuries of regal Indian heritage, slow-cooked royal repasts, 24-karat saffron delicacies, and transcendent palace hospitality in Jaipur.
+            Good food, good company, and a place to enjoy it all. Enjoy comforting Indian favourites, tandoori dishes, snacks, beverages, and rewarding dining in Jagatpura, Jaipur.
           </motion.p>
 
           {/* Dual Luxury Call-to-Actions */}

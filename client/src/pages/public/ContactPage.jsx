@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 
@@ -233,9 +233,16 @@ export default function ContactPage() {
                   <div className="flex items-start gap-3.5 p-4 rounded-2xl bg-surface-container-high/60 border border-outline-variant/30">
                     <span className="material-symbols-outlined text-primary text-[22px] shrink-0">location_on</span>
                     <div>
-                      <p className="text-on-surface font-bold mb-1">Palace Location</p>
-                      <p className="leading-relaxed">Plot No. AC-209, Central Spine, Mahal Road, University Marg, Gyan Vihar, Jagatpura, Jaipur, Rajasthan 302017</p>
-                      <p className="text-[11px] text-primary mt-1 font-semibold">Complimentary Valet Parking Available</p>
+                      <p className="text-on-surface font-bold mb-1">Restaurant Location</p>
+                      <a
+                        href="https://share.google/2nmScZz1II7jKmnKO"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="leading-relaxed text-primary hover:underline block"
+                      >
+                        AC-209, Central Spine, Gyan Vihar Marg, Jagatpura, Jaipur ↗
+                      </a>
+                      <p className="text-[11px] text-primary mt-1 font-semibold">Parking Available</p>
                     </div>
                   </div>
 
@@ -292,7 +299,7 @@ export default function ContactPage() {
                     Urban Maharaja on Google Maps
                   </h3>
                   <p className="text-xs text-on-surface-variant font-sans">
-                    Plot No. AC-209, Central Spine, Mahal Road, Jagatpura, Jaipur
+                    AC-209, Central Spine, Gyan Vihar Marg, Jagatpura, Jaipur
                   </p>
                 </div>
               </div>
