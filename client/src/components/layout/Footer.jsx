@@ -127,8 +127,8 @@ export default function Footer() {
               <div className="flex items-start gap-2.5">
                 <span className="material-symbols-outlined text-primary text-[16px] sm:text-[18px] mt-0.5 shrink-0" aria-hidden="true">call</span>
                 <div className="min-w-0">
-                  <p className="text-on-surface font-medium mb-0.5">VIP Concierge</p>
-                  <a href="tel:+918001234567" className="text-on-surface-variant no-underline hover:text-primary transition-colors">+91 (800) MAHARAJA</a>
+                  <p className="text-on-surface font-medium mb-0.5">Contact / Reservations</p>
+                  <a href="tel:+919082035880" className="text-on-surface-variant no-underline hover:text-primary transition-colors font-medium">+91 90820 35880</a>
                 </div>
               </div>
             </div>

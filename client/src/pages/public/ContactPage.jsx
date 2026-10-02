@@ -134,7 +134,7 @@ export default function ContactPage() {
                           required
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="+91 98765 43210"
+                          placeholder="+91 90820 35880"
                           className="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant/40 text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary"
                         />
                       </div>
@@ -269,8 +269,8 @@ export default function ContactPage() {
                   <div className="flex items-start gap-3.5 p-4 rounded-2xl bg-surface-container-high/60 border border-outline-variant/30">
                     <span className="material-symbols-outlined text-primary text-[22px] shrink-0">call</span>
                     <div>
-                      <p className="text-on-surface font-bold mb-0.5">Telephone Concierge</p>
-                      <p className="text-primary font-mono text-sm">+91 98765 43210 / +1 (800) MAHARAJA</p>
+                      <p className="text-on-surface font-bold mb-0.5">Telephone &amp; WhatsApp</p>
+                      <a href="tel:+919082035880" className="text-primary font-mono text-sm hover:underline block font-bold">+91 90820 35880</a>
                     </div>
                   </div>
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, MapPin, X, UtensilsCrossed, ArrowRight, Award } from 'lucide-react';
+import { Sparkles, MapPin, Phone, X, UtensilsCrossed, ArrowRight, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function WelcomeModal() {
@@ -99,10 +99,16 @@ export default function WelcomeModal() {
                 Urban Maharaja welcomes you to enjoy comforting flavours, from Indian favourites and tandoori dishes to snacks, beverages and more.
               </p>
 
-              {/* Location Badge */}
-              <div className="w-full p-3 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] flex items-center justify-center gap-2 text-xs text-[#1d0f09] font-semibold mb-5 shadow-xs">
-                <MapPin className="w-4 h-4 text-primary shrink-0" />
-                <span>AC-209, Central Spine, Gyan Vihar Marg, Jagatpura, Jaipur</span>
+              {/* Location & Telephone Badge */}
+              <div className="w-full p-3 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] space-y-1 text-xs text-[#1d0f09] font-semibold mb-5 shadow-xs">
+                <div className="flex items-center justify-center gap-1.5">
+                  <MapPin className="w-4 h-4 text-primary shrink-0" />
+                  <span>AC-209, Central Spine, Gyan Vihar Marg, Jagatpura, Jaipur</span>
+                </div>
+                <div className="flex items-center justify-center gap-1.5 text-primary pt-0.5">
+                  <Phone className="w-3.5 h-3.5" />
+                  <a href="tel:+919082035880" className="hover:underline font-mono font-bold">+91 90820 35880</a>
+                </div>
               </div>
 
               {/* Digital Rewards Promo Callout */}

@@ -16,11 +16,11 @@ const restaurantSettingsSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      default: 'Plot No. AC-209, Central Spine, Mahal Road, Gyan Vihar, Jagatpura, Jaipur, Rajasthan 302017',
+      default: 'AC-209, Central Spine, Gyan Vihar Marg, Jagatpura, Jaipur',
     },
     phone: {
       type: String,
-      default: '+91 98765 43210',
+      default: '+91 90820 35880',
     },
     email: {
       type: String,
