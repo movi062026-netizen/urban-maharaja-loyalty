@@ -3,6 +3,7 @@ import { rewardApi, loyaltyApi } from '../../services/api';
 import { Gift, Sparkles, CheckCircle2, Award, Clock } from 'lucide-react';
 import GuestRedemptionVoucher from '../../components/guest/GuestRedemptionVoucher';
 import RewardCard from '../../components/rewards/RewardCard';
+import ProgramTermsCard from '../../components/common/ProgramTermsCard';
 import toast from 'react-hot-toast';
 
 export default function RewardsPage() {
@@ -204,6 +205,11 @@ export default function RewardsPage() {
           </div>
         </div>
       )}
+
+      {/* Program Terms & Conditions — Accessible but visually secondary */}
+      <div className="pt-4">
+        <ProgramTermsCard defaultOpen={false} />
+      </div>
     </div>
   );
 }

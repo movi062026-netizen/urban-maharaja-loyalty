@@ -1,6 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import MaharajaCard from '../../components/loyalty/MaharajaCard';
+import ProgramTermsCard from '../../components/common/ProgramTermsCard';
 
 const tiers = [
   {
@@ -191,12 +192,19 @@ export default function LoyaltyLandingPage() {
             <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto mb-8 leading-relaxed">
               When dining with us, simply display your phone’s digital card QR code or give your phone number to your waiter. Our staff approves your seal directly through their tablet terminal, updating your card in real time.
             </p>
-            <Link
-              to="/login"
-              className="px-8 py-3.5 rounded-full bg-gradient-to-r from-primary-container to-secondary text-white font-label-md uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all no-underline"
-            >
-              Get Your Digital Card Now
-            </Link>
+            <div className="pt-2">
+              <Link
+                to="/login"
+                className="px-8 py-3.5 rounded-full bg-gradient-to-r from-primary-container to-secondary text-white font-label-md uppercase tracking-[0.16em] font-bold shadow-lg hover:brightness-110 transition-all no-underline inline-block"
+              >
+                Get Your Digital Card Now
+              </Link>
+            </div>
+          </div>
+
+          {/* Accessible but Visually Secondary Terms & Conditions */}
+          <div className="mt-12 max-w-3xl mx-auto text-left">
+            <ProgramTermsCard defaultOpen={false} />
           </div>
         </div>
       </motion.section>

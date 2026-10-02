@@ -45,3 +45,14 @@ export const ROLE_HOME_ROUTES = {
   STAFF: '/staff/dashboard',
   GUEST: '/guest/card',
 };
+
+export const REWARDS_TERMS_AND_CONDITIONS = [
+  'Rewards are available only through the Urban Maharaja Rewards program.',
+  'Stamps are provided only on eligible visits according to program rules.',
+  'One rewards account is permitted per customer.',
+  'Rewards cannot be exchanged for cash.',
+  'Rewards cannot be combined with other offers unless specifically mentioned.',
+  'Rewards are subject to their individual validity period.',
+  'Urban Maharaja may modify or update the rewards program from time to time.',
+  'Urban Maharaja reserves the right to verify reward eligibility before redemption.',
+];

@@ -164,8 +164,8 @@ export default function Footer() {
               Privacy Policy
             </Link>
             <span className="text-outline-variant hidden sm:inline" aria-hidden="true">•</span>
-            <Link to="/about" className="hover:text-primary transition-colors no-underline">
-              Terms of Royal Service
+            <Link to="/terms" className="hover:text-primary transition-colors no-underline">
+              Terms &amp; Conditions
             </Link>
             <span className="text-outline-variant hidden sm:inline" aria-hidden="true">•</span>
             <Link to="/about" className="hover:text-primary transition-colors no-underline">

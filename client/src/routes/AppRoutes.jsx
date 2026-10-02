@@ -13,6 +13,7 @@ import AboutPage from '../pages/public/AboutPage';
 import MenuPage from '../pages/public/MenuPage';
 import ContactPage from '../pages/public/ContactPage';
 import LoyaltyLandingPage from '../pages/public/LoyaltyLandingPage';
+import TermsPage from '../pages/public/TermsPage';
 import LoginPage from '../pages/public/LoginPage';
 import RegisterPage from '../pages/public/RegisterPage';
 import ForgotPasswordPage from '../pages/public/ForgotPasswordPage';
@@ -54,6 +55,8 @@ export default function AppRoutes() {
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/loyalty" element={<LoyaltyLandingPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/terms-and-conditions" element={<TermsPage />} />
       </Route>
 
       {/* Authentication Portals (Distinct for Customers, Staff, and Admin) */}

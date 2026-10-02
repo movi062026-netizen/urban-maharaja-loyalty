@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Gift, Copy, Check, QrCode, Clock, Award } from 'lucide-react';
+import { Gift, Copy, Check, QrCode, Clock, Award, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react';
 import { copyToClipboard, formatDate } from '../../utils';
+import { REWARDS_TERMS_AND_CONDITIONS } from '../../constants';
 import toast from 'react-hot-toast';
 
 const rewardIcons = {
@@ -11,6 +12,7 @@ const rewardIcons = {
 export default function GuestRedemptionVoucher({ redemption }) {
   const [copied, setCopied] = useState(false);
   const [showQr, setShowQr] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
 
   const isAvailable = redemption.status === 'AVAILABLE';
   const isRedeemed = redemption.status === 'REDEEMED';
@@ -155,8 +157,30 @@ export default function GuestRedemptionVoucher({ redemption }) {
           </div>
         )}
 
+        {/* Visually secondary Terms toggle */}
+        <div className="pt-2.5 mt-2.5 border-t border-[#eee0d2]">
+          <button
+            type="button"
+            onClick={() => setShowTerms(!showTerms)}
+            className="w-full flex items-center justify-between text-[10px] text-on-surface-variant/70 hover:text-primary transition-colors cursor-pointer"
+          >
+            <span className="flex items-center gap-1 font-bold uppercase tracking-wider">
+              <ShieldCheck className="w-3 h-3 text-secondary" />
+              <span>Voucher Terms &amp; Conditions</span>
+            </span>
+            {showTerms ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          </button>
+          {showTerms && (
+            <ul className="mt-2 space-y-1 text-[10px] text-on-surface-variant/80 pl-3 list-disc leading-relaxed font-sans">
+              {REWARDS_TERMS_AND_CONDITIONS.map((term, i) => (
+                <li key={i}>{term}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+
         {/* Footer dates */}
-        <div className="flex items-center justify-between text-[11px] text-on-surface-variant/70 pt-3.5 mt-3.5 border-t border-[#eee0d2] font-mono">
+        <div className="flex items-center justify-between text-[11px] text-on-surface-variant/70 pt-3 border-t border-[#eee0d2] font-mono">
           <span>Issued: {formatDate(redemption.createdAt)}</span>
           {redemption.expiresAt && (
             <span className={`flex items-center gap-1 ${isAvailable ? 'text-secondary font-bold' : ''}`}>
