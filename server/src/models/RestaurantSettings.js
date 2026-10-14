@@ -40,7 +40,7 @@ const restaurantSettingsSchema = new mongoose.Schema(
     },
     googleReviewUrl: {
       type: String,
-      default: 'https://search.google.com/local/writereview?placeid=ChIJMcfXSQDJbTkRFyg-4Qkdv-k',
+      default: 'https://g.page/r/CRcoPuEJHb3pEAE/review',
     },
     googleMapsUrl: {
       type: String,

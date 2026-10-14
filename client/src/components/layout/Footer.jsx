@@ -46,14 +46,6 @@ export default function Footer() {
                 <span className="material-symbols-outlined text-[14px] sm:text-[16px] text-secondary" aria-hidden="true">workspace_premium</span>
                 <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.18em] sm:tracking-[0.22em] font-bold text-secondary">Michelin Standard 2026</span>
               </div>
-              <a
-                href="https://share.google/2nmScZz1II7jKmnKO"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-amber-600/10 border border-amber-600/30 text-amber-700 hover:bg-amber-500 hover:text-white transition-all text-[9px] sm:text-[10px] uppercase tracking-[0.14em] font-bold w-fit no-underline"
-              >
-                <span>⭐ Google Reviews</span>
-              </a>
             </div>
           </div>
 
@@ -85,7 +77,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="https://share.google/2nmScZz1II7jKmnKO"
+                  href="https://g.page/r/CRcoPuEJHb3pEAE/review"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-amber-700 hover:text-amber-500 transition-colors no-underline font-medium inline-flex items-center gap-1"
@@ -115,7 +107,7 @@ export default function Footer() {
                 <div className="min-w-0">
                   <p className="text-on-surface font-medium mb-0.5">Location</p>
                   <a
-                    href="https://share.google/2nmScZz1II7jKmnKO"
+                    href="https://www.google.com/maps/place/URBAN+MAHARAJA/@26.8069227,75.8578327,17z/data=!3m1!4b1!4m6!3m5!1s0x396dc90049d7c731:0xe9bd1d09e13e2817!8m2!3d26.8069227!4d75.8578327!16s%2Fg%2F11w2_b84t7"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-on-surface-variant break-safe hover:text-primary transition-colors no-underline block"

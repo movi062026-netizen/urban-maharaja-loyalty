@@ -255,7 +255,7 @@ export default function ContactPage() {
                     <div>
                       <p className="text-on-surface font-bold mb-1">Restaurant Location</p>
                       <a
-                        href="https://share.google/2nmScZz1II7jKmnKO"
+                        href="https://www.google.com/maps/place/URBAN+MAHARAJA/@26.8069227,75.8578327,17z/data=!3m1!4b1!4m6!3m5!1s0x396dc90049d7c731:0xe9bd1d09e13e2817!8m2!3d26.8069227!4d75.8578327!16s%2Fg%2F11w2_b84t7"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="leading-relaxed text-primary hover:underline block"
@@ -328,7 +328,7 @@ export default function ContactPage() {
               </div>
               <div className="flex flex-wrap items-center gap-2.5">
                 <a
-                  href="https://share.google/2nmScZz1II7jKmnKO"
+                  href="https://g.page/r/CRcoPuEJHb3pEAE/review"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black text-xs uppercase tracking-wider font-bold shadow-md transition-all no-underline w-fit"

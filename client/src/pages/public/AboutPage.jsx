@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 export default function AboutPage() {
-  const googleMapsUrl = 'https://share.google/2nmScZz1II7jKmnKO';
+  const googleMapsUrl = 'https://www.google.com/maps/place/URBAN+MAHARAJA/@26.8069227,75.8578327,17z/data=!3m1!4b1!4m6!3m5!1s0x396dc90049d7c731:0xe9bd1d09e13e2817!8m2!3d26.8069227!4d75.8578327!16s%2Fg%2F11w2_b84t7';
 
   return (
     <div className="w-full bg-background min-h-screen text-on-surface">

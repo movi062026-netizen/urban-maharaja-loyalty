@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { settingsApi, reviewApi } from '../../services/api';
 import { Star, ExternalLink, Heart, Sparkles, CheckCircle2 } from 'lucide-react';
 
-const DEFAULT_GOOGLE_REVIEW_URL = 'https://share.google/2nmScZz1II7jKmnKO';
+const DEFAULT_GOOGLE_REVIEW_URL = 'https://g.page/r/CRcoPuEJHb3pEAE/review';
 
 export default function ReviewPage() {
   const [reviewUrl, setReviewUrl] = useState(DEFAULT_GOOGLE_REVIEW_URL);

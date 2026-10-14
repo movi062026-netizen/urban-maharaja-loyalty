@@ -123,8 +123,8 @@ const seed = async () => {
     address: 'Plot No. AC-209, Central Spine, Mahal Road, Jagatpura, Jaipur, Rajasthan 302017',
     phone: '+91 (800) MAHARAJA',
     email: 'contact@urbanmaharaja.com',
-    googleReviewUrl: 'https://share.google/2nmScZz1II7jKmnKO',
-    googleMapsUrl: 'https://share.google/2nmScZz1II7jKmnKO',
+    googleReviewUrl: 'https://g.page/r/CRcoPuEJHb3pEAE/review',
+    googleMapsUrl: 'https://www.google.com/maps/place/URBAN+MAHARAJA/@26.8069227,75.8578327,17z/data=!3m1!4b1!4m6!3m5!1s0x396dc90049d7c731:0xe9bd1d09e13e2817!8m2!3d26.8069227!4d75.8578327!16s%2Fg%2F11w2_b84t7',
     reservationUrl: 'https://urban-maharaja-premium-restaurant-menu-website-hbi32srb0.vercel.app/',
     loyaltyConfig: {
       targetStamps: 5,
