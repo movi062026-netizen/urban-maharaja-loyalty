@@ -40,7 +40,7 @@ export default function CookieConsent() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 50, scale: 0.98 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="fixed bottom-4 sm:bottom-6 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-50 rounded-3xl bg-white/95 backdrop-blur-xl border-2 border-[#e0c8b0] shadow-[0_20px_50px_-10px_rgba(46,26,16,0.25)] p-5 text-on-surface"
+          className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] lg:bottom-6left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-50 rounded-3xl bg-white/95 backdrop-blur-xl border-2 border-[#e0c8b0] shadow-[0_20px_50px_-10px_rgba(46,26,16,0.25)] p-5 text-on-surface"
           role="region"
           aria-label="Cookie consent banner"
         >

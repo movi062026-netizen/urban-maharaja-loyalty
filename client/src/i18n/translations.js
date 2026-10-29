@@ -27,6 +27,18 @@ const en = {
   'nav.myCard': 'My Card',
   'nav.myCardFull': 'My Maharaja Card',
 
+  // Mobile bottom tab bar (short labels)
+  'tab.home': 'Home',
+  'tab.menu': 'Menu',
+  'tab.card': 'Card',
+  'tab.reserve': 'Reserve',
+  'tab.login': 'Login',
+  'tab.account': 'Account',
+  'tab.stamps': 'Stamps',
+  'tab.rewards': 'Rewards',
+  'tab.bookings': 'Bookings',
+  'tab.more': 'More',
+
   // Guest portal
   'guest.portal': 'Patron Portal',
   'guest.headerTitle': 'Urban Maharaja Digital Loyalty',
@@ -221,6 +233,17 @@ const hi = {
   'nav.staffPortal': 'स्टाफ पोर्टल',
   'nav.myCard': 'मेरा कार्ड',
   'nav.myCardFull': 'मेरा महाराजा कार्ड',
+
+  'tab.home': 'होम',
+  'tab.menu': 'मेन्यू',
+  'tab.card': 'कार्ड',
+  'tab.reserve': 'बुकिंग',
+  'tab.login': 'लॉगिन',
+  'tab.account': 'अकाउंट',
+  'tab.stamps': 'स्टैम्प',
+  'tab.rewards': 'रिवॉर्ड्स',
+  'tab.bookings': 'बुकिंग्स',
+  'tab.more': 'और',
 
   'guest.portal': 'मेंबर पोर्टल',
   'guest.headerTitle': 'अर्बन महाराजा डिजिटल लॉयल्टी',

@@ -8,8 +8,9 @@ import LanguageToggle from '../common/LanguageToggle';
 import PushPrompt from '../common/PushPrompt';
 import {
   Globe, CreditCard, Gift, History, User, Star, UtensilsCrossed,
-  CalendarCheck, CalendarDays, Menu, X, LogOut, Sparkles, Stamp
+  CalendarCheck, CalendarDays, Menu, X, LogOut, Sparkles, Stamp, LayoutGrid
 } from 'lucide-react';
+import MobileBottomNav from './MobileBottomNav';
 
 const guestNavLinks = [
   { to: '/guest/card', label: 'guest.nav.card', icon: CreditCard, badge: 'guest.nav.cardBadge' },
@@ -49,8 +50,19 @@ export default function GuestLayout() {
     navigate('/');
   };
 
+  const tabs = [
+    { to: '/guest/card', label: 'tab.card', icon: CreditCard },
+    { to: '/guest/stamps', label: 'tab.stamps', icon: Stamp },
+    { to: '/guest/rewards', label: 'tab.rewards', icon: Gift },
+    { to: '/guest/bookings', label: 'tab.bookings', icon: CalendarDays },
+    { label: 'tab.more', icon: LayoutGrid, onClick: () => setSidebarOpen(true) },
+  ];
+
   return (
     <div className="min-h-screen min-h-dvh bg-background text-on-surface flex overflow-x-hidden">
+      {/* Bottom tab bar (Mobile) — rendered before the overlay so the open sidebar covers it */}
+      <MobileBottomNav items={tabs} />
+
       {/* Sidebar Overlay (Mobile) */}
       {sidebarOpen && (
         <div
@@ -195,7 +207,7 @@ export default function GuestLayout() {
         </header>
 
         {/* Spacious Dashboard Viewport */}
-        <main className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-8 py-5 sm:py-8 w-full flex-1" role="main">
+        <main className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-8 py-5 sm:py-8 pb-[calc(5.5rem+env(safe-area-inset-bottom))] sm:pb-[calc(6rem+env(safe-area-inset-bottom))] lg:pb-8 w-full flex-1" role="main">
           <PushPrompt />
           <Outlet />
         </main>
