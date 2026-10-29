@@ -30,7 +30,7 @@ const customerRegisterRules = [
     }),
   body('password')
     .notEmpty().withMessage('Password is required')
-    .isLength({ min: 6, max: 128 }).withMessage('Password must be between 6 and 128 characters')
+    .isLength({ min: 8, max: 128 }).withMessage('Password must be between 8 and 128 characters')
     .custom((password) => {
       if (typeof password === 'string' && password.trim().length === 0) {
         throw new Error('Password cannot be composed solely of whitespace');
@@ -81,8 +81,8 @@ const staffLoginRules = [
     .notEmpty().withMessage('Email is required')
     .isEmail().withMessage('Invalid email'),
   body('password')
-    .notEmpty().withMessage('Password is required')
-    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+    .isString().withMessage('Password is required')
+    .isLength({ min: 1, max: 128 }).withMessage('Password is required'),
 ];
 
 const refreshTokenRules = [
@@ -128,7 +128,7 @@ const resetPasswordRules = [
     .isLength({ min: 4, max: 10 }).withMessage('Verification seal length is invalid'),
   body('newPassword')
     .notEmpty().withMessage('New secret password is required')
-    .isLength({ min: 6, max: 128 }).withMessage('Password must be between 6 and 128 characters')
+    .isLength({ min: 8, max: 128 }).withMessage('Password must be between 8 and 128 characters')
     .custom((password) => {
       if (typeof password === 'string' && password.trim().length === 0) {
         throw new Error('Password cannot be composed solely of whitespace');

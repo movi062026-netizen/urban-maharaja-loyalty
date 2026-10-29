@@ -41,6 +41,11 @@ const env = {
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || '',
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || '',
   
+  // Web Push (VAPID) — generate once with: npx web-push generate-vapid-keys
+  WEB_PUSH_PUBLIC_KEY: process.env.WEB_PUSH_PUBLIC_KEY || '',
+  WEB_PUSH_PRIVATE_KEY: process.env.WEB_PUSH_PRIVATE_KEY || '',
+  WEB_PUSH_SUBJECT: process.env.WEB_PUSH_SUBJECT || 'mailto:noreply@urbanmaharaja.com',
+
   // Logging
   LOG_LEVEL: process.env.LOG_LEVEL || 'info',
 
@@ -56,6 +61,17 @@ if (env.isProduction) {
   const missing = required.filter(key => !process.env[key]);
   if (missing.length > 0) {
     throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
+  }
+
+  // Refuse to boot with placeholder or guessable signing keys
+  for (const key of ['JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET']) {
+    const value = process.env[key];
+    if (value.length < 32 || value.startsWith('dev-') || value.includes('change')) {
+      throw new Error(`${key} is too weak for production — use a random value of at least 32 characters`);
+    }
+  }
+  if (process.env.JWT_ACCESS_SECRET === process.env.JWT_REFRESH_SECRET) {
+    throw new Error('JWT_ACCESS_SECRET and JWT_REFRESH_SECRET must be different');
   }
 }
 

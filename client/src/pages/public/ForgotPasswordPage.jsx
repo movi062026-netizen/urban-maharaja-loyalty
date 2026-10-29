@@ -1,10 +1,12 @@
 ﻿import { useState, useEffect, useRef } from 'react';
+import useSeo from '../../hooks/useSeo';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { authApi } from '../../services/api';
 import toast from 'react-hot-toast';
 
 export default function ForgotPasswordPage() {
+  useSeo({ title: "Reset Password", description: "Reset your Urban Maharaja account password.", noindex: true });
   const [searchParams] = useSearchParams();
   const initialEmail = searchParams.get('email') || '';
 
@@ -127,8 +129,8 @@ export default function ForgotPasswordPage() {
       return;
     }
 
-    if (!newPassword || newPassword.length < 6) {
-      toast.error('Password must be at least 6 characters long');
+    if (!newPassword || newPassword.length < 8) {
+      toast.error('Password must be at least 8 characters long');
       return;
     }
 
@@ -383,10 +385,10 @@ export default function ForgotPasswordPage() {
                     type={showPassword ? 'text' : 'password'}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Minimum 6 characters"
+                    placeholder="Minimum 8 characters"
                     className="w-full pl-11 pr-4 py-3 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
                     autoComplete="new-password"
-                    minLength={6}
+                    minLength={8}
                     required
                   />
                 </div>
@@ -412,7 +414,7 @@ export default function ForgotPasswordPage() {
                     placeholder="Repeat your secret password"
                     className="w-full pl-11 pr-4 py-3 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-primary transition-colors font-sans"
                     autoComplete="new-password"
-                    minLength={6}
+                    minLength={8}
                     required
                   />
                 </div>

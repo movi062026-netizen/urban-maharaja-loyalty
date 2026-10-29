@@ -8,10 +8,10 @@ const { ValidationError } = require('../utils/errors');
 const validate = (req, _res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    // Never echo submitted values back — they may be passwords, OTPs or tokens
     const details = errors.array().map((err) => ({
       field: err.path,
       message: err.msg,
-      value: err.value,
     }));
     throw new ValidationError('Validation failed', details);
   }

@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import useSeo from '../../hooks/useSeo';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import MaharajaCard from '../../components/loyalty/MaharajaCard';
 import toast from 'react-hot-toast';
 
 export default function HomePage() {
+  useSeo({ description: "Urban Maharaja is a 100% pure veg fine dine restaurant in Jagatpura, Jaipur. North Indian curries, tandoor sizzlers, Indo-Chinese and free rewards with the digital Maharaja Card." });
   const navigate = useNavigate();
   const [bookingTime, setBookingTime] = useState('Tonight, 7:30 PM');
   const [partySize, setPartySize] = useState('2 Royalty');
@@ -12,8 +14,9 @@ export default function HomePage() {
 
   const handleQuickReservation = (e) => {
     e.preventDefault();
-    toast.success(`Royal table reserved for ${partySize} in ${seating} (${bookingTime})!`);
-    navigate('/contact');
+    // Hand the choices to the real booking form; nothing is reserved until it is submitted
+    const params = new URLSearchParams({ guests: partySize, seating });
+    navigate(`/contact?${params.toString()}`);
   };
 
   return (
@@ -371,6 +374,7 @@ export default function HomePage() {
               <div className="lg:col-span-5 flex justify-center w-full">
                 <MaharajaCard
                   guestName="Ravi Prakash Singh"
+                  memberId="48217305"
                   currentStamps={3}
                   targetStamps={5}
                   cycleNumber={1}

@@ -1,28 +1,35 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
+import useSeo from '../../hooks/useSeo';
+import NotificationBell from '../common/NotificationBell';
+import LanguageToggle from '../common/LanguageToggle';
+import PushPrompt from '../common/PushPrompt';
 import {
-  Crown, LayoutDashboard, Users, Stamp, Gift, ShoppingBag,
+  Globe, LayoutDashboard, Users, Stamp, Gift, ShoppingBag,
   Settings, BarChart3, ScrollText, UserCog, Menu, X, LogOut,
   CalendarDays
 } from 'lucide-react';
 
 const sidebarLinks = [
-  { to: '/admin/dashboard', label: 'Executive Dashboard', icon: LayoutDashboard },
-  { to: '/admin/bookings', label: 'Dining Bookings', icon: CalendarDays },
-  { to: '/admin/staff', label: 'Staff Credentials', icon: UserCog },
-  { to: '/admin/rewards', label: 'Rewards Manager', icon: Gift },
-  { to: '/admin/analytics', label: 'Palace Analytics', icon: BarChart3 },
-  { to: '/admin/settings', label: 'Platform Settings', icon: Settings },
-  { to: '/admin/audit-logs', label: 'Security & Audit', icon: ScrollText },
-  { to: '/admin/guests', label: 'Patrons Registry', icon: Users },
-  { to: '/admin/stamps', label: 'Master Stamp Desk', icon: Stamp },
-  { to: '/admin/redemptions', label: 'Master Redemptions', icon: ShoppingBag },
+  { to: '/admin/dashboard', label: 'admin.nav.dashboard', icon: LayoutDashboard },
+  { to: '/admin/bookings', label: 'admin.nav.bookings', icon: CalendarDays },
+  { to: '/admin/staff', label: 'admin.nav.staff', icon: UserCog },
+  { to: '/admin/rewards', label: 'admin.nav.rewards', icon: Gift },
+  { to: '/admin/analytics', label: 'admin.nav.analytics', icon: BarChart3 },
+  { to: '/admin/settings', label: 'admin.nav.settings', icon: Settings },
+  { to: '/admin/audit-logs', label: 'admin.nav.audit', icon: ScrollText },
+  { to: '/admin/guests', label: 'admin.nav.guests', icon: Users },
+  { to: '/admin/stamps', label: 'admin.nav.stamps', icon: Stamp },
+  { to: '/admin/redemptions', label: 'admin.nav.redemptions', icon: ShoppingBag },
 ];
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
+  useSeo({ title: 'Admin Portal', noindex: true });
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -65,10 +72,14 @@ export default function AdminLayout() {
         <div className="p-4 sm:p-5 border-b border-outline-variant/30">
           <div className="flex items-center justify-between">
             <Link to="/admin/dashboard" className="flex items-center gap-3 no-underline group">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#c99a4e] via-[#deb268] to-[#996d2b] p-[2px] shadow-md flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <div className="w-full h-full rounded-full bg-white flex items-center justify-center border border-[#d4a66a]/40">
-                  <Crown className="w-4 h-4 text-[#9b284e]" />
-                </div>
+              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#c99a4e] via-[#deb268] to-[#996d2b] p-[2px] shadow-md shrink-0 group-hover:scale-105 transition-transform">
+                <img
+                  src="/logo.png"
+                  alt="Urban Maharaja"
+                  className="w-full h-full rounded-full object-cover bg-white"
+                  width="44"
+                  height="44"
+                />
               </div>
               <div className="min-w-0">
                 <div className="font-serif text-sm font-bold text-on-surface tracking-wider group-hover:text-primary transition-colors truncate">
@@ -107,7 +118,7 @@ export default function AdminLayout() {
                 aria-current={isActive ? 'page' : undefined}
               >
                 <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-secondary'}`} />
-                <span className="truncate">{label}</span>
+                <span className="truncate">{t(label)}</span>
               </Link>
             );
           })}
@@ -136,7 +147,7 @@ export default function AdminLayout() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Bar */}
         <header className="glass-navbar px-3 sm:px-4 lg:px-6 py-2.5 sm:py-3.5 flex items-center justify-between sticky top-0 z-30" role="banner">
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <button
               onClick={() => setSidebarOpen(true)}
               className="lg:hidden p-1.5 sm:p-2 rounded-lg hover:bg-surface-container text-on-surface transition-colors cursor-pointer"
@@ -144,23 +155,26 @@ export default function AdminLayout() {
             >
               <Menu className="w-5 h-5 text-primary" />
             </button>
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2 min-w-0">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" aria-hidden="true" />
-              <span className="text-[10px] sm:text-xs font-serif tracking-wider text-primary uppercase font-semibold">
-                Admin Governance Terminal
+              <span className="text-[10px] sm:text-xs font-serif tracking-wider text-primary uppercase font-semibold truncate">
+                {t('admin.headerTitle')}
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3 ml-auto">
+          <div className="flex items-center gap-2 sm:gap-3 ml-auto shrink-0">
+            <LanguageToggle />
+            <NotificationBell />
             <Link
               to="/"
-              className="hidden sm:inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg glass-surface text-[10px] sm:text-xs text-on-surface-variant hover:text-secondary transition-colors no-underline font-medium"
+              className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg glass-surface text-xs text-on-surface-variant hover:text-secondary transition-colors no-underline font-medium whitespace-nowrap shrink-0"
+              title={t('common.mainSite')}
             >
-              <span>Main Site</span>
-              <span className="text-[10px]" aria-hidden="true">↗</span>
+              <Globe className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+              <span className="hidden xl:inline">{t('common.mainSite')}</span>
             </Link>
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full glass-chip-rose flex items-center justify-center">
+            <div className="hidden sm:flex w-7 h-7 sm:w-8 sm:h-8 rounded-full glass-chip-rose items-center justify-center">
               <UserCog className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
             </div>
           </div>
@@ -168,6 +182,7 @@ export default function AdminLayout() {
 
         {/* Page Content */}
         <main className="flex-1 p-3 sm:p-4 lg:p-6 overflow-auto" role="main">
+          <PushPrompt />
           <Outlet />
         </main>
       </div>

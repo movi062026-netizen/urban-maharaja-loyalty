@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { loyaltyApi } from '../services/api';
 import toast from 'react-hot-toast';
+import { useRealtimeRefresh } from '../context/NotificationContext';
 
 export function useLoyaltyCard() {
   const [data, setData] = useState(null);
@@ -24,6 +25,8 @@ export function useLoyaltyCard() {
   useEffect(() => {
     fetchCard();
   }, [fetchCard]);
+
+  useRealtimeRefresh(['STAMP_APPROVED', 'STAMP_REJECTED', 'REWARD_UNLOCKED', 'CARD_COMPLETED', 'REWARD_CLAIMED', 'REWARD_REDEEMED'], () => fetchCard());
 
   const requestStamp = async () => {
     try {

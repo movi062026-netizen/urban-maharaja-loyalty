@@ -1,4 +1,5 @@
 ﻿import { useState, useEffect } from 'react';
+import { useRealtimeRefresh } from '../../context/NotificationContext';
 import { motion } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 import { adminApi, loyaltyApi } from '../../services/api';
@@ -35,6 +36,11 @@ export default function StaffStampsPage() {
       executeSearch(guestQueryParam);
     }
   }, [pagination.page, statusFilter]);
+
+  useRealtimeRefresh(['STAMP_REQUESTED', 'QUEUE_UPDATED', 'STAMP_APPROVED_BY_STAFF', 'STAMP_REJECTED_BY_STAFF', 'REWARD_ISSUED'], () => {
+    loadPendingRequests();
+    loadStamps();
+  });
 
   const loadStamps = async () => {
     try {

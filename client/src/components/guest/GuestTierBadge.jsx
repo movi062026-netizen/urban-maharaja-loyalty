@@ -16,7 +16,7 @@ export default function GuestTierBadge({ totalApprovedStamps = 0 }) {
         <div>
           <div className="flex items-center gap-2">
             <span className="font-serif text-lg sm:text-xl font-bold text-on-surface tracking-wide">
-              {tier.name} Tier
+              {`${tier.name}`} {'Tier'}
             </span>
             <span className="text-[10px] uppercase font-mono tracking-wider px-2.5 py-0.5 rounded-full bg-surface-container-highest/80 text-secondary border border-secondary/30 font-semibold shadow-sm">
               {tier.badge}
@@ -35,7 +35,7 @@ export default function GuestTierBadge({ totalApprovedStamps = 0 }) {
           </p>
           <p className="text-xs sm:text-sm font-bold text-primary mt-0.5 flex items-center justify-center sm:justify-end gap-1">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>{tier.needed} more seal{tier.needed > 1 ? 's' : ''} to ascend</span>
+            <span>{`${tier.needed} more seal${tier.needed > 1 ? 's' : ''} to ascend`}</span>
           </p>
         </div>
       ) : (

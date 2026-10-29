@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useRealtimeRefresh } from '../../context/NotificationContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   CalendarDays, Clock, Users, MapPin, Phone, Mail,
@@ -19,6 +20,8 @@ export default function BookingsList({ title = 'Table Reservations & Orders', is
   useEffect(() => {
     loadBookings();
   }, [statusFilter]);
+
+  useRealtimeRefresh(['BOOKING_CREATED', 'BOOKING_UPDATED', 'BOOKING_CANCELLED_BY_GUEST'], () => loadBookings());
 
   const loadBookings = async () => {
     try {
@@ -46,8 +49,15 @@ export default function BookingsList({ title = 'Table Reservations & Orders', is
 
   const handleUpdateStatus = async (id, newStatus) => {
     try {
+      let staffNote;
+      if (newStatus === 'CONFIRMED' || newStatus === 'CANCELLED') {
+        // Optional message shown to the customer (e.g. "Table 7 by the window")
+        const note = window.prompt('Optional note for the customer (leave empty to skip):', '');
+        if (note === null) return;
+        staffNote = note.trim() || undefined;
+      }
       setUpdatingId(id);
-      await bookingApi.updateBookingStatus(id, newStatus);
+      await bookingApi.updateBookingStatus(id, newStatus, staffNote);
       toast.success(`Reservation status updated to ${newStatus}!`);
       await loadBookings();
     } catch (err) {

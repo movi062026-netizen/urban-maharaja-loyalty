@@ -94,11 +94,39 @@ const createStaffRules = [
     .notEmpty().withMessage('Email is required')
     .isEmail().withMessage('Invalid email'),
   body('password')
-    .notEmpty().withMessage('Password is required')
-    .isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
+    .isString().withMessage('Password is required')
+    .isLength({ min: 10, max: 128 }).withMessage('Password must be 10-128 characters')
+    .matches(/[a-z]/).withMessage('Password needs a lowercase letter')
+    .matches(/[A-Z]/).withMessage('Password needs an uppercase letter')
+    .matches(/[0-9]/).withMessage('Password needs a number')
+    .matches(/[^A-Za-z0-9]/).withMessage('Password needs a symbol'),
   body('role')
     .optional()
-    .isIn(['STAFF', 'ADMIN']).withMessage('Role must be STAFF or ADMIN'),
+    .equals('STAFF').withMessage('Only STAFF accounts can be created here'),
+];
+
+const updateStaffRules = [
+  body('isActive').optional().isBoolean().withMessage('isActive must be true or false'),
+  body('name').optional().isString().trim().isLength({ min: 1, max: 100 }),
+  body('password')
+    .optional()
+    .isString()
+    .isLength({ min: 10, max: 128 }).withMessage('Password must be 10-128 characters')
+    .matches(/[a-z]/).withMessage('Password needs a lowercase letter')
+    .matches(/[A-Z]/).withMessage('Password needs an uppercase letter')
+    .matches(/[0-9]/).withMessage('Password needs a number')
+    .matches(/[^A-Za-z0-9]/).withMessage('Password needs a symbol'),
+];
+
+const bookingRules = [
+  body('name').isString().trim().isLength({ min: 2, max: 100 }).withMessage('Name must be 2-100 characters'),
+  body('phone').isString().trim().matches(/^[+\d][\d\s-]{8,18}$/).withMessage('Enter a valid phone number'),
+  body('email').optional({ values: 'falsy' }).isEmail().withMessage('Enter a valid email').normalizeEmail(),
+  body('date').optional().isString().isLength({ max: 20 }),
+  body('time').optional().isString().isLength({ max: 20 }),
+  body('guests').optional().isString().isLength({ max: 40 }),
+  body('seating').optional().isString().isLength({ max: 60 }),
+  body('notes').optional().isString().isLength({ max: 500 }).withMessage('Notes cannot exceed 500 characters'),
 ];
 
 module.exports = {
@@ -112,4 +140,6 @@ module.exports = {
   mongoIdParam,
   searchRules,
   createStaffRules,
+  updateStaffRules,
+  bookingRules,
 };

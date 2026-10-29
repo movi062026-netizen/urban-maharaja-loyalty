@@ -1,4 +1,5 @@
 import { Link, useSearchParams } from 'react-router-dom';
+import useSeo from '../../hooks/useSeo';
 import { motion } from 'framer-motion';
 import MaharajaCard from '../../components/loyalty/MaharajaCard';
 import ProgramTermsCard from '../../components/common/ProgramTermsCard';
@@ -48,6 +49,7 @@ const tiers = [
 ];
 
 export default function LoyaltyLandingPage() {
+  useSeo({ title: "Maharaja Card — Restaurant Loyalty Rewards", description: "Join the free digital Maharaja Card at Urban Maharaja Jaipur. Collect a stamp on every visit and unlock complimentary dishes and dining perks." });
   const [searchParams] = useSearchParams();
   const source = searchParams.get('source');
 
@@ -125,6 +127,7 @@ export default function LoyaltyLandingPage() {
           <div className="max-w-md mx-auto mb-16 flex flex-col items-center">
             <MaharajaCard
               guestName="Member Guest"
+              memberId="30591746"
               currentStamps={4}
               targetStamps={5}
               cycleNumber={1}

@@ -1,4 +1,5 @@
 const loyaltyService = require('../services/loyalty.service');
+const { escapeRegex } = require('../utils/regex');
 const { auditContext } = require('../services/audit.service');
 const { success } = require('../utils/response');
 
@@ -103,7 +104,7 @@ const searchGuest = async (req, res, next) => {
         $or: [
           { phone: searchTerm },
           { email: searchTerm.toLowerCase() },
-          { name: new RegExp(searchTerm, 'i') },
+          { name: new RegExp(escapeRegex(searchTerm), 'i') },
         ],
       };
     }

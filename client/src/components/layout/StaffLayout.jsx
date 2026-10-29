@@ -1,22 +1,29 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
+import useSeo from '../../hooks/useSeo';
+import NotificationBell from '../common/NotificationBell';
+import LanguageToggle from '../common/LanguageToggle';
+import PushPrompt from '../common/PushPrompt';
 import {
-  Crown, LayoutDashboard, Stamp, ShoppingBag, Users,
+  Globe, LayoutDashboard, Stamp, ShoppingBag, Users,
   Menu, X, LogOut, UserCheck, CalendarDays
 } from 'lucide-react';
 
 const staffLinks = [
-  { to: '/staff/dashboard', label: 'Floor Overview', icon: LayoutDashboard },
-  { to: '/staff/bookings', label: 'Dining Bookings', icon: CalendarDays, badge: 'Reservations' },
-  { to: '/staff/stamps', label: 'Stamp & Seal Desk', icon: Stamp, badge: 'Live Desk' },
-  { to: '/staff/redemptions', label: 'Voucher Redemptions', icon: ShoppingBag },
-  { to: '/staff/guests', label: 'Patron Directory', icon: Users },
+  { to: '/staff/dashboard', label: 'staff.nav.dashboard', icon: LayoutDashboard },
+  { to: '/staff/bookings', label: 'staff.nav.bookings', icon: CalendarDays, badge: 'staff.nav.bookingsBadge' },
+  { to: '/staff/stamps', label: 'staff.nav.stamps', icon: Stamp, badge: 'staff.nav.stampsBadge' },
+  { to: '/staff/redemptions', label: 'staff.nav.redemptions', icon: ShoppingBag },
+  { to: '/staff/guests', label: 'staff.nav.guests', icon: Users },
 ];
 
 export default function StaffLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
+  useSeo({ title: 'Staff Portal', noindex: true });
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -33,7 +40,7 @@ export default function StaffLayout() {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/admin/login');
+    navigate('/staff/login');
   };
 
   return (
@@ -59,17 +66,21 @@ export default function StaffLayout() {
         <div className="p-4 sm:p-5 border-b border-outline-variant/30">
           <div className="flex items-center justify-between">
             <Link to="/staff/dashboard" className="flex items-center gap-3 no-underline group">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#c99a4e] via-[#deb268] to-[#996d2b] p-[2px] shadow-md flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <div className="w-full h-full rounded-full bg-white flex items-center justify-center border border-[#d4a66a]/40">
-                  <Crown className="w-4 h-4 text-[#9b284e]" />
-                </div>
+              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#c99a4e] via-[#deb268] to-[#996d2b] p-[2px] shadow-md shrink-0 group-hover:scale-105 transition-transform">
+                <img
+                  src="/logo.png"
+                  alt="Urban Maharaja"
+                  className="w-full h-full rounded-full object-cover bg-white"
+                  width="44"
+                  height="44"
+                />
               </div>
               <div className="min-w-0">
                 <div className="font-serif text-sm font-bold text-on-surface tracking-wider group-hover:text-primary transition-colors truncate">
                   URBAN MAHARAJA
                 </div>
                 <div className="text-[10px] text-secondary font-mono tracking-[0.2em] uppercase font-bold">
-                  Floor Concierge
+                  {t('staff.portal')}
                 </div>
               </div>
             </Link>
@@ -100,7 +111,7 @@ export default function StaffLayout() {
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-secondary'}`} />
-                  <span className="truncate">{label}</span>
+                  <span className="truncate">{t(label)}</span>
                 </div>
                 {badge && (
                   <span
@@ -110,7 +121,7 @@ export default function StaffLayout() {
                         : 'bg-amber-100 text-amber-900 border border-amber-300'
                     }`}
                   >
-                    {badge}
+                    {t(badge)}
                   </span>
                 )}
               </Link>
@@ -125,7 +136,7 @@ export default function StaffLayout() {
               <p className="text-xs font-bold text-on-surface truncate">{user?.name || 'Floor Officer'}</p>
               <p className="text-[10px] text-secondary font-mono uppercase tracking-wider truncate flex items-center gap-1 font-semibold">
                 <UserCheck className="w-3 h-3 text-secondary shrink-0" />
-                <span>Active Floor Concierge</span>
+                <span>{t('staff.member')}</span>
               </p>
             </div>
             <button
@@ -144,7 +155,7 @@ export default function StaffLayout() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Header */}
         <header className="glass-navbar px-3 sm:px-4 lg:px-8 py-2.5 sm:py-3.5 flex items-center justify-between sticky top-0 z-30" role="banner">
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <button
               onClick={() => setSidebarOpen(true)}
               className="lg:hidden p-1.5 sm:p-2 rounded-lg hover:bg-surface-container text-on-surface transition-colors cursor-pointer"
@@ -153,23 +164,26 @@ export default function StaffLayout() {
               <Menu className="w-5 h-5 text-secondary" />
             </button>
 
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2 min-w-0">
               <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" aria-hidden="true" />
-              <span className="text-[10px] sm:text-xs font-serif tracking-wider text-secondary uppercase font-semibold">
-                Floor Service & Loyalty Terminal
+              <span className="text-[10px] sm:text-xs font-serif tracking-wider text-secondary uppercase font-semibold truncate">
+                {t('staff.headerTitle')}
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <LanguageToggle />
+            <NotificationBell />
             <Link
               to="/"
-              className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg glass-surface text-[10px] sm:text-xs text-on-surface-variant hover:text-secondary transition-colors no-underline font-medium"
+              className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg glass-surface text-xs text-on-surface-variant hover:text-secondary transition-colors no-underline font-medium whitespace-nowrap shrink-0"
+              title={t('common.websiteLink')}
             >
-              <span>Palace Website</span>
-              <span className="text-[10px]" aria-hidden="true">↗</span>
+              <Globe className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+              <span className="hidden xl:inline">{t('common.websiteLink')}</span>
             </Link>
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full glass-chip flex items-center justify-center text-secondary font-bold text-[10px] sm:text-xs">
+            <div className="hidden sm:flex w-7 h-7 sm:w-8 sm:h-8 rounded-full glass-chip items-center justify-center text-secondary font-bold text-[10px] sm:text-xs">
               {(user?.name || 'S').charAt(0).toUpperCase()}
             </div>
           </div>
@@ -177,6 +191,7 @@ export default function StaffLayout() {
 
         {/* Viewport Content */}
         <main className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-8 py-5 sm:py-8 w-full flex-1" role="main">
+          <PushPrompt />
           <Outlet />
         </main>
       </div>

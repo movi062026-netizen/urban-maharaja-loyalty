@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useRealtimeRefresh } from '../../context/NotificationContext';
 import { motion } from 'framer-motion';
 import { adminApi } from '../../services/api';
 import { Users, Stamp, Gift, ShoppingBag, Star, CreditCard, BarChart3, TrendingUp } from 'lucide-react';
@@ -29,6 +30,8 @@ export default function DashboardPage() {
   useEffect(() => {
     loadDashboard();
   }, []);
+
+  useRealtimeRefresh([...['STAMP_REQUESTED', 'QUEUE_UPDATED', 'STAMP_APPROVED_BY_STAFF', 'STAMP_REJECTED_BY_STAFF', 'REWARD_ISSUED'], ...['BOOKING_CREATED', 'BOOKING_UPDATED', 'BOOKING_CANCELLED_BY_GUEST']], () => loadDashboard());
 
   const loadDashboard = async () => {
     try {

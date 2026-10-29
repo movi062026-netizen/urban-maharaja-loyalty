@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useRealtimeRefresh } from '../../context/NotificationContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { loyaltyApi } from '../../services/api';
@@ -83,6 +84,8 @@ export default function GuestStampsPage() {
   useEffect(() => {
     loadStampData();
   }, []);
+
+  useRealtimeRefresh(['STAMP_APPROVED', 'STAMP_REJECTED', 'REWARD_UNLOCKED', 'CARD_COMPLETED', 'REWARD_CLAIMED', 'REWARD_REDEEMED'], () => loadStampData());
 
   const loadStampData = async () => {
     try {

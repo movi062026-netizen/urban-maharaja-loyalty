@@ -6,6 +6,7 @@ const rewardRoutes = require('./reward.routes');
 const adminRoutes = require('./admin.routes');
 const publicRoutes = require('./public.routes');
 const bookingRoutes = require('./booking.routes');
+const notificationRoutes = require('./notification.routes');
 
 // API v1 routes
 router.use('/auth', authRoutes);
@@ -13,6 +14,7 @@ router.use('/loyalty', loyaltyRoutes);
 router.use('/rewards', rewardRoutes);
 router.use('/admin', adminRoutes);
 router.use('/bookings', bookingRoutes);
+router.use('/notifications', notificationRoutes);
 router.use('/', publicRoutes);
 
 // Health check

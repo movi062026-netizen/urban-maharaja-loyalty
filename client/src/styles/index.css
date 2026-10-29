@@ -705,3 +705,8 @@ img, video, svg {
   z-index: 9999;
   box-shadow: 0 4px 16px rgba(46, 26, 20, 0.2);
 }
+
+/* Hindi: wide tracking splits Devanagari conjuncts — reset it */
+html[lang='hi'] body * {
+  letter-spacing: normal !important;
+}

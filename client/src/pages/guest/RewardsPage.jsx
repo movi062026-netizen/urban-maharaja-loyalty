@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useRealtimeRefresh } from '../../context/NotificationContext';
 import { rewardApi, loyaltyApi } from '../../services/api';
 import { Gift, Sparkles, CheckCircle2, Award, Clock } from 'lucide-react';
 import GuestRedemptionVoucher from '../../components/guest/GuestRedemptionVoucher';
@@ -16,6 +17,8 @@ export default function RewardsPage() {
   useEffect(() => {
     loadData();
   }, []);
+
+  useRealtimeRefresh(['STAMP_APPROVED', 'STAMP_REJECTED', 'REWARD_UNLOCKED', 'CARD_COMPLETED', 'REWARD_CLAIMED', 'REWARD_REDEEMED'], () => loadData());
 
   const loadData = async () => {
     try {
@@ -191,7 +194,7 @@ export default function RewardsPage() {
                 </p>
               ) : (
                 <p className="text-xs text-[#3b241a] font-medium mt-1">
-                  Preview the exclusive delicacies unlocked after completing your 5 seals
+                  Complete your card and one of these rewards is added to your vouchers automatically
                 </p>
               )}
             </div>

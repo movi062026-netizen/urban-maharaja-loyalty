@@ -1,12 +1,19 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { authApi } from '../services/api';
+import { unsubscribePushForLogout } from '../services/push';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem('user');
-    return stored ? JSON.parse(stored) : null;
+    try {
+      const stored = localStorage.getItem('user');
+      // Without a token the cached profile is stale — treat as logged out
+      return stored && localStorage.getItem('accessToken') ? JSON.parse(stored) : null;
+    } catch {
+      localStorage.removeItem('user');
+      return null;
+    }
   });
   const [loading, setLoading] = useState(true);
 
@@ -37,6 +44,8 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = useCallback(async () => {
+    // Stop this device from receiving the signed-out user's alerts
+    await unsubscribePushForLogout();
     try {
       await authApi.logout();
     } catch (e) {

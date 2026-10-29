@@ -1,14 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { adminApi, loyaltyApi } from '../services/api';
 import toast from 'react-hot-toast';
+import { useRealtimeRefresh } from '../context/NotificationContext';
 
 export function useStaffQueue() {
   const [pendingStamps, setPendingStamps] = useState([]);
   const [recentPatrons, setRecentPatrons] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchQueue = useCallback(async () => {
-    setLoading(true);
+  const fetchQueue = useCallback(async ({ silent = false } = {}) => {
+    if (!silent) setLoading(true);
     try {
       const [pendingRes, patronsRes] = await Promise.all([
         adminApi.getStamps({ status: 'PENDING', limit: 12 }).catch(() => ({ data: { data: [] } })),
@@ -26,10 +27,12 @@ export function useStaffQueue() {
 
   useEffect(() => {
     fetchQueue();
-    // Auto-refresh queue every 15 seconds for live dining room updates
-    const interval = setInterval(fetchQueue, 15000);
+    // Background safety-net refresh; live events below handle the instant updates
+    const interval = setInterval(() => fetchQueue({ silent: true }), 30000);
     return () => clearInterval(interval);
   }, [fetchQueue]);
+
+  useRealtimeRefresh(['STAMP_REQUESTED', 'QUEUE_UPDATED', 'STAMP_APPROVED_BY_STAFF', 'STAMP_REJECTED_BY_STAFF', 'REWARD_ISSUED'], () => fetchQueue({ silent: true }));
 
   const approveStamp = async (stampId) => {
     try {
