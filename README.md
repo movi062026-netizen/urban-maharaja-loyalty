@@ -10,12 +10,15 @@
 - Mobile-first responsive design with Playfair Display + Inter typography
 
 ### 👤 Guest Experience (Mobile-First)
-- **Google OAuth & Direct Sign-in** — Instant one-click Google authentication with patron profile sync
+- **Sign-in** — Email or mobile number + password, or one-click Google sign-in. New patrons are signed in straight after registering
 - **Digital Maharaja Card** — Real-time stamp progress visualization and visit history
 - **Dining Bill Upload** — Upload dining receipt photos with bill number, amount, and date when requesting visits
 - **Reward Tracking** — View available, unlocked, redeemed, and expired rewards
 - **Visit History** — Complete loyalty cycle history with verified stamps
 - **Google Review Flow** — Tracked review CTA with click analytics
+- **Table Bookings** — Book a table and track or cancel it from **My Bookings**
+- **Notifications** — In-app bell plus optional phone/desktop push notifications (Web Push)
+- **English / हिंदी** — Language toggle across the site
 
 ### 🧑‍💼 Staff & 👑 Admin Verification Desks
 - **Live Seal Queue** — Real-time requests awaiting desk approval
@@ -25,6 +28,8 @@
 - **Audit Logs & History Tables** — Stamp logs featuring customer details, dining bill thumbnails, and approving officer records
 - **Analytics & Revenue Reporting** — Guest growth, stamp trends, redemption charts (Recharts)
 - **Reward & Staff CRUD** — Manage rewards, access permissions, and restaurant configurations
+- **Booking Desk** — View table bookings and update their status
+- **Live Notifications** — New members, stamp requests and bookings appear instantly (server-sent events + Web Push)
 
 ### 🛡️ Multi-Layer Anti-Fraud Engine
 1. **Invoice Number Deduplication**: Permanently locks approved receipt numbers against reuse across all patrons.
@@ -41,13 +46,21 @@
 - EXIF metadata and privacy stripping (`flags: 'strip_profile'`).
 
 ### 🔒 Security
-- JWT-based authentication with refresh tokens & HTTP-only cookies
+- JWT access + refresh tokens (refresh tokens stored hashed in the database)
 - Google OAuth 2.0 verification
 - Role-based access control (GUEST / STAFF / ADMIN)
 - Rate limiting with Token Bucket algorithm & Redis integration
 - Helmet security headers, CORS, and request ID tracing
-- Input validation (express-validator)
+- Input validation (express-validator) and request sanitising middleware
 - Transactional operations (Mongoose sessions)
+
+### ⏸️ Currently Disabled
+**Email OTP login** and **Forgot Password** are switched off because the project has no verified
+email sending domain yet. The service code and the Resend integration are kept in
+`server/src/services/auth.service.js` and `server/src/integrations/email/` so they can be
+re-enabled once an email provider is configured. Until then:
+- Email addresses are not verified at signup.
+- Staff and admin have no self-service password reset (admin: see **Create the Administrator** below).
 
 ## 🏗️ Architecture
 
@@ -58,7 +71,8 @@ URBAN MAHARAJA DIGITAL LOYALTY PLATFORM/
 │       ├── config/            # Environment, logging, database, Cloudinary
 │       ├── constants/         # Business constants & enums
 │       ├── controllers/       # Thin HTTP handlers
-│       ├── integrations/      # Cloudinary storage, Resend email, Redis cache
+│       ├── database/          # One-time scripts (create-admin)
+│       ├── integrations/      # Cloudinary storage, Redis cache, email (currently unused)
 │       ├── middleware/        # Auth, upload (multer memory), rate limiting, error handling
 │       ├── models/            # Mongoose schemas (Stamp, User, Reward, etc.)
 │       ├── routes/            # API v1 routes
@@ -72,7 +86,8 @@ URBAN MAHARAJA DIGITAL LOYALTY PLATFORM/
 │       ├── components/        # Layout, guest stamp modal, staff queue, loyalty cards
 │       ├── config/            # Client configuration
 │       ├── constants/         # Client-side enums
-│       ├── context/           # AuthContext (React Context)
+│       ├── context/           # Auth, Language and Notification contexts
+│       ├── i18n/              # English / Hindi translations
 │       ├── pages/             # Public, Guest, Staff, Admin pages
 │       ├── services/          # Axios API client + service layer
 │       └── styles/            # Design system (Tailwind CSS)
@@ -89,6 +104,8 @@ URBAN MAHARAJA DIGITAL LOYALTY PLATFORM/
 | Database    | MongoDB + Mongoose 8                                 |
 | Storage     | Cloudinary (WebP compression & streaming upload)     |
 | Auth        | Google OAuth 2.0, JWT, bcryptjs                      |
+| Cache       | Upstash Redis (optional)                             |
+| Push        | Web Push (VAPID) + service worker                    |
 | Security    | Helmet, CORS, Token Bucket Limiter, SHA-256 Hashing   |
 | Logging     | Winston (structured JSON logging)                    |
 
@@ -124,10 +141,11 @@ cp client/.env.example client/.env
 
 Key environment variables in `server/.env`:
 ```env
-# MongoDB & JWT
-MONGO_URI=mongodb://localhost:27017/urban-maharaja
+# MongoDB, JWT & client origin (all required)
+MONGODB_URI=mongodb://localhost:27017/urban-maharaja
 JWT_ACCESS_SECRET=your_access_secret
 JWT_REFRESH_SECRET=your_refresh_secret
+CLIENT_URL=http://localhost:5173
 
 # Cloudinary (WebP Bill Uploads)
 CLOUDINARY_CLOUD_NAME=your_cloud_name
@@ -187,16 +205,28 @@ cd server && npm run test:unit
 
 | Method | Endpoint                              | Auth          | Description                          |
 |--------|--------------------------------------|---------------|--------------------------------------|
+| POST   | `/api/v1/auth/guest/register`        | Public        | Guest registration (signs in directly) |
+| POST   | `/api/v1/auth/guest/login`           | Public        | Guest email/mobile + password login  |
 | POST   | `/api/v1/auth/google`                | Public        | Google OAuth login / registration    |
-| POST   | `/api/v1/auth/login`                 | Public        | Email + password login               |
+| POST   | `/api/v1/auth/staff/login`           | Public        | Staff login                          |
+| POST   | `/api/v1/auth/admin/login`           | Public        | Admin login                          |
+| POST   | `/api/v1/auth/refresh`               | Public        | Exchange refresh token               |
 | GET    | `/api/v1/loyalty/cards/me`           | Guest         | Get current Maharaja Card status     |
-| POST   | `/api/v1/loyalty/stamps/request`     | Guest / Staff | Request seal with WebP bill upload   |
+| POST   | `/api/v1/loyalty/stamps/request-my-stamp` | Guest    | Request seal with WebP bill upload   |
+| POST   | `/api/v1/loyalty/stamps`             | Staff / Admin | Request seal on a guest's behalf     |
 | PATCH  | `/api/v1/loyalty/stamps/:id/approve` | Staff / Admin | Approve seal & verify bill           |
 | PATCH  | `/api/v1/loyalty/stamps/:id/reject`  | Staff / Admin | Reject seal with custom reason       |
-| GET    | `/api/v1/loyalty/stamps`             | Staff / Admin | Query stamp requests & bill history  |
+| GET    | `/api/v1/admin/stamps`               | Staff / Admin | Query stamp requests & bill history  |
 | GET    | `/api/v1/rewards`                    | Public        | List active rewards                  |
-| POST   | `/api/v1/rewards/:id/redeem`         | Staff         | Redeem reward at restaurant          |
-| GET    | `/api/v1/admin/dashboard`            | Admin         | Overview analytics & stats           |
+| POST   | `/api/v1/rewards/:id/redeem`         | Staff / Admin | Redeem reward at restaurant          |
+| POST   | `/api/v1/bookings`                   | Public        | Create a table booking               |
+| GET    | `/api/v1/bookings/me`                | Guest         | My bookings                          |
+| GET    | `/api/v1/bookings`                   | Staff / Admin | All bookings                         |
+| PATCH  | `/api/v1/bookings/:id/status`        | Staff / Admin | Update booking status                |
+| GET    | `/api/v1/notifications`              | Signed in     | List my notifications                |
+| GET    | `/api/v1/notifications/stream`       | Signed in     | Live notification stream (SSE)       |
+| POST   | `/api/v1/notifications/push/subscribe` | Signed in   | Enable Web Push on this device       |
+| GET    | `/api/v1/admin/dashboard`            | Staff / Admin | Overview analytics & stats           |
 
 ## 🔑 Key Business Rules
 
