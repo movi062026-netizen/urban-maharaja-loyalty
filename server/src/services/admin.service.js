@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const { escapeRegex } = require('../utils/regex');
 const LoyaltyCard = require('../models/LoyaltyCard');
 const Stamp = require('../models/Stamp');
 const Reward = require('../models/Reward');
@@ -133,11 +134,12 @@ const getRecentActivity = async (limit = 20) => {
  */
 const getGuestsList = async (page = 1, limit = 20, search = '') => {
   const query = { role: ROLES.GUEST };
-  if (search) {
+  if (typeof search === 'string' && search.trim()) {
+    const pattern = escapeRegex(search.trim());
     query.$or = [
-      { name: { $regex: search, $options: 'i' } },
-      { phone: { $regex: search, $options: 'i' } },
-      { email: { $regex: search, $options: 'i' } },
+      { name: { $regex: pattern, $options: 'i' } },
+      { phone: { $regex: pattern, $options: 'i' } },
+      { email: { $regex: pattern, $options: 'i' } },
     ];
   }
 

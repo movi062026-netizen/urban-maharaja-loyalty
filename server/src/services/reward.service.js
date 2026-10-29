@@ -5,6 +5,7 @@ const { REDEMPTION_STATUS, AUDIT_ACTIONS, ENTITY_TYPES } = require('../constants
 const { NotFoundError, ConflictError, AuthorizationError } = require('../utils/errors');
 const { createAuditLog } = require('./audit.service');
 const { cache } = require('../integrations/redis');
+const notifications = require('./notification.service');
 
 /**
  * Get all active rewards (cached with Redis, 5-min TTL)
@@ -78,7 +79,28 @@ const createReward = async (data, auditCtx = {}) => {
     metadata: { title: reward.title, requiredStamps: reward.requiredStamps },
   });
 
+  // Guests who finished a card while no reward was configured get one now
+  if (reward.isActive) backfillPendingGuests().catch(() => {});
+
   return reward;
+};
+
+/**
+ * Issue rewards to every guest holding a completed card without a voucher.
+ */
+const backfillPendingGuests = async () => {
+  const LoyaltyCard = require('../models/LoyaltyCard');
+  const { LOYALTY_STATUS } = require('../constants');
+  const { issueMissingRewards } = require('./loyalty.service');
+
+  const claimedCardIds = await RewardRedemption.distinct('loyaltyCardId');
+  const guestIds = await LoyaltyCard.distinct('guestId', {
+    status: LOYALTY_STATUS.COMPLETED,
+    _id: { $nin: claimedCardIds },
+  });
+  for (const guestId of guestIds) {
+    await issueMissingRewards(guestId);
+  }
 };
 
 /**
@@ -101,6 +123,8 @@ const updateReward = async (rewardId, data, auditCtx = {}) => {
     entityId: reward._id,
     metadata: { title: reward.title, changes: Object.keys(data) },
   });
+
+  if (reward.isActive) backfillPendingGuests().catch(() => {});
 
   return reward;
 };
@@ -182,6 +206,24 @@ const redeemReward = async (redemptionId, staffId, auditCtx = {}) => {
     },
   });
 
+  notifications.notifyUser(guestId, {
+    type: 'REWARD_REDEEMED',
+    title: 'Reward redeemed',
+    message: `${redemption.rewardId?.title || 'Your reward'} has been redeemed. Enjoy!`,
+    link: '/guest/rewards',
+    data: { rewardTitle: redemption.rewardId?.title },
+  });
+  notifications.notifyStaff(
+    {
+      type: 'VOUCHER_REDEEMED',
+      title: 'Voucher redeemed',
+      message: `${redemption.rewardId?.title || 'A reward'} redeemed for ${redemption.guestId?.name || 'a guest'}.`,
+      link: '/redemptions',
+      data: { rewardTitle: redemption.rewardId?.title, guestName: redemption.guestId?.name, code: redemption.code },
+    },
+    { excludeUserId: staffId }
+  );
+
   return redemption;
 };
 
@@ -189,6 +231,9 @@ const redeemReward = async (redemptionId, staffId, auditCtx = {}) => {
  * Get guest's redemptions
  */
 const getGuestRedemptions = async (guestId) => {
+  // Make sure every completed card has its voucher before listing them
+  await require('./loyalty.service').issueMissingRewards(guestId);
+
   return RewardRedemption.find({ guestId })
     .populate('rewardId', 'title description rewardType validityDays')
     .populate('redeemedBy', 'name')

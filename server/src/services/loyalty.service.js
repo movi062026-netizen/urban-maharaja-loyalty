@@ -12,6 +12,26 @@ const { cache } = require('../integrations/redis');
 const crypto = require('crypto');
 const { uploadBillImage } = require('../integrations/storage');
 const logger = require('../config/logger');
+const User = require('../models/User');
+const notifications = require('./notification.service');
+
+/**
+ * Tell staff & admins (except whoever acted) what just happened to a guest.
+ * Looks up names after the fact so it never slows the main request.
+ */
+const notifyTeam = ({ guestId, actorId, build }) => {
+  Promise.all([
+    guestId ? User.findById(guestId).select('name').lean() : null,
+    actorId ? User.findById(actorId).select('name').lean() : null,
+  ])
+    .then(([guest, actor]) => {
+      notifications.notifyStaff(
+        build({ guestName: guest?.name || 'A guest', actorName: actor?.name || 'Staff' }),
+        { excludeUserId: actorId }
+      );
+    })
+    .catch(() => {});
+};
 
 /**
  * Get or create active loyalty card for a guest
@@ -46,9 +66,100 @@ const getOrCreateActiveCard = async (guestId) => {
 };
 
 /**
+ * Pick one of the admin's active rewards that fits this card and issue it as a
+ * voucher. Returns null when the admin has not configured any eligible reward
+ * (the card is then picked up later by issueMissingRewards).
+ */
+const autoIssueReward = async (card, session = null) => {
+  const existing = await RewardRedemption.findOne({ loyaltyCardId: card._id }).session(session);
+  if (existing) return null;
+
+  const eligible = await Reward.find({
+    isActive: true,
+    requiredStamps: { $lte: card.targetStamps },
+  }).session(session);
+  if (!eligible.length) return null;
+
+  // Every completed card gets ONE of the admin's rewards, chosen at random
+  const reward = eligible[crypto.randomInt(eligible.length)];
+
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + (reward.validityDays || 30));
+
+  const [redemption] = await RewardRedemption.create(
+    [{
+      guestId: card.guestId,
+      rewardId: reward._id,
+      loyaltyCardId: card._id,
+      code: `UM-RW-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
+      status: REDEMPTION_STATUS.AVAILABLE,
+      expiresAt,
+    }],
+    { session }
+  );
+
+  return { redemption, reward };
+};
+
+/**
+ * Safety net: issue a reward for any completed card that never got one
+ * (e.g. completed before the admin added rewards, or before auto-issue existed).
+ */
+const issueMissingRewards = async (guestId) => {
+  const completedCards = await LoyaltyCard.find({ guestId, status: LOYALTY_STATUS.COMPLETED });
+  if (!completedCards.length) return [];
+
+  const claimed = await RewardRedemption.distinct('loyaltyCardId', {
+    loyaltyCardId: { $in: completedCards.map((c) => c._id) },
+  });
+  const claimedIds = new Set(claimed.map(String));
+
+  const issued = [];
+  for (const card of completedCards) {
+    if (claimedIds.has(String(card._id))) continue;
+    try {
+      const result = await autoIssueReward(card);
+      if (!result) break; // no rewards configured yet
+      issued.push(result);
+      createAuditLog({
+        action: AUDIT_ACTIONS.REWARD_UNLOCKED,
+        entityType: ENTITY_TYPES.REDEMPTION,
+        entityId: result.redemption._id,
+        metadata: { guestId, rewardTitle: result.reward.title, cycleNumber: card.cycleNumber, autoIssued: true, backfill: true },
+      });
+      notifications.notifyUser(guestId, {
+        type: 'REWARD_UNLOCKED',
+        title: 'Reward unlocked!',
+        message: `You won ${result.reward.title}! Voucher ${result.redemption.code} is ready.`,
+        link: '/guest/rewards',
+        data: { rewardTitle: result.reward.title, code: result.redemption.code, targetStamps: card.targetStamps },
+      });
+      notifyTeam({
+        guestId,
+        build: ({ guestName }) => ({
+          type: 'REWARD_ISSUED',
+          title: 'Reward issued',
+          message: `${guestName} received ${result.reward.title} (${result.redemption.code}).`,
+          link: '/redemptions',
+          data: { guestName, rewardTitle: result.reward.title, code: result.redemption.code },
+        }),
+      });
+    } catch (error) {
+      // Duplicate (raced with another request) or transient error — next load retries
+      logger.warn('Reward backfill skipped', { cardId: String(card._id), error: error.message });
+    }
+  }
+
+  if (issued.length) cache.invalidateGuestCaches(guestId).catch(() => {});
+  return issued;
+};
+
+/**
  * Get guest's loyalty card with full details and cycle history
  */
 const getGuestLoyaltyCard = async (guestId) => {
+  await issueMissingRewards(guestId);
+
   // Try Redis cache first
   const cached = await cache.getCachedGuestCard(guestId);
   if (cached) return cached;
@@ -286,6 +397,18 @@ const requestStamp = async (guestId, staffId = null, auditCtx = {}, billPayload 
 
   cache.invalidateGuestCaches(guestId).catch(() => {});
 
+  User.findById(guestId).select('name').lean()
+    .then((guest) => {
+      notifications.notifyStaff({
+        type: 'STAMP_REQUESTED',
+        title: 'New stamp request',
+        message: `${guest?.name || 'A guest'} requested a dining stamp${billAmount ? ` (₹${billAmount})` : ''}.`,
+        link: '/stamps',
+        data: { stampId: stamp._id, guestName: guest?.name, billAmount },
+      });
+    })
+    .catch(() => {});
+
   return stamp;
 };
 
@@ -337,17 +460,21 @@ const approveStamp = async (stampId, staffId, auditCtx = {}) => {
     if (card.currentStamps >= card.targetStamps) {
       card.status = LOYALTY_STATUS.COMPLETED;
 
-      // NOTE: We no longer auto-create redemptions for ALL rewards.
-      // Instead, the guest will choose ONE reward to claim via the
-      // claimReward endpoint. We just mark the card as completed.
-      // The eligible rewards list is shown to the guest on the frontend.
+      // Automatically give the guest one of the admin's active rewards,
+      // in the same transaction as the stamp that completed the card
+      rewardUnlocked = await autoIssueReward(card, session);
 
       createAuditLog({
         ...auditCtx,
         action: AUDIT_ACTIONS.REWARD_UNLOCKED,
         entityType: ENTITY_TYPES.LOYALTY_CARD,
         entityId: card._id,
-        metadata: { guestId: stamp.guestId, cycleNumber: card.cycleNumber },
+        metadata: {
+          guestId: stamp.guestId,
+          cycleNumber: card.cycleNumber,
+          autoIssued: Boolean(rewardUnlocked),
+          rewardTitle: rewardUnlocked?.reward.title,
+        },
       });
     }
 
@@ -370,6 +497,48 @@ const approveStamp = async (stampId, staffId, auditCtx = {}) => {
 
     // Invalidate guest card and dashboard caches in Redis
     cache.invalidateGuestCaches(stamp.guestId).catch(() => {});
+
+    const cardComplete = card.currentStamps >= card.targetStamps;
+    const wonTitle = rewardUnlocked?.reward.title;
+    notifications.notifyUser(stamp.guestId, {
+      type: cardComplete ? (wonTitle ? 'REWARD_UNLOCKED' : 'CARD_COMPLETED') : 'STAMP_APPROVED',
+      title: cardComplete ? 'Reward unlocked!' : 'Stamp approved',
+      message: cardComplete
+        ? (wonTitle
+          ? `All ${card.targetStamps} stamps collected! You won ${wonTitle}. Voucher ${rewardUnlocked.redemption.code} is ready.`
+          : `All ${card.targetStamps} stamps collected! Your reward will appear here shortly.`)
+        : `Your stamp was approved. ${card.currentStamps}/${card.targetStamps} stamps collected.`,
+      link: cardComplete ? '/guest/rewards' : '/guest/card',
+      data: {
+        currentStamps: card.currentStamps,
+        targetStamps: card.targetStamps,
+        rewardTitle: wonTitle,
+        code: rewardUnlocked?.redemption.code,
+      },
+    });
+    notifyTeam({
+      guestId: stamp.guestId,
+      actorId: staffId,
+      build: ({ guestName, actorName }) => ({
+        type: 'STAMP_APPROVED_BY_STAFF',
+        title: 'Stamp approved',
+        message: `${actorName} approved a stamp for ${guestName} (${card.currentStamps}/${card.targetStamps}).`,
+        link: '/stamps',
+        data: { stampId: stamp._id, guestName, actorName, decision: 'APPROVED', currentStamps: card.currentStamps, targetStamps: card.targetStamps },
+      }),
+    });
+    if (rewardUnlocked) {
+      notifyTeam({
+        guestId: stamp.guestId,
+        build: ({ guestName }) => ({
+          type: 'REWARD_ISSUED',
+          title: 'Reward issued',
+          message: `${guestName} completed their card and won ${rewardUnlocked.reward.title} (${rewardUnlocked.redemption.code}).`,
+          link: '/redemptions',
+          data: { guestName, rewardTitle: rewardUnlocked.reward.title, code: rewardUnlocked.redemption.code },
+        }),
+      });
+    }
 
     return {
       stamp,
@@ -409,6 +578,25 @@ const rejectStamp = async (stampId, staffId, reason, auditCtx = {}) => {
 
   // Invalidate guest card cache in Redis
   cache.invalidateGuestCard(stamp.guestId).catch(() => {});
+
+  notifications.notifyUser(stamp.guestId, {
+    type: 'STAMP_REJECTED',
+    title: 'Stamp request declined',
+    message: `Your stamp request was declined: ${stamp.rejectionReason}`,
+    link: '/guest/stamps',
+    data: { reason: stamp.rejectionReason },
+  });
+  notifyTeam({
+    guestId: stamp.guestId,
+    actorId: staffId,
+    build: ({ guestName, actorName }) => ({
+      type: 'STAMP_REJECTED_BY_STAFF',
+      title: 'Stamp rejected',
+      message: `${actorName} rejected a stamp request from ${guestName}.`,
+      link: '/stamps',
+      data: { stampId: stamp._id, guestName, actorName, decision: 'REJECTED' },
+    }),
+  });
 
   return stamp;
 };
@@ -506,10 +694,30 @@ const claimReward = async (guestId, rewardId, loyaltyCardId, auditCtx = {}) => {
     metadata: { guestId, rewardTitle: reward.title, cycleNumber: card.cycleNumber },
   });
 
+  notifications.notifyUser(guestId, {
+    type: 'REWARD_CLAIMED',
+    title: 'Voucher ready',
+    message: `${reward.title} voucher (${voucherCode}) is ready to use.`,
+    link: '/guest/rewards',
+    data: { rewardTitle: reward.title, code: voucherCode },
+  });
+  notifyTeam({
+    guestId,
+    build: ({ guestName }) => ({
+      type: 'REWARD_ISSUED',
+      title: 'Reward claimed',
+      message: `${guestName} claimed ${reward.title} (${voucherCode}).`,
+      link: '/redemptions',
+      data: { guestName, rewardTitle: reward.title, code: voucherCode },
+    }),
+  });
+
   return { redemption, reward, card };
 };
 
 module.exports = {
+  autoIssueReward,
+  issueMissingRewards,
   getOrCreateActiveCard,
   getGuestLoyaltyCard,
   startNextCycle,

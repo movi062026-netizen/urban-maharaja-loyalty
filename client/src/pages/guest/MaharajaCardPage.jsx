@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
+import { useRealtimeRefresh } from '../../context/NotificationContext';
 import { loyaltyApi } from '../../services/api';
 import MaharajaCard from '../../components/loyalty/MaharajaCard';
 import { Gift, ArrowRight, Stamp, Sparkles, CheckCircle2, ShieldCheck, History, RefreshCw } from 'lucide-react';
@@ -12,6 +14,7 @@ import RequestStampModal from '../../components/guest/RequestStampModal';
 
 export default function MaharajaCardPage() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,14 +27,23 @@ export default function MaharajaCardPage() {
     loadCard();
   }, []);
 
-  const loadCard = async () => {
+  // Live updates: refresh silently when staff approves/rejects or a reward changes
+  useRealtimeRefresh(
+    ['STAMP_APPROVED', 'STAMP_REJECTED', 'REWARD_UNLOCKED', 'CARD_COMPLETED', 'REWARD_CLAIMED', 'REWARD_REDEEMED'],
+    () => loadCard({ silent: true })
+  );
+
+  const loadCard = async ({ silent = false } = {}) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const res = await loyaltyApi.getMyCard();
       setData(res.data.data);
+      setError(null);
     } catch (err) {
-      setError(err.response?.data?.error?.message || 'Failed to load Maharaja Card');
-      toast.error('Failed to load your Maharaja Card');
+      if (!silent) {
+        setError(err.response?.data?.error?.message || t('cardPage.loadError'));
+        toast.error(t('cardPage.loadError'));
+      }
     } finally {
       setLoading(false);
     }
@@ -45,11 +57,11 @@ export default function MaharajaCardPage() {
     setRequestingStamp(true);
     try {
       await loyaltyApi.requestMyStamp(formData);
-      toast.success('Royal dining bill uploaded & seal requested! Concierge will verify your visit.');
+      toast.success(t('cardPage.billUploaded'));
       setBillModalOpen(false);
-      loadCard();
+      loadCard({ silent: true });
     } catch (err) {
-      toast.error(err.response?.data?.error?.message || 'Failed to submit bill');
+      toast.error(err.response?.data?.error?.message || t('cardPage.billFailed'));
     } finally {
       setRequestingStamp(false);
     }
@@ -59,10 +71,10 @@ export default function MaharajaCardPage() {
     setStartingCycle(true);
     try {
       await loyaltyApi.startNextCycle();
-      toast.success('New Maharaja Card cycle activated! Enjoy your dining.');
-      loadCard();
+      toast.success(t('cardPage.cycleStarted'));
+      loadCard({ silent: true });
     } catch (err) {
-      toast.error(err.response?.data?.error?.message || 'Failed to activate next cycle');
+      toast.error(err.response?.data?.error?.message || t('cardPage.cycleFailed'));
     } finally {
       setStartingCycle(false);
     }
@@ -88,10 +100,10 @@ export default function MaharajaCardPage() {
       <div className="text-center py-16 p-8 rounded-3xl bg-surface-container/80 border border-outline-variant/30 text-on-surface">
         <p className="text-on-surface-variant text-sm mb-4">{error}</p>
         <button
-          onClick={loadCard}
+          onClick={() => loadCard()}
           className="px-6 py-2.5 rounded-full bg-gradient-to-r from-primary-container to-secondary text-white text-xs uppercase tracking-wider font-bold shadow-md hover:brightness-110 cursor-pointer"
         >
-          Try Again
+          {t('common.tryAgain')}
         </button>
       </div>
     );
@@ -99,7 +111,8 @@ export default function MaharajaCardPage() {
 
   const { card, allCards = [], stamps = [], availableRedemptions = [], isComplete, totalCompletedCycles = 0, totalApprovedStamps = 0 } = data || {};
   const activeCycle = card?.cycleNumber || 1;
-  const isCardFinished = (card?.currentStamps || 0) >= (card?.targetStamps || 5);
+  const targetStamps = card?.targetStamps || 5;
+  const isCardFinished = (card?.currentStamps || 0) >= targetStamps;
 
   return (
     <motion.div
@@ -112,21 +125,22 @@ export default function MaharajaCardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-outline-variant/20">
         <div>
           <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl text-on-surface font-bold">
-            Digital Maharaja Card
+            {t('cardPage.title')}
           </h1>
           <p className="text-xs text-on-surface-variant mt-1 font-sans">
-            Welcome, <strong className="text-secondary">{user?.name || 'Noble Patron'}</strong>. Present your card during dining to collect seals.
+            {t('cardPage.welcome', { name: user?.name || 'Guest' })}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <span className="px-3 py-1.5 rounded-xl bg-surface-container border border-outline-variant/30 text-xs font-mono text-secondary font-bold flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-primary" />
-            <span>Cycle #{activeCycle} Active</span>
+            <span>{t('cardPage.cycleActive', { cycle: activeCycle })}</span>
           </span>
           <button
-            onClick={loadCard}
+            onClick={() => loadCard()}
             className="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-            title="Refresh Card"
+            title={t('common.refresh')}
+            aria-label={t('common.refresh')}
           >
             <RefreshCw className="w-4 h-4" />
           </button>
@@ -143,6 +157,7 @@ export default function MaharajaCardPage() {
           <div className="flex justify-center">
             <MaharajaCard
               guestName={user?.name}
+              memberId={user?._id || user?.id}
               currentStamps={card?.currentStamps}
               targetStamps={card?.targetStamps}
               cycleNumber={card?.cycleNumber}
@@ -169,10 +184,10 @@ export default function MaharajaCardPage() {
               </div>
               <div>
                 <p className="text-xs font-bold text-on-surface">
-                  Dedicated Stamp & Seal Desk
+                  {t('cardPage.deskTitle')}
                 </p>
                 <p className="text-[11px] text-on-surface-variant">
-                  Submit dining bills, track real-time concierge approvals, and inspect milestone perks.
+                  {t('cardPage.deskDesc')}
                 </p>
               </div>
             </div>
@@ -180,7 +195,7 @@ export default function MaharajaCardPage() {
               to="/guest/stamps"
               className="px-4 py-2 rounded-xl bg-primary-container text-white text-xs font-bold uppercase tracking-wider hover:brightness-110 shadow-xs no-underline flex items-center gap-1.5 shrink-0"
             >
-              <span>Open Desk</span>
+              <span>{t('cardPage.openDesk')}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -192,10 +207,10 @@ export default function MaharajaCardPage() {
                 <CheckCircle2 className="w-6 h-6" />
               </div>
               <h3 className="font-serif text-xl font-bold text-on-surface">
-                🎉 Royal Cycle #{activeCycle} Completed!
+                🎉 {t('cardPage.completedTitle', { cycle: activeCycle })}
               </h3>
               <p className="text-xs text-on-surface-variant max-w-md mx-auto leading-relaxed">
-                You have collected all 5 royal seals! Your royal complimentary reward voucher has been unlocked and added to your rewards vault.
+                {t('cardPage.completedDesc', { target: targetStamps })}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                 <Link
@@ -203,7 +218,7 @@ export default function MaharajaCardPage() {
                   className="px-5 py-2.5 rounded-xl bg-primary-container text-white text-xs uppercase tracking-wider font-bold hover:brightness-110 shadow no-underline inline-flex items-center gap-1.5"
                 >
                   <Gift className="w-4 h-4" />
-                  <span>Claim Your Reward</span>
+                  <span>{t('cardPage.claim')}</span>
                 </Link>
                 <button
                   onClick={handleStartNextCycle}
@@ -211,7 +226,7 @@ export default function MaharajaCardPage() {
                   className="px-5 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/40 text-secondary text-xs uppercase tracking-wider font-bold transition-all cursor-pointer flex items-center gap-1.5"
                 >
                   <Sparkles className="w-4 h-4 text-primary" />
-                  <span>{startingCycle ? 'Activating...' : `Begin Royal Cycle #${activeCycle + 1}`}</span>
+                  <span>{startingCycle ? t('cardPage.activating') : t('cardPage.beginCycle', { cycle: activeCycle + 1 })}</span>
                 </button>
               </div>
             </div>
@@ -221,26 +236,26 @@ export default function MaharajaCardPage() {
           <div className="grid grid-cols-3 gap-2 sm:gap-3">
             <div className="p-3 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
               <span className="text-[9px] sm:text-[10px] uppercase font-black tracking-wider text-[#744d1c] block mb-1">
-                Current Seals
+                {t('cardPage.statCurrent')}
               </span>
               <span className="text-lg sm:text-2xl font-serif font-black text-primary">
-                {card?.currentStamps || 0} / {card?.targetStamps || 5}
+                {card?.currentStamps || 0} / {targetStamps}
               </span>
             </div>
             <div className="p-3 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
               <span className="text-[9px] sm:text-[10px] uppercase font-black tracking-wider text-[#744d1c] block mb-1">
-                Completed Cards
+                {t('cardPage.statCompleted')}
               </span>
               <span className="text-lg sm:text-2xl font-serif font-black text-[#744d1c]">
-                {totalCompletedCycles} Passes
+                {t('cardPage.passes', { count: totalCompletedCycles })}
               </span>
             </div>
             <div className="p-3 sm:p-5 rounded-2xl bg-white border border-[#e0c8b0] shadow-sm text-center">
               <span className="text-[9px] sm:text-[10px] uppercase font-black tracking-wider text-[#744d1c] block mb-1">
-                Total Visits
+                {t('cardPage.statVisits')}
               </span>
               <span className="text-lg sm:text-2xl font-serif font-black text-[#1d0f09]">
-                {totalApprovedStamps} Seals
+                {t('cardPage.seals', { count: totalApprovedStamps })}
               </span>
             </div>
           </div>
@@ -252,10 +267,10 @@ export default function MaharajaCardPage() {
           <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border border-[#e0c8b0] shadow-[0_12px_36px_-10px_rgba(46,26,16,0.08)]">
             <h3 className="font-serif text-base font-bold text-on-surface mb-2 flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-primary" />
-              <span>Maharaja Card Cycle Progression</span>
+              <span>{t('cardPage.progressionTitle')}</span>
             </h3>
             <p className="text-xs text-[#3b241a] font-medium leading-relaxed mb-4">
-              Every 5 dining visits completes a full cycle and awards an exclusive fine-dining perk. Once completed, your pass rolls over into Cycle 2, Cycle 3, and beyond with higher privileges!
+              {t('cardPage.progressionDesc', { target: targetStamps })}
             </p>
 
             {/* Cycle History Badges */}
@@ -295,17 +310,17 @@ export default function MaharajaCardPage() {
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-serif text-base font-bold text-on-surface flex items-center gap-2">
                 <Gift className="w-4 h-4 text-primary" />
-                <span>Unlocked Reward Vouchers</span>
+                <span>{t('cardPage.vouchersTitle')}</span>
               </h3>
               <Link to="/guest/rewards" className="text-xs text-primary hover:text-primary-container transition-colors no-underline font-bold">
-                View All →
+                {t('common.viewAll')} →
               </Link>
             </div>
 
             {availableRedemptions.length === 0 ? (
               <div className="p-5 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] text-center">
                 <p className="text-xs text-[#3b241a] font-medium leading-relaxed">
-                  No unredeemed vouchers at this moment. Complete your 5 seals to unlock your complimentary royal treat!
+                  {t('cardPage.noVouchers', { target: targetStamps })}
                 </p>
               </div>
             ) : (
@@ -316,11 +331,11 @@ export default function MaharajaCardPage() {
                     className="p-3.5 rounded-2xl bg-[#fdfaf6] border border-[#ede0d2] hover:border-primary/40 flex items-center justify-between transition-colors"
                   >
                     <div>
-                      <p className="font-bold text-on-surface text-xs">{r.rewardId?.title || 'Complimentary Perk'}</p>
-                      <p className="text-xs text-[#3b241a] font-medium mt-0.5">{r.rewardId?.description || 'Valid on your next dine-in'}</p>
+                      <p className="font-bold text-on-surface text-xs">{r.rewardId?.title || t('cardPage.perk')}</p>
+                      <p className="text-xs text-[#3b241a] font-medium mt-0.5">{r.rewardId?.description || t('cardPage.perkDesc')}</p>
                     </div>
                     <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-950 border border-emerald-400 text-[10px] font-bold uppercase">
-                      Ready
+                      {t('cardPage.ready')}
                     </span>
                   </div>
                 ))}

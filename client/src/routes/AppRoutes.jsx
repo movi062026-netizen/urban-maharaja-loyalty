@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 // Layouts
@@ -16,39 +17,48 @@ import LoyaltyLandingPage from '../pages/public/LoyaltyLandingPage';
 import TermsPage from '../pages/public/TermsPage';
 import LoginPage from '../pages/public/LoginPage';
 import RegisterPage from '../pages/public/RegisterPage';
-import ForgotPasswordPage from '../pages/public/ForgotPasswordPage';
 import AdminLoginPage from '../pages/public/AdminLoginPage';
 import StaffLoginPage from '../pages/public/StaffLoginPage';
 
 // Guest Pages
-import MaharajaCardPage from '../pages/guest/MaharajaCardPage';
-import GuestStampsPage from '../pages/guest/GuestStampsPage';
-import RewardsPage from '../pages/guest/RewardsPage';
-import ProfilePage from '../pages/guest/ProfilePage';
-import HistoryPage from '../pages/guest/HistoryPage';
-import ReviewPage from '../pages/guest/ReviewPage';
+const MaharajaCardPage = lazy(() => import('../pages/guest/MaharajaCardPage'));
+const GuestStampsPage = lazy(() => import('../pages/guest/GuestStampsPage'));
+const RewardsPage = lazy(() => import('../pages/guest/RewardsPage'));
+const ProfilePage = lazy(() => import('../pages/guest/ProfilePage'));
+const HistoryPage = lazy(() => import('../pages/guest/HistoryPage'));
+const ReviewPage = lazy(() => import('../pages/guest/ReviewPage'));
+const MyBookingsPage = lazy(() => import('../pages/guest/MyBookingsPage'));
 
 // Staff Pages
-import StaffDashboardPage from '../pages/staff/StaffDashboardPage';
-import StaffBookingsPage from '../pages/staff/StaffBookingsPage';
-import StaffStampsPage from '../pages/staff/StaffStampsPage';
-import StaffRedemptionsPage from '../pages/staff/StaffRedemptionsPage';
-import StaffGuestsPage from '../pages/staff/StaffGuestsPage';
+const StaffDashboardPage = lazy(() => import('../pages/staff/StaffDashboardPage'));
+const StaffBookingsPage = lazy(() => import('../pages/staff/StaffBookingsPage'));
+const StaffStampsPage = lazy(() => import('../pages/staff/StaffStampsPage'));
+const StaffRedemptionsPage = lazy(() => import('../pages/staff/StaffRedemptionsPage'));
+const StaffGuestsPage = lazy(() => import('../pages/staff/StaffGuestsPage'));
 
 // Admin Pages
-import AdminDashboardPage from '../pages/admin/DashboardPage';
-import AdminBookingsPage from '../pages/admin/BookingsPage';
-import AdminStaffPage from '../pages/admin/StaffPage';
-import AdminAnalyticsPage from '../pages/admin/AnalyticsPage';
-import AdminRewardsPage from '../pages/admin/RewardsPage';
-import AdminSettingsPage from '../pages/admin/SettingsPage';
-import AdminAuditLogsPage from '../pages/admin/AuditLogsPage';
-import AdminGuestsPage from '../pages/admin/GuestsPage';
-import AdminStampsPage from '../pages/admin/StampsPage';
-import AdminRedemptionsPage from '../pages/admin/RedemptionsPage';
+const AdminDashboardPage = lazy(() => import('../pages/admin/DashboardPage'));
+const AdminBookingsPage = lazy(() => import('../pages/admin/BookingsPage'));
+const AdminStaffPage = lazy(() => import('../pages/admin/StaffPage'));
+const AdminAnalyticsPage = lazy(() => import('../pages/admin/AnalyticsPage'));
+const AdminRewardsPage = lazy(() => import('../pages/admin/RewardsPage'));
+const AdminSettingsPage = lazy(() => import('../pages/admin/SettingsPage'));
+const AdminAuditLogsPage = lazy(() => import('../pages/admin/AuditLogsPage'));
+const AdminGuestsPage = lazy(() => import('../pages/admin/GuestsPage'));
+const AdminStampsPage = lazy(() => import('../pages/admin/StampsPage'));
+const AdminRedemptionsPage = lazy(() => import('../pages/admin/RedemptionsPage'));
+
+function RouteFallback() {
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center" role="status" aria-label="Loading">
+      <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
 
 export default function AppRoutes() {
   return (
+    <Suspense fallback={<RouteFallback />}>
     <Routes>
       {/* ── Public Routes ────────────────────────── */}
       <Route element={<PublicLayout />}>
@@ -64,7 +74,6 @@ export default function AppRoutes() {
       {/* Authentication Portals (Distinct for Customers, Staff, and Admin) */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route path="/staff/login" element={<StaffLoginPage />} />
 
@@ -83,6 +92,7 @@ export default function AppRoutes() {
         <Route path="/guest/history" element={<HistoryPage />} />
         <Route path="/guest/profile" element={<ProfilePage />} />
         <Route path="/guest/review" element={<ReviewPage />} />
+        <Route path="/guest/bookings" element={<MyBookingsPage />} />
 
         {/* Dedicated Stamp & Seal Tracker Desk */}
         <Route path="/guest/stamps" element={<GuestStampsPage />} />
@@ -140,5 +150,6 @@ export default function AppRoutes() {
       {/* 404 Catch-All */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </Suspense>
   );
 }

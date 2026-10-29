@@ -15,7 +15,7 @@ const authenticate = async (req, _res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, env.JWT_ACCESS_SECRET);
+    const decoded = jwt.verify(token, env.JWT_ACCESS_SECRET, { algorithms: ['HS256'] });
 
     // Verify user still exists and is active
     const user = await User.findById(decoded.id).select('_id name role isActive');
@@ -60,4 +60,16 @@ const authorize = (...roles) => {
   };
 };
 
-module.exports = { authenticate, authorize };
+/**
+ * Attach req.user when a valid token is sent, but never reject the request.
+ * Used by public endpoints that behave better for signed-in users.
+ */
+const optionalAuthenticate = async (req, res, next) => {
+  if (!req.headers.authorization?.startsWith('Bearer ')) return next();
+  return authenticate(req, res, (err) => {
+    if (err) req.user = undefined;
+    next();
+  });
+};
+
+module.exports = { authenticate, authorize, optionalAuthenticate };

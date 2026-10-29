@@ -242,8 +242,62 @@ const sendPasswordResetEmail = async ({ to, name, otp }) => {
   }
 };
 
+const escapeHtml = (value) =>
+  String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+const BOOKING_COPY = {
+  PENDING: { subject: 'We received your table request', line: 'We have received your table request. Our team will confirm it shortly.' },
+  CONFIRMED: { subject: 'Your table is confirmed', line: 'Great news — your table is confirmed. We look forward to hosting you!' },
+  CANCELLED: { subject: 'Your table booking was cancelled', line: 'Your table booking has been cancelled. Call us if you would like to rebook.' },
+  COMPLETED: { subject: 'Thank you for dining with us', line: 'Thank you for dining at Urban Maharaja. We hope to see you again soon!' },
+};
+
+/**
+ * Email a customer about their table booking status. Never throws.
+ */
+const sendBookingStatusEmail = async ({ to, name, status, date, time, guests, staffNote }) => {
+  const client = getResendClient();
+  const copy = BOOKING_COPY[status];
+  if (!client || !to || !copy) return { success: false };
+
+  try {
+    const details = `${escapeHtml(date)} at ${escapeHtml(time)} · ${escapeHtml(guests)}`;
+    const html = `
+      <div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:24px;color:#2e1a14">
+        <h2 style="color:#9b284e;margin:0 0 12px">Urban Maharaja</h2>
+        <p>Hello ${escapeHtml(name || 'Guest')},</p>
+        <p>${copy.line}</p>
+        <p style="padding:12px 16px;background:#faf3eb;border-radius:10px"><strong>${details}</strong><br/>Status: <strong>${status}</strong></p>
+        ${staffNote ? `<p><em>Note from our team:</em> ${escapeHtml(staffNote)}</p>` : ''}
+        <p style="font-size:12px;color:#8a6e54">AC-209, Central Spine, Gyan Vihar Marg, Jagatpura, Jaipur · +91 94146 44988</p>
+      </div>`;
+    const response = await client.emails.send({
+      from: env.RESEND_FROM || 'Urban Maharaja <onboarding@resend.dev>',
+      to: [to],
+      subject: `Urban Maharaja — ${copy.subject}`,
+      html,
+      text: `Hello ${name || 'Guest'},
+
+${copy.line}
+
+${date} at ${time} · ${guests}
+Status: ${status}${staffNote ? `
+Note: ${staffNote}` : ''}`,
+    });
+    if (response.error) {
+      logger.warn('Booking email failed', { error: response.error.message });
+      return { success: false };
+    }
+    return { success: true };
+  } catch (error) {
+    logger.warn('Booking email failed', { error: error.message });
+    return { success: false };
+  }
+};
+
 module.exports = {
   getResendClient,
   isEmailConfigured,
   sendPasswordResetEmail,
+  sendBookingStatusEmail,
 };

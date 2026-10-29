@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useLanguage } from '../../context/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, Cookie, Check, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function CookieConsent() {
   const [isVisible, setIsVisible] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     // Check if user already consented
@@ -50,7 +52,7 @@ export default function CookieConsent() {
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <h3 className="font-serif text-base font-bold text-[#1d0f09]">
-                  Cookie Preferences
+                  {t('cookie.title')}
                 </h3>
                 <button
                   onClick={handleEssentialOnly}
@@ -62,7 +64,7 @@ export default function CookieConsent() {
                 </button>
               </div>
               <p className="text-xs text-[#2d1a10] leading-relaxed mt-1 font-medium">
-                We use cookies to secure your sessions, remember your dining preferences, and power our digital loyalty rewards card.
+                {t('cookie.text')}
               </p>
             </div>
           </div>
@@ -73,14 +75,14 @@ export default function CookieConsent() {
               className="w-full sm:flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-primary via-primary-container to-secondary text-white text-xs uppercase tracking-wider font-bold shadow-xs hover:brightness-110 transition-all cursor-pointer flex items-center justify-center gap-1.5"
             >
               <Check className="w-3.5 h-3.5" />
-              <span>Accept Cookies</span>
+              <span>{t('cookie.accept')}</span>
             </button>
 
             <button
               onClick={handleEssentialOnly}
               className="w-full sm:w-auto py-2.5 px-3.5 rounded-xl bg-[#fdfaf6] hover:bg-[#f3e7dc] border border-[#ede0d2] text-[#1d0f09] text-xs font-bold transition-all cursor-pointer"
             >
-              Essential Only
+              {t('cookie.decline')}
             </button>
           </div>
 
@@ -93,7 +95,7 @@ export default function CookieConsent() {
               to="/terms"
               className="text-primary hover:underline"
             >
-              Read Terms &amp; Conditions
+              {t('cookie.terms')}
             </Link>
           </div>
         </motion.aside>

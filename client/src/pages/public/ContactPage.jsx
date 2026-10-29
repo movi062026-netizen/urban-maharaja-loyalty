@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import useSeo from '../../hooks/useSeo';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { bookingApi } from '../../services/api';
 
 export default function ContactPage() {
+  useSeo({ title: "Contact & Table Reservation", description: "Reserve a table at Urban Maharaja, AC-209 Central Spine, Gyan Vihar Marg, Jagatpura, Jaipur. Call +91 94146 44988 or +91 90820 35880. Open daily 12 PM – 11 PM." });
   const todayStr = new Date().toISOString().split('T')[0];
   const [formData, setFormData] = useState({
     name: '',
@@ -17,6 +21,21 @@ export default function ContactPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { user } = useAuth();
+  const isGuest = user?.role === 'GUEST';
+  const [searchParams] = useSearchParams();
+
+  // Pre-fill from the signed-in account and from the home page quick-booking bar
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      name: prev.name || (isGuest ? user.name || '' : ''),
+      phone: prev.phone || (isGuest ? user.phone || '' : ''),
+      email: prev.email || (isGuest ? user.email || '' : ''),
+      guests: searchParams.get('guests') || prev.guests,
+      seating: searchParams.get('seating') || prev.seating,
+    }));
+  }, [isGuest, user, searchParams]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +47,7 @@ export default function ContactPage() {
       setIsSubmitting(true);
       await bookingApi.createBooking(formData);
       setIsSubmitted(true);
-      toast.success(`Royal reservation confirmed for ${formData.name}! Our concierge team and floor staff have received your request.`);
+      toast.success('Table request sent! You will be notified once our team confirms it.');
     } catch (err) {
       const msg = err.response?.data?.error?.message || err.response?.data?.message || 'Failed to submit reservation. Please call us directly.';
       toast.error(msg);
@@ -96,11 +115,26 @@ export default function ContactPage() {
                   <div className="p-8 rounded-2xl bg-surface-container-high/90 border border-primary/40 text-center space-y-4">
                     <span className="material-symbols-outlined text-primary text-[48px]">check_circle</span>
                     <h3 className="font-serif text-xl sm:text-2xl text-on-surface font-bold">
-                      Your Imperial Table is Reserved
+                      Table Request Received
                     </h3>
                     <p className="text-sm text-on-surface-variant max-w-md mx-auto leading-relaxed">
-                      Thank you, <span className="text-primary font-bold">{formData.name}</span>. A VIP reservation confirmation SMS has been dispatched for {formData.guests} in the {formData.seating}.
+                      Thank you, <span className="text-primary font-bold">{formData.name}</span>. Your request for {formData.guests} in the {formData.seating} is waiting for confirmation from our team.
                     </p>
+                    {isGuest ? (
+                      <Link
+                        to="/guest/bookings"
+                        className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-primary text-on-primary text-xs uppercase tracking-wider font-bold no-underline"
+                      >
+                        Track in My Bookings
+                      </Link>
+                    ) : (
+                      <p className="text-xs text-on-surface-variant max-w-sm mx-auto">
+                        {formData.email
+                          ? 'We will email you as soon as it is confirmed.'
+                          : 'Our team will call you to confirm.'}{' '}
+                        <Link to="/login" className="text-primary font-bold">Log in</Link> next time to track bookings live.
+                      </p>
+                    )}
                     <button
                       onClick={() => setIsSubmitted(false)}
                       className="mt-4 px-6 py-2.5 rounded-full bg-surface-container border border-primary/30 text-primary text-xs uppercase tracking-wider font-bold cursor-pointer hover:bg-primary hover:text-on-primary transition-all"
@@ -110,6 +144,11 @@ export default function ContactPage() {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-5">
+                    {!isGuest && (
+                      <div className="px-4 py-3 rounded-xl bg-primary/5 border border-primary/20 text-xs text-on-surface-variant">
+                        <Link to="/login" className="text-primary font-bold">Log in</Link> to track your booking and get a notification the moment it is confirmed — or add your email below to get it by email.
+                      </div>
+                    )}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
                         <label className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-2">

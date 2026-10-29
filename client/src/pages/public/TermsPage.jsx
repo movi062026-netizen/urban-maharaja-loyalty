@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
+import useSeo from '../../hooks/useSeo';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, FileText, ArrowLeft, CheckCircle2, Award, Sparkles } from 'lucide-react';
 import { REWARDS_TERMS_AND_CONDITIONS } from '../../constants';
 
 export default function TermsPage() {
+  useSeo({ title: "Terms & Conditions", description: "Terms and conditions for the Urban Maharaja Maharaja Card loyalty program and website." });
   return (
     <div className="w-full bg-background min-h-screen text-on-surface">
       {/* Hero Header */}

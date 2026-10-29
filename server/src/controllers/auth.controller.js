@@ -15,7 +15,7 @@ const guestRequestOtp = async (req, res, next) => {
 const customerRegister = async (req, res, next) => {
   try {
     const { name, email, phone, password } = req.body;
-    const result = await authService.customerRegister({ name, email, phone, password });
+    const result = await authService.customerRegister({ name, email, phone, password }, auditContext(req));
     success(res, result, result.message || 'Registration successful', 201);
   } catch (error) {
     next(error);

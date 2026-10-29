@@ -51,6 +51,26 @@ const bookingSchema = new mongoose.Schema(
       enum: ['PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED'],
       default: 'PENDING',
     },
+    // Set when a signed-in customer books, so they can track it and get notified
+    guestId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      index: true,
+    },
+    // Short message from staff shown to the customer (e.g. "Table 7 ready")
+    staffNote: {
+      type: String,
+      trim: true,
+      maxlength: 300,
+    },
+    handledBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    cancelledBy: {
+      type: String,
+      enum: ['GUEST', 'STAFF'],
+    },
   },
   {
     timestamps: true,
@@ -60,5 +80,6 @@ const bookingSchema = new mongoose.Schema(
 bookingSchema.index({ status: 1, createdAt: -1 });
 bookingSchema.index({ phone: 1 });
 bookingSchema.index({ date: 1 });
+bookingSchema.index({ guestId: 1, createdAt: -1 });
 
 module.exports = mongoose.model('Booking', bookingSchema);

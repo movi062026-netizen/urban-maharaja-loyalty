@@ -106,5 +106,7 @@ export const surpriseApi = {
 export const bookingApi = {
   createBooking: (data) => api.post('/bookings', data),
   getBookings: (params) => api.get('/bookings', { params }),
-  updateBookingStatus: (id, status) => api.patch(`/bookings/${id}/status`, { status }),
+  updateBookingStatus: (id, status, staffNote) => api.patch(`/bookings/${id}/status`, { status, ...(staffNote ? { staffNote } : {}) }),
+  getMyBookings: () => api.get('/bookings/me'),
+  cancelMyBooking: (id) => api.patch(`/bookings/me/${id}/cancel`),
 };

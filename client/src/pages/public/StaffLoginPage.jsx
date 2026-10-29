@@ -1,4 +1,5 @@
 ﻿import { useState } from 'react';
+import useSeo from '../../hooks/useSeo';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
@@ -6,6 +7,7 @@ import { authApi } from '../../services/api';
 import toast from 'react-hot-toast';
 
 export default function StaffLoginPage() {
+  useSeo({ title: "Staff Login", description: "Urban Maharaja staff portal.", noindex: true });
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -33,11 +35,6 @@ export default function StaffLoginPage() {
     }
   };
 
-  const handleQuickFill = (roleEmail = 'staff@urbanmaharaja.com', defaultPass = 'Staff@123') => {
-    setEmail(roleEmail);
-    setPassword(defaultPass);
-    toast.success(`Loaded credentials for ${roleEmail}`);
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4 relative overflow-hidden text-on-surface">
@@ -95,7 +92,7 @@ export default function StaffLoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="staff@urbanmaharaja.com"
+                  placeholder="you@example.com"
                   className="w-full pl-11 pr-4 py-3.5 bg-surface-container border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-sm focus:outline-none focus:border-secondary transition-colors font-sans"
                   autoComplete="email"
                   required
@@ -110,12 +107,6 @@ export default function StaffLoginPage() {
                   Terminal Key
                 </label>
                 <div className="flex items-center gap-3">
-                  <Link
-                    to={email ? `/forgot-password?email=${encodeURIComponent(email.trim())}` : '/forgot-password'}
-                    className="text-xs text-secondary hover:underline font-semibold"
-                  >
-                    Forgot Key?
-                  </Link>
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -162,17 +153,6 @@ export default function StaffLoginPage() {
             </button>
           </form>
 
-          {/* Quick Demo Credentials Helper */}
-          <div className="mt-6 pt-5 border-t border-outline-variant/30">
-            <button
-              type="button"
-              onClick={() => handleQuickFill('staff@urbanmaharaja.com', 'Staff@123')}
-              className="w-full px-3 py-2.5 rounded-xl bg-surface-container-high/80 hover:bg-surface-container-highest border border-secondary/30 text-xs text-secondary font-mono text-center transition-colors cursor-pointer flex items-center justify-center gap-2"
-            >
-              <span className="material-symbols-outlined text-[16px]">badge</span>
-              <span>1-Click Load Staff Concierge (staff@urbanmaharaja.com)</span>
-            </button>
-          </div>
 
           {/* Dedicated Link to Admin Console */}
           <div className="mt-6 pt-4 border-t border-outline-variant/30 text-center">

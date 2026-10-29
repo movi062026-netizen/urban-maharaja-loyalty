@@ -1,17 +1,23 @@
 {
   "name": "Urban Maharaja — Royal Fine Dining & Loyalty",
   "short_name": "Urban Maharaja",
-  "description": "Jaipur's premier fine dining restaurant offering royal Indian cuisine and the exclusive Maharaja Card loyalty program.",
+  "description": "100% pure veg fine dining in Jagatpura, Jaipur with the digital Maharaja Card loyalty program.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#12080a",
-  "theme_color": "#ffb869",
+  "background_color": "#faf3eb",
+  "theme_color": "#faf3eb",
   "orientation": "portrait-primary",
   "icons": [
     {
       "src": "/favicon.svg",
       "type": "image/svg+xml",
       "sizes": "any"
+    },
+    {
+      "src": "/favicon.png",
+      "type": "image/png",
+      "sizes": "128x128"
     }
-  ]
+  ],
+  "lang": "en-IN"
 }

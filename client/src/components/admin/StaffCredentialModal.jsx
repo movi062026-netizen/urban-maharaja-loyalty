@@ -155,7 +155,7 @@ export default function StaffCredentialModal({ isOpen, onClose, onSubmit, loadin
                 type="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                placeholder="At least 6 characters"
+                placeholder="10+ chars, A-z, 0-9, symbol"
                 className="w-full px-4 py-2.5 rounded-xl bg-surface-container-high/90 border border-outline-variant/40 text-on-surface text-sm focus:outline-none focus:border-primary transition-all"
               />
               {errors.password && (

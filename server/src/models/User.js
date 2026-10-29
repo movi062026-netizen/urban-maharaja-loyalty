@@ -44,6 +44,11 @@ const userSchema = new mongoose.Schema(
       type: Date,
     },
     // Dev-only OTP for guest authentication
+    otpFailedAttempts: {
+      type: Number,
+      default: 0,
+      select: false,
+    },
     devOtp: {
       type: String,
       select: false,

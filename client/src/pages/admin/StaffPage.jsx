@@ -4,6 +4,21 @@ import { adminApi } from '../../services/api';
 import { UserCog, Plus, ShieldCheck, Mail, Key, Check, Copy, UserX, UserCheck, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+const STRONG_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{10,128}$/;
+
+// Random 14-char password with every character class, from the browser CSPRNG
+const generatePassword = () => {
+  const sets = ['ABCDEFGHJKLMNPQRSTUVWXYZ', 'abcdefghijkmnpqrstuvwxyz', '23456789', '!@#$%&*?'];
+  const all = sets.join('');
+  const pick = (chars) => chars[crypto.getRandomValues(new Uint32Array(1))[0] % chars.length];
+  const chars = [...sets.map(pick), ...Array.from({ length: 10 }, () => pick(all))];
+  for (let i = chars.length - 1; i > 0; i -= 1) {
+    const j = crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1);
+    [chars[i], chars[j]] = [chars[j], chars[i]];
+  }
+  return chars.join('');
+};
+
 export default function StaffPage() {
   const [staffList, setStaffList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +27,7 @@ export default function StaffPage() {
   const [newStaff, setNewStaff] = useState({
     name: '',
     email: '',
-    password: 'Staff@123',
+    password: '',
     role: 'STAFF',
   });
   const [createdCredential, setCreatedCredential] = useState(null);
@@ -39,10 +54,14 @@ export default function StaffPage() {
       toast.error('All fields are required');
       return;
     }
+    if (!STRONG_PASSWORD.test(newStaff.password)) {
+      toast.error('Password must be 10+ characters with uppercase, lowercase, a number and a symbol');
+      return;
+    }
 
     setCreating(true);
     try {
-      const res = await adminApi.createStaff(newStaff);
+      await adminApi.createStaff({ name: newStaff.name, email: newStaff.email, password: newStaff.password });
       toast.success(`Credentials created for ${newStaff.name}`);
       setCreatedCredential({
         name: newStaff.name,
@@ -50,7 +69,7 @@ export default function StaffPage() {
         password: newStaff.password,
         role: newStaff.role,
       });
-      setNewStaff({ name: '', email: '', password: 'Staff@123', role: 'STAFF' });
+      setNewStaff({ name: '', email: '', password: '', role: 'STAFF' });
       loadStaff();
     } catch (err) {
       toast.error(err.response?.data?.error?.message || 'Failed to create staff credentials');
@@ -305,29 +324,29 @@ export default function StaffPage() {
                   <label className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-1.5">
                     Terminal Key (Password)
                   </label>
-                  <input
-                    type="text"
-                    value={newStaff.password}
-                    onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
-                    placeholder="Min 8 characters"
-                    className="w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-xs font-mono focus:outline-none focus:border-primary transition-colors"
-                    required
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newStaff.password}
+                      onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
+                      placeholder="10+ chars, A-z, 0-9, symbol"
+                      autoComplete="new-password"
+                      className="flex-1 min-w-0 px-4 py-3 bg-surface-container-lowest border border-outline-variant/40 rounded-xl text-on-surface placeholder-on-surface-variant/40 text-xs font-mono focus:outline-none focus:border-primary transition-colors"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setNewStaff({ ...newStaff, password: generatePassword() })}
+                      className="px-3 rounded-xl border border-primary/30 text-primary text-[11px] font-bold uppercase tracking-wider hover:bg-primary/5 cursor-pointer shrink-0"
+                    >
+                      Generate
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-on-surface-variant mt-1">
+                    Share it with the staff member privately.
+                  </p>
                 </div>
 
-                <div>
-                  <label className="block text-xs uppercase tracking-wider text-on-surface-variant font-semibold mb-1.5">
-                    Access Clearance Role
-                  </label>
-                  <select
-                    value={newStaff.role}
-                    onChange={(e) => setNewStaff({ ...newStaff, role: e.target.value })}
-                    className="w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant/40 rounded-xl text-on-surface text-xs focus:outline-none focus:border-primary transition-colors cursor-pointer"
-                  >
-                    <option value="STAFF">STAFF (Concierge Desk &amp; Stamps)</option>
-                    <option value="ADMIN">ADMIN (Full Imperial Control)</option>
-                  </select>
-                </div>
 
                 <div className="pt-2">
                   <button

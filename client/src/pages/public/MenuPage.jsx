@@ -1,4 +1,5 @@
 ﻿import { useState, useMemo } from 'react';
+import useSeo from '../../hooks/useSeo';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -22,7 +23,7 @@ import dishRoyalDosa from '../../assets/images/dish-royal-dosa-premium.jpg';
 import dishGrilledSandwich from '../../assets/images/dish-grilled-sandwich-premium.jpg';
 import brandLogo from '../../assets/images/logo.png';
 
-const MENU_LIVE_URL = 'https://urban-maharaja-premium-restaurant-menu-website-hbi32srb0.vercel.app/';
+import { MENU_URL as MENU_LIVE_URL } from '../../config';
 
 const signatureDishes = [
   {
@@ -517,6 +518,7 @@ const menuData = [
 ];
 
 export default function MenuPage() {
+  useSeo({ title: "Menu — Pure Veg North Indian, Tandoor & Indo-Chinese", description: "Explore the Urban Maharaja pure veg menu in Jagatpura, Jaipur: paneer tikka sizzlers, royal dosa, curries, breads, bruschetta and chef specials with prices." });
   const [activeCategory, setActiveCategory] = useState('All Items');
   const [searchQuery, setSearchQuery] = useState('');
 

@@ -3,6 +3,7 @@ const loyaltyController = require('../controllers/loyalty.controller');
 const { authenticate, authorize } = require('../middleware/auth');
 const { operationLimiter } = require('../middleware/rateLimiter');
 const { uploadBill } = require('../middleware/upload');
+const { sanitizeInput } = require('../middleware/sanitize');
 const validate = require('../middleware/validate');
 const { ROLES } = require('../constants');
 const {
@@ -22,6 +23,7 @@ router.post(
   authorize(ROLES.GUEST),
   operationLimiter,
   uploadBill,
+  sanitizeInput,
   loyaltyController.requestMyStamp
 );
 router.get('/history/me', authenticate, authorize(ROLES.GUEST), loyaltyController.getMyHistory);
@@ -43,6 +45,7 @@ router.post(
   authorize(ROLES.STAFF, ROLES.ADMIN),
   operationLimiter,
   uploadBill,
+  sanitizeInput,
   stampRequestRules,
   validate,
   loyaltyController.requestStamp

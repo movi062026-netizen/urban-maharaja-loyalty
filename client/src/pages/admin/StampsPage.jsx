@@ -1,4 +1,5 @@
 ﻿import { useState, useEffect } from 'react';
+import { useRealtimeRefresh } from '../../context/NotificationContext';
 import { motion } from 'framer-motion';
 import { adminApi, loyaltyApi } from '../../services/api';
 import { Stamp as StampIcon, Search, CheckCircle, XCircle, Clock, ChevronLeft, ChevronRight, User, ShieldCheck, Sparkles, Users, AlertTriangle, Eye, X, Image as ImageIcon, FileText } from 'lucide-react';
@@ -30,6 +31,11 @@ export default function StampsPage() {
     loadRecentPatrons();
     loadPendingRequests();
   }, [pagination.page, statusFilter]);
+
+  useRealtimeRefresh(['STAMP_REQUESTED', 'QUEUE_UPDATED', 'STAMP_APPROVED_BY_STAFF', 'STAMP_REJECTED_BY_STAFF', 'REWARD_ISSUED'], () => {
+    loadPendingRequests();
+    loadStamps();
+  });
 
   const loadStamps = async () => {
     try {

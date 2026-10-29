@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
+import useSeo from '../../hooks/useSeo';
 import { motion } from 'framer-motion';
 
 export default function AboutPage() {
+  useSeo({ title: "Our Story", description: "The story of Urban Maharaja — a pure veg fine dine in Jagatpura, Jaipur built around comforting Indian favourites, warm hospitality and royal ambience." });
   const googleMapsUrl = 'https://www.google.com/maps/place/URBAN+MAHARAJA/@26.8069227,75.8578327,17z/data=!3m1!4b1!4m6!3m5!1s0x396dc90049d7c731:0xe9bd1d09e13e2817!8m2!3d26.8069227!4d75.8578327!16s%2Fg%2F11w2_b84t7';
 
   return (

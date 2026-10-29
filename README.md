@@ -13,7 +13,6 @@
 - **Google OAuth & Direct Sign-in** — Instant one-click Google authentication with patron profile sync
 - **Digital Maharaja Card** — Real-time stamp progress visualization and visit history
 - **Dining Bill Upload** — Upload dining receipt photos with bill number, amount, and date when requesting visits
-- **Forgot Password Flow** — Secure password reset with branded transactional emails powered by **Resend**
 - **Reward Tracking** — View available, unlocked, redeemed, and expired rewards
 - **Visit History** — Complete loyalty cycle history with verified stamps
 - **Google Review Flow** — Tracked review CTA with click analytics
@@ -89,7 +88,6 @@ URBAN MAHARAJA DIGITAL LOYALTY PLATFORM/
 | Backend     | Express.js 4, Node.js                                |
 | Database    | MongoDB + Mongoose 8                                 |
 | Storage     | Cloudinary (WebP compression & streaming upload)     |
-| Email       | Resend API (Transactional password reset & notices)  |
 | Auth        | Google OAuth 2.0, JWT, bcryptjs                      |
 | Security    | Helmet, CORS, Token Bucket Limiter, SHA-256 Hashing   |
 | Logging     | Winston (structured JSON logging)                    |
@@ -100,7 +98,6 @@ URBAN MAHARAJA DIGITAL LOYALTY PLATFORM/
 - **Node.js** v18+
 - **MongoDB** (local or Atlas connection string)
 - **Cloudinary Account** (for bill image uploads)
-- **Resend Account** (for password reset emails)
 
 ### Installation
 
@@ -137,27 +134,37 @@ CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 
-# Resend Email
-RESEND_API_KEY=re_your_api_key
-EMAIL_FROM=Urban Maharaja <noreply@urbanmaharaja.com>
-
 # Google OAuth
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
 
-### Seed Database (Development)
+### Phone / Desktop Notifications (Web Push)
+
+The three `WEB_PUSH_*` variables are keys you generate yourself (they are not URLs):
 
 ```bash
-npm run seed
+cd server
+npx web-push generate-vapid-keys
 ```
 
-Demo credentials after seeding:
-| Role   | Login                          | Password   |
-|--------|-------------------------------|------------|
-| Admin  | admin@urbanmaharaja.com       | Admin@123  |
-| Staff  | staff@urbanmaharaja.com       | Staff@123  |
-| Guest  | patron@example.com / Google   | User@123   |
+Copy the printed **Public Key** into `WEB_PUSH_PUBLIC_KEY` and the **Private Key** into `WEB_PUSH_PRIVATE_KEY`.
+Set `WEB_PUSH_SUBJECT` to `mailto:` followed by an email you own (e.g. `mailto:owner@example.com`).
+Use the same pair locally and on Render (Dashboard → API service → Environment). Never share the private key.
+
+### Create the Administrator
+
+There are no built-in or default accounts. Create the admin once (works on any database,
+never deletes data). Use a strong password: 12+ characters with upper/lower case, a number and a symbol.
+
+```bash
+cd server
+ADMIN_NAME="Owner Name" ADMIN_EMAIL=owner@example.com ADMIN_PASSWORD='<strong-password>' npm run create-admin
+```
+
+To rotate the admin password later, run the same command with `-- --reset-password`.
+
+Staff accounts are created by the admin from **Admin → Staff Credentials**. Guests register themselves.
 
 ### Run Development
 
@@ -181,8 +188,6 @@ cd server && npm run test:unit
 | Method | Endpoint                              | Auth          | Description                          |
 |--------|--------------------------------------|---------------|--------------------------------------|
 | POST   | `/api/v1/auth/google`                | Public        | Google OAuth login / registration    |
-| POST   | `/api/v1/auth/forgot-password`       | Public        | Send Resend password reset email     |
-| POST   | `/api/v1/auth/reset-password`        | Public        | Reset password with secure token     |
 | POST   | `/api/v1/auth/login`                 | Public        | Email + password login               |
 | GET    | `/api/v1/loyalty/cards/me`           | Guest         | Get current Maharaja Card status     |
 | POST   | `/api/v1/loyalty/stamps/request`     | Guest / Staff | Request seal with WebP bill upload   |

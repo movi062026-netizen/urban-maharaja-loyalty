@@ -6,7 +6,8 @@ const settingsController = require('../controllers/settings.controller');
 const { authenticate, authorize } = require('../middleware/auth');
 const validate = require('../middleware/validate');
 const { ROLES } = require('../constants');
-const { paginationRules, createStaffRules, mongoIdParam } = require('../validators/business.validator');
+const { paginationRules, createStaffRules,
+  updateStaffRules, mongoIdParam } = require('../validators/business.validator');
 
 // All terminal routes require authentication
 router.use(authenticate);
@@ -32,7 +33,7 @@ router.get('/redemptions', authorize(ROLES.ADMIN, ROLES.STAFF), paginationRules,
 // Staff management & Credential Creation (Admin Only)
 router.get('/staff', authorize(ROLES.ADMIN), staffController.getStaff);
 router.post('/staff', authorize(ROLES.ADMIN), createStaffRules, validate, staffController.createStaff);
-router.patch('/staff/:id', authorize(ROLES.ADMIN), mongoIdParam, validate, staffController.updateStaff);
+router.patch('/staff/:id', authorize(ROLES.ADMIN), mongoIdParam, updateStaffRules, validate, staffController.updateStaff);
 
 // Settings (Admin Only)
 router.get('/settings', authorize(ROLES.ADMIN), settingsController.getSettings);
